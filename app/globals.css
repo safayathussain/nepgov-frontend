@@ -2,20 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer components {
+  .container {
+    @apply max-w-[1440px] mx-auto px-3 md:px-5 lg:px-12 2xl:px-16;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+:root {
+  --primary-color: #3560AD !important;
+  --primary-lighten: #4d74bd !important;
+  --primary-darken: #2a4d8a !important;
+  --surface-ground: #f8f9fa !important;
+  --surface-section: #ffffff !important;
+  --surface-card: #ffffff !important;
+  --surface-overlay: #ffffff !important;
+  --surface-border: #dee2e6 !important;
+  
+  --focus-ring: 0 0 0 0.2rem #3560AD40 !important;
+  --highlight-bg: #eef2f8 !important;
+  --highlight-text-color: #3560AD !important;
+}
+
+.p-dropdown-label {
+  padding: 9px !important;
+}
+.p-placeholder {
+  color: #a1a1a1 !important;
+}
+.p-dropdown-item.p-highlight {
+  background-color: #f5f7fb;
+  color: #3c55a5;
+}
+.p-dropdown-trigger {
+  width: 15px !important;
+}
+.p-highlight > .p-checkbox-box {
+  background-color: #3c55a5 !important;
+}
+.p-radiobutton-input {
+  background-color: #3c55a5 !important;
+}
+input[type="radio"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="radio"]:checked {
+  background-color: #3c55a5 !important; 
+  border-color: #a1a1a1 !important;
+}
+.rs-picker-toggle-active,
+.rs-input-group-focus, .rs-picker {
+  box-shadow: none !important;
+  outline: 0 !important;
+  border-color: #d1d5db !important;
+}
+.rs-picker-toggle:hover {
+  border: 1px solid #d1d5db !important;
+}
+.rs-picker-tag-list {
+  display: flex !important;
+  gap: 5px;
+}
+.rs-tag {
+  background-color: #d1d5db;
+  padding: 0px 5px;
+  border-radius: 3px;
+  display: flex;
+  gap: 5px;
+}
+
+.rs-stack-item {
+  padding: 2px !important;
+}
+.rs-picker-textbox {
+  padding: 5px 0px !important;
+}
+
+.rs-picker-value-count {
+  background-color:#3C55A5 !important ;
+}
+.rs-picker-value-item {
+  color: #3C55A5 !important;
+}
+.rs-uploader-picture-center {
+  display: flex !important;
+  overflow-x: hidden;
+  width: 100vw;
+  justify-content: center !important;
 }
