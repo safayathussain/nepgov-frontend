@@ -1,7 +1,5 @@
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import { CustomProvider } from "rsuite";
-import 'rsuite/dist/rsuite-no-reset.min.css';
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -20,11 +18,9 @@ export default function RootLayout({ children }) {
   };
   return (
     <html lang="en">
-      <CustomProvider>
-        <body className={`${dmSans.variable} bg-white text-black`}>
-          {children}
-        </body>
-      </CustomProvider>
+      <body className={`${dmSans.variable} bg-white text-black`}>
+        {children}
+      </body>
     </html>
   );
 }
