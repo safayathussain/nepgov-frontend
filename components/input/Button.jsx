@@ -14,30 +14,37 @@ const Button = ({
   let sizeClassName = "";
   switch (variant) {
     case "primary":
-      variantClassName = "bg-primary text-white border-primary border-[1.5px]";
+      variantClassName =
+        "bg-primary text-white border-primary border-[1.5px] hover:bg-transparent hover:text-primary";
       break;
     case "secondary":
-      variantClassName = "  bg-secondary text-white ";
+      variantClassName =
+        " border-secondary border-[1.5px] bg-secondary text-white hover:bg-transparent hover:text-secondary";
       break;
     case "primary-outline":
-      variantClassName = "border-[1.5px] border-primary text-primary   ";
+      variantClassName =
+        "border-[1.5px] border-primary text-primary  hover:bg-primary hover:text-white";
+      break;
+    case "secondary-outline":
+      variantClassName =
+        "border-[1.5px] border-secondary text-secondary  hover:bg-secondary hover:text-white";
       break;
   }
   switch (size) {
     case "sm":
-      sizeClassName = " px-2 py-1 text-sm rounded-md";
+      sizeClassName = " px-2 py-1 text-sm rounded-full";
       break;
     case "md":
-      sizeClassName = "px-5 py-1.5 rounded-[8px] font-semibold";
+      sizeClassName = "px-5 py-1.5 rounded-full font-semibold";
       break;
     case "lg":
-      sizeClassName = "px-6 py-2 rounded-[8px] font-semibold";
+      sizeClassName = "px-6 py-2 rounded-full font-semibold";
       break;
   }
 
   return (
     <button
-      className={`font-medium ${variantClassName} ${sizeClassName} ${className} ${
+      className={`font-medium duration-300 ${variantClassName} ${sizeClassName} ${className} ${
         disabled && "opacity-60"
       } whitespace-nowrap`}
       onClick={onClick}

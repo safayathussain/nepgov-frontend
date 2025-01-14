@@ -7,7 +7,7 @@ import homeIcon from "@/public/icons/home.svg";
 import { RiShareBoxLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { IoMdAdd } from "react-icons/io";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import LanguageSelectInput from "../input/NavbarLanguageSelectInput";
 import Button from "../input/Button";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
@@ -15,6 +15,7 @@ import useClickOutside from "@/hooks/useClickOutside";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const routes = [
     {
       label: <Image src={homeIcon} alt="" className="size-6" />,
@@ -61,7 +62,7 @@ const Navbar = () => {
     setSidebarOpen(false);
   });
   return (
-    <div className="shadow-lg">
+    <div className="shadow-lg bg-white">
       <div className="container">
         <div className="py-5 flex items-center justify-between">
           <Link href={"/"}>
@@ -99,6 +100,7 @@ const Navbar = () => {
               variant={"primary-outline"}
               className={"flex items-center gap-1 !rounded-full"}
               size="sm"
+              onClick={() => router.push("/login")}
             >
               <CgProfile /> Log in
             </Button>
@@ -106,6 +108,7 @@ const Navbar = () => {
               variant={"primary"}
               className={"  hidden md:flex items-center gap-1 !rounded-full"}
               size="sm"
+              onClick={() => router.push("/signup")}
             >
               <IoMdAdd size={20} /> Sign up
             </Button>

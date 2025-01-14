@@ -7,21 +7,7 @@
     @apply max-w-[1440px] mx-auto px-3 md:px-5 lg:px-12 2xl:px-16;
   }
 }
-
-:root {
-  --primary-color: #3560AD !important;
-  --primary-lighten: #4d74bd !important;
-  --primary-darken: #2a4d8a !important;
-  --surface-ground: #f8f9fa !important;
-  --surface-section: #ffffff !important;
-  --surface-card: #ffffff !important;
-  --surface-overlay: #ffffff !important;
-  --surface-border: #dee2e6 !important;
-  
-  --focus-ring: 0 0 0 0.2rem #3560AD40 !important;
-  --highlight-bg: #eef2f8 !important;
-  --highlight-text-color: #3560AD !important;
-}
+ 
 
 .p-dropdown-label {
   padding: 9px !important;
@@ -37,7 +23,10 @@
   width: 15px !important;
 }
 .p-highlight > .p-checkbox-box {
-  background-color: #3c55a5 !important;
+  background-color: #EF4634 !important;
+  border-radius: 0 !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 .p-radiobutton-input {
   background-color: #3c55a5 !important;
