@@ -5,7 +5,7 @@ import { CgClose, CgSearch } from "react-icons/cg";
 const Search = ({ open, setOpen }) => {
   return (
     <div
-      className={`fixed top-0 w-screen overflow-y-scroll h-screen bg-white duration-300 z-50 p-5 ${
+      className={`fixed  w-screen overflow-y-scroll h-screen bg-white duration-300 z-50 p-5 ${
         open ? "top-0" : "-top-[100vh]"
       }`}
     >
