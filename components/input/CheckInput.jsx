@@ -9,6 +9,7 @@ const CheckInput = ({
   name,
   type = "text",
   className,
+  boxClassName,
   placeholder,
   value = false,
   setValue = () => {},
@@ -25,7 +26,7 @@ const CheckInput = ({
             id={id}
             name={name}
             spellCheck="false"
-            className={`outline outline-[2px]  outline-secondary size-4`}
+            className={`outline outline-[2px]  outline-secondary size-4 ${boxClassName} rounded-full`}
             {...etc}
           />
           <label htmlFor={id} className="block text-black text-sm">

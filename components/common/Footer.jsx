@@ -36,7 +36,7 @@ const Footer = () => {
       name: "Home",
     },
     {
-      route: "/about",
+      route: "/aboutUs",
       name: "About",
     },
     {
@@ -58,7 +58,7 @@ const Footer = () => {
   ];
   const routes2 = [
     {
-      route: "/terms-and-condition",
+      route: "/terms-and-conditions",
       name: "Terms & Conditions",
     },
     {

@@ -79,6 +79,7 @@ export default function Trackers() {
         className="mt-5"
       >
         <SwiperSlide>
+          <Link href={'/report/tracker/1'}>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">
             <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
             <div className="flex justify-between py-3">
@@ -90,8 +91,10 @@ export default function Trackers() {
             <SimpleChart height={150}/>
             <p className="text-secondary font-semibold text-xl mt-2">2000 people voted</p>
           </div>
+          </Link>
         </SwiperSlide>  
         <SwiperSlide>
+          <Link href={'/report/tracker/1'}>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">
             <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
             <div className="flex justify-between py-3">
@@ -103,8 +106,10 @@ export default function Trackers() {
             <SimpleChart height={150}/>
             <p className="text-secondary font-semibold text-xl mt-2">2000 people voted</p>
           </div>
+          </Link>
         </SwiperSlide>  
         <SwiperSlide>
+          <Link href={'/report/tracker/1'}>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">
             <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
             <div className="flex justify-between py-3">
@@ -116,8 +121,10 @@ export default function Trackers() {
             <SimpleChart height={150}/>
             <p className="text-secondary font-semibold text-xl mt-2">2000 people voted</p>
           </div>
+          </Link>
         </SwiperSlide>  
         <SwiperSlide>
+          <Link href={'/report/tracker/1'}>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">
             <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
             <div className="flex justify-between py-3">
@@ -129,6 +136,7 @@ export default function Trackers() {
             <SimpleChart height={150}/>
             <p className="text-secondary font-semibold text-xl mt-2">2000 people voted</p>
           </div>
+          </Link>
         </SwiperSlide>  
       </Swiper>
     </div>

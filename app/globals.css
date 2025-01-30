@@ -20,7 +20,7 @@
   color: #3c55a5;
 }
 .p-dropdown-trigger {
-  width: 15px !important;
+  width: 25px !important;
 }
 .p-highlight > .p-checkbox-box {
   background-color: #EF4634 !important;
@@ -84,4 +84,15 @@ input[type="radio"]:checked {
   overflow-x: hidden;
   width: 100vw;
   justify-content: center !important;
+}
+
+.p-dropdown-label {
+  padding: 9px !important;
+}
+.p-placeholder {
+  color: #a1a1a1 !important;
+}
+.p-dropdown-item.p-highlight {
+  background-color: #f5f7fb;
+  color: #3c55a5;
 }

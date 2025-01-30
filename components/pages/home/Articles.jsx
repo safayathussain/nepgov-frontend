@@ -78,6 +78,7 @@ export default function Articles() {
         className="mt-5"
       >
         <SwiperSlide>
+          <Link href={'/article/1'}>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">
             <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
             <div className="flex justify-between py-3">
@@ -88,8 +89,10 @@ export default function Articles() {
             <p className="text-sm text-gray-400">about 2 hours ago</p>
             
           </div>
+          </Link>
         </SwiperSlide> 
         <SwiperSlide>
+          <Link href={'/article/1'}>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">
             <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
             <div className="flex justify-between py-3">
@@ -100,8 +103,10 @@ export default function Articles() {
             <p className="text-sm text-gray-400">about 2 hours ago</p>
             
           </div>
+          </Link>
         </SwiperSlide> 
         <SwiperSlide>
+          <Link href={'/article/1'}>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">
             <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
             <div className="flex justify-between py-3">
@@ -112,8 +117,10 @@ export default function Articles() {
             <p className="text-sm text-gray-400">about 2 hours ago</p>
             
           </div>
+          </Link>
         </SwiperSlide> 
         <SwiperSlide>
+          <Link href={'/article/1'}>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">
             <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
             <div className="flex justify-between py-3">
@@ -124,6 +131,7 @@ export default function Articles() {
             <p className="text-sm text-gray-400">about 2 hours ago</p>
             
           </div>
+          </Link>
         </SwiperSlide> 
       </Swiper>
     </div>

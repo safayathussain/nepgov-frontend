@@ -23,7 +23,7 @@ const Navbar = () => {
     },
     {
       label: "About Us",
-      link: "/about",
+      link: "/aboutUs",
     },
     {
       label: (
@@ -80,7 +80,7 @@ const Navbar = () => {
                 key={i}
                 href={item?.link}
                 className={`font-semibold ${
-                  pathname === item.link ? "text-black " : "text-lightGray"
+                  pathname === item.link ? "text-black " : "text-[#808DA5]"
                 }`}
               >
                 {item?.label}
