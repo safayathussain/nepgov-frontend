@@ -15,7 +15,7 @@ const page = () => {
         className="w-full h-[400px] object-cover"
       ></Image>
       <div className="container max-w-[850px] py-10 ">
-        <p className="text-4xl text-primary font-semibold">
+        <p className="text-2xl md:text-4xl text-primary font-semibold">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aperiam,
           reprehenderit?
         </p>
@@ -24,8 +24,8 @@ const page = () => {
         </p>
         <div>{/* content */}</div>
         <div>
-          <p className="text-3xl font-semibold text-">Read more</p>
-          <div className="grid grid-cols-2 mt-5">
+          <p className="text-xl md:text-3xl font-semibold text-">Read more</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 mt-5">
             {/* articles */}
             <Link href={"/article/1"}>
               <div className="p-5 border border-[#EBEBEB] shadow-medium">

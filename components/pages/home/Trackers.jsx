@@ -70,13 +70,17 @@ export default function Trackers() {
       {/* 3 slide in view */}
       <Swiper
         modules={[Navigation]}
-        slidesPerView={3}
+        slidesPerView={1}
         spaceBetween={20}
         navigation={{
           prevEl: ".home-tracker-swiper-button-prev",
           nextEl: ".home-tracker-swiper-button-next",
         }}
         className="mt-5"
+        breakpoints={{
+          768: { slidesPerView: 2 }, // md
+          1024: { slidesPerView: 3 }, // lg
+        }}
       >
         <SwiperSlide>
           <Link href={'/report/tracker/1'}>

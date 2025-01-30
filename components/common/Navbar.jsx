@@ -140,7 +140,7 @@ const Navbar = () => {
                 href={item?.link}
                 onClick={() => setSidebarOpen(false)}
                 className={`font-semibold my-2 ${
-                  pathname === item.link ? "text-black" : "text-lightGray"
+                  pathname === item.link ? "text-black" : "text-[#808DA5]"
                 }`}
               >
                 {item?.label}

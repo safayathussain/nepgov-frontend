@@ -69,13 +69,17 @@ export default function Articles() {
       {/* 3 slide in view */}
       <Swiper
         modules={[Navigation]}
-        slidesPerView={3}
+        slidesPerView={1}
         spaceBetween={20}
         navigation={{
           prevEl: ".swiper-button-prev-article",
           nextEl: ".swiper-button-next-article",
         }}
         className="mt-5"
+        breakpoints={{
+          768: { slidesPerView: 2 }, // md
+          1024: { slidesPerView: 3 }, // lg
+        }}
       >
         <SwiperSlide>
           <Link href={'/article/1'}>

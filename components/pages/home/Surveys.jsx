@@ -69,13 +69,17 @@ export default function Surveys() {
       {/* 3 slide in view */}
       <Swiper
         modules={[Navigation]}
-        slidesPerView={3}
+        slidesPerView={1}
         spaceBetween={20}
         navigation={{
           prevEl: ".swiper-button-prev",
           nextEl: ".swiper-button-next",
         }}
         className="mt-5"
+        breakpoints={{
+          768: { slidesPerView: 2 }, // md
+          1024: { slidesPerView: 3 }, // lg
+        }}
       >
         <SwiperSlide>
           <div className="p-5 border border-[#EBEBEB] shadow-medium">

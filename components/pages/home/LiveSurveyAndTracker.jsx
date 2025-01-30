@@ -8,10 +8,10 @@ const LiveSurveyAndTracker = () => {
   return (
     <div className="bg-[#F3F4F6] p-5">
       <div className="flex items-end gap-5">
-        <p className="text-4xl font-semibold">Vote Now & Share Your Opinion!</p>
+        <p className="text-2xl md:text-4xl font-semibold">Vote Now & Share Your Opinion!</p>
         <LiveStatus />
       </div>
-      <div className="grid grid-cols-2 mt-8 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 mt-8 gap-4">
         <div className="p-5 bg-white border border-lightGray">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
