@@ -10,6 +10,7 @@ const DropdownInput = ({
   options=[],
   value = null,
   setValue = () => {},
+  className
 }) => {
   return (
     <div>
@@ -19,7 +20,7 @@ const DropdownInput = ({
         options={options}
         name={name}
         placeholder={placeholder}
-        className="w-full border shadow-none"
+        className={`w-full border shadow-none ${className}`}
         optionLabel="name"
         optionValue="value"
       />

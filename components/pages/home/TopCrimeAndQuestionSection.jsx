@@ -1,7 +1,10 @@
+"use client"
+import { useRouter } from "next/navigation";
 import React from "react";
 import { GoDotFill } from "react-icons/go";
 
 const TopCrimeAndQuestionSection = () => {
+  const router = useRouter()
   return (
     <div>
       <div className="text-white flex flex-col lg:flex-row gap-5 mt-8">
@@ -19,7 +22,7 @@ const TopCrimeAndQuestionSection = () => {
             <p>Your anonymity is 100% guaranteed.</p>
           </div>
           <div className="">
-            <button className="w-full bg-white text-secondary font-semibold rounded-full py-2">
+            <button onClick={() => router.push('/send-crime-info')} className="w-full bg-white text-secondary font-semibold rounded-full py-2">
               Give Information Here
             </button>
           </div>

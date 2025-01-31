@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useId, useState } from "react";
 import { Checkbox } from "primereact/checkbox";
 import { PrimeReactProvider } from "primereact/api";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
@@ -15,6 +15,9 @@ const CheckInput = ({
   setValue = () => {},
   ...etc
 }) => {
+if(!id){
+  id = useId()
+}
   return (
     <PrimeReactProvider>
       <div className={`${className}`}>
@@ -26,10 +29,10 @@ const CheckInput = ({
             id={id}
             name={name}
             spellCheck="false"
-            className={`outline outline-[2px]  outline-secondary size-4 ${boxClassName} rounded-full`}
+            className={`outline outline-[2px]  outline-secondary size-4 rounded-full ${boxClassName} `}
             {...etc}
           />
-          <label htmlFor={id} className="block text-black text-sm">
+          <label onClick={() => setValue(!value)} htmlFor={id} className="block text-black text-sm">
             {label}
           </label>
         </div>

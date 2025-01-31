@@ -1,17 +1,19 @@
 import React, { useId } from "react";
 
-const TextInput = ({
+const TextArea = ({
   label,
-  id  ,
+  id ,
   name,
   type = "text",
   className,
   placeholder,
+  rows=3,
+  cols,
   ...etc
 }) => {
-    if(!id){
-        id = useId()
-      }
+  if(!id){
+    id = useId()
+  }
   return (
     <div>
       <div>
@@ -19,13 +21,15 @@ const TextInput = ({
           {label}
         </label>
         <div className="mt-0.5">
-          <input
+          <textarea
+          rows={rows}
+          cols={cols}
             placeholder={placeholder}
             id={id}
             type={type}
             name={name}
             spellCheck="false"
-            className={`block w-full bg-white placeholder:text-sm md:placeholder:text-base rounded-full p-2 px-3 border-[1.5px] border-gray-200 focus:border-gray-300 focus:outline-none focus:border-[1.5px] focus:ring-0 ${className}`}
+            className={`block w-full bg-white placeholder:text-sm md:placeholder:text-base rounded-2xl p-2 px-3 border-[1.5px] border-gray-200 focus:border-gray-300 focus:outline-none focus:border-[1.5px] focus:ring-0 ${className}`}
             {...etc}
           />
         </div>
@@ -34,4 +38,4 @@ const TextInput = ({
   );
 };
 
-export default TextInput;
+export default TextArea;

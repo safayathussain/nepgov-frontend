@@ -24,7 +24,7 @@ const Search = ({ open, setOpen }) => {
           ></TextInput>
           <CgSearch
             size={25}
-            className="text-secondary w-max absolute top-2 right-3"
+            className="text-secondary w-max absolute top-2 right-3 cursor-pointer"
             onClick={() => console.log("hi")}
           />
         </div>
