@@ -5,8 +5,11 @@ import Button from "@/components/input/Button";
 import TextInput from "@/components/input/TextInput";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FetchApi } from "@/utils/FetchApi";
+import { useDispatch } from "react-redux";
+import { setAuth } from "@/redux/slices/AuthSlice";
 
 const ResetPassword = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     otp: "",
@@ -36,7 +39,7 @@ const ResetPassword = () => {
     try {
       const { data } = await FetchApi({
         method: "post",
-        url: "/auth/verify-otp",
+        url: "/auth/verify-otp-for-pass",
         data: { email: formData.email, otp: formData.otp },
         callback: () =>setStep(3)
       }); 
@@ -51,8 +54,9 @@ const ResetPassword = () => {
         method: "post",
         url: "/auth/reset-password",
         data: { email: formData.email, newPassword: formData.newPassword, otp: formData.otp },
-        callback: () => window.location.href = "/signin"
       }); 
+      dispatch(setAuth(data?.data?.user))
+      window.location.href = "/"
     } catch (error) {
       console.error("Reset password error:", error);
     }

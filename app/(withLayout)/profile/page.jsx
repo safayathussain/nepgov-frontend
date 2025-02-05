@@ -4,69 +4,102 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { BiImageAdd } from "react-icons/bi";
 import TextInput from "@/components/input/TextInput";
 import Button from "@/components/input/Button";
+import { logout, useAuth } from "@/utils/functions";
+import { FetchApi } from "@/utils/FetchApi";
+import { useDispatch } from "react-redux";
+import { setAuth } from "@/redux/slices/AuthSlice";
+import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function ProfilePage() {
+  const dispatch = useDispatch();
+  const { auth } = useAuth();
   const [profileData, setProfileData] = useState({
-    firstName: "",
-    lastName: "",
-    street: "",
-    city: "",
-    state: "",
-    postcode: "",
-    email: "saul.ramirez@gmail.com",
+    firstName: auth?.firstName || "",
+    lastName: auth?.lastName || "",
+    street: auth?.street || "",
+    city: auth?.city || "",
+    state_province: auth?.state_province || "",
+    postCode: auth?.postCode || "",
+  });
+  const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
-
   const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicturePreview, setProfilePicturePreview] = useState(
+    auth?.profilePicture
+      ? `${process.env.NEXT_PUBLIC_BASE_IMAGE_API}${auth?.profilePicture}`
+      : ""
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({ ...prev, [name]: value }));
   };
-
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordData((prev) => ({ ...prev, [name]: value }));
+  };
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setProfilePicture(e.target.files[0]);
+      const file = e.target.files[0];
+      setProfilePicture(file);
+      setProfilePicturePreview(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Prepare the form data
     const formData = new FormData();
-
-    // Append profile data
     Object.entries(profileData).forEach(([key, value]) => {
       formData.append(key, value);
     });
-
-    // Append profile picture if it exists
     if (profilePicture) {
       formData.append("profilePicture", profilePicture);
     }
-
     try {
-      // Replace with your actual API endpoint
-      const response = await fetch("/api/edit-profile", {
-        method: "POST",
-        body: formData,
+      const { data } = await FetchApi({
+        url: `/auth/update-profile/${auth?._id}`,
+        method: "put",
+        data: formData,
+        isToast: true,
       });
-
-      if (response.ok) {
-        // Handle successful update
-        console.log("Profile updated successfully");
-      } else {
-        // Handle error
-        console.error("Failed to update profile");
-      }
+      dispatch(setAuth(data?.data));
     } catch (error) {
       console.error("Error updating profile:", error);
     }
   };
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    // Validate password fields (ensure new and confirm password match)
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      return toast.error("New password and confirm password must match");
+    }
 
+    try {
+      const { data } = await FetchApi({
+        url: `/auth/change-password/${auth?._id}`,
+        method: "post",
+        data: {
+          email: auth?.email,
+          oldPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword,
+        },
+        callback: () => {
+          setPasswordData({
+            confirmPassword: "",
+            currentPassword: "",
+            newPassword: "",
+          });
+        },
+        isToast: true,
+      });
+    } catch (error) {
+      console.error("Error changing password:", error);
+    }
+  };
   return (
     <div className="container py-10">
       <h1 className="text-2xl md:text-3xl font-bold mb-8">My Profile</h1>
@@ -83,10 +116,22 @@ export default function ProfilePage() {
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
               onChange={handleFileChange}
             />
-            <BiImageAdd className="w-12 h-12 text-gray-400 mb-2 group-hover:text-gray-500 transition-colors" />
-            <p className="text-sm text-gray-500 group-hover:text-gray-600 transition-colors text-center">
-              {profilePicture ? profilePicture.name : "Upload Profile Picture"}
-            </p>
+            {profilePicturePreview ? (
+              <Image
+                width={200}
+                height={200}
+                src={profilePicturePreview}
+                alt="Profile Preview"
+                className="w-full h-full object-cover rounded-lg"
+              />
+            ) : (
+              <>
+                <BiImageAdd className="w-12 h-12 text-gray-400 mb-2 group-hover:text-gray-500 transition-colors" />
+                <p className="text-sm text-gray-500 group-hover:text-gray-600 transition-colors text-center">
+                  Upload Profile Picture
+                </p>
+              </>
+            )}
           </div>
         </div>
 
@@ -121,14 +166,14 @@ export default function ProfilePage() {
               />
               <TextInput
                 label="State/Province"
-                name="state"
-                value={profileData.state}
+                name="state_province"
+                value={profileData.state_province}
                 onChange={handleInputChange}
               />
               <TextInput
                 label="Postcode"
-                name="postcode"
-                value={profileData.postcode}
+                name="postCode"
+                value={profileData.postCode}
                 onChange={handleInputChange}
               />
             </div>
@@ -144,8 +189,22 @@ export default function ProfilePage() {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                   onChange={handleFileChange}
                 />
-                <BiImageAdd className="w-12 h-12 text-gray-400 mb-2 group-hover:text-gray-500 transition-colors" />
-                 
+                {profilePicturePreview ? (
+                  <Image
+                    width={200}
+                    height={200}
+                    src={profilePicturePreview}
+                    alt="Profile Preview"
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                ) : (
+                  <>
+                    <BiImageAdd className="w-12 h-12 text-gray-400 mb-2 group-hover:text-gray-500 transition-colors" />
+                    <p className="text-sm text-gray-500 group-hover:text-gray-600 transition-colors text-center">
+                      Upload Profile Picture
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -154,9 +213,10 @@ export default function ProfilePage() {
               Save Changes
             </Button>
           </div>
-          <hr className="mt-5" />
+          <hr className="my-5" />
         </section>
-
+      </form>
+      <form onSubmit={handlePasswordSubmit} className="space-y-8">
         {/* Login Details Section */}
         <section>
           <h2 className="text-xl font-semibold mb-6">Login Details</h2>
@@ -165,7 +225,7 @@ export default function ProfilePage() {
               label="Email Address"
               name="email"
               type="email"
-              value={profileData.email}
+              value={auth.email}
               onChange={handleInputChange}
               disabled
             />
@@ -173,22 +233,22 @@ export default function ProfilePage() {
               label="Current Password"
               name="currentPassword"
               type="password"
-              value={profileData.currentPassword}
-              onChange={handleInputChange}
+              value={passwordData.currentPassword}
+              onChange={handlePasswordChange}
             />
             <TextInput
               label="New Password"
               name="newPassword"
               type="password"
-              value={profileData.newPassword}
-              onChange={handleInputChange}
+              value={passwordData.newPassword}
+              onChange={handlePasswordChange}
             />
             <TextInput
               label="Confirm New Password"
               name="confirmPassword"
               type="password"
-              value={profileData.confirmPassword}
-              onChange={handleInputChange}
+              value={passwordData.confirmPassword}
+              onChange={handlePasswordChange}
             />
           </div>
           <div className="pt-5">
@@ -196,25 +256,21 @@ export default function ProfilePage() {
               Change Password
             </Button>
           </div>
-          <hr className="mt-5" />
+          <hr className="my-5" />
         </section>
-
-        {/* Submit and Logout Buttons */}
-        <div className="flex flex-wrap gap-4">
-          <Button
-            type="button"
-            variant="primary"
-            size="md"
-            onClick={() => {
-              // Handle logout logic here
-              console.log("Logout clicked");
-            }}
-          >
-            Logout
-            <IoLogOutOutline className="inline-block w-5 h-5 ml-2" />
-          </Button>
-        </div>
       </form>
+      {/*   Logout Button */}
+      <div className="flex flex-wrap gap-4">
+        <Button
+          type="button"
+          variant="primary"
+          size="md"
+          onClick={logout}
+        >
+          Logout
+          <IoLogOutOutline className="inline-block w-5 h-5 ml-2" />
+        </Button>
+      </div>
     </div>
   );
 }

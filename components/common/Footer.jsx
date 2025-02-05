@@ -52,7 +52,7 @@ const Footer = () => {
       name: "Log in",
     },
     {
-      route: "/signin",
+      route: "/signup",
       name: "Sign up",
     },
   ];

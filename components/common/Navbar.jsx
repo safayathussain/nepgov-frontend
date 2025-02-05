@@ -12,8 +12,11 @@ import LanguageSelectInput from "../input/NavbarLanguageSelectInput";
 import Button from "../input/Button";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import useClickOutside from "@/hooks/useClickOutside";
+import { useAuth } from "@/utils/functions";
+import Profile from "./Profile";
 
 const Navbar = () => {
+  const { auth } = useAuth();
   const pathname = usePathname();
   const router = useRouter();
   const routes = [
@@ -24,15 +27,6 @@ const Navbar = () => {
     {
       label: "About Us",
       link: "/aboutUs",
-    },
-    {
-      label: (
-        <p className="flex items-center gap-1">
-          Vote Now
-          <RiShareBoxLine />
-        </p>
-      ),
-      link: "/vote",
     },
     {
       label: (
@@ -96,22 +90,31 @@ const Navbar = () => {
               value={selectedLanguage}
               className={"!text-[10px] !border-0 hidden md:block"}
             />
-            <Button
-              variant={"primary-outline"}
-              className={"flex items-center gap-1 !rounded-full"}
-              size="sm"
-              onClick={() => router.push("/login")}
-            >
-              <CgProfile /> Log in
-            </Button>
-            <Button
-              variant={"primary"}
-              className={"  hidden md:flex items-center gap-1 !rounded-full"}
-              size="sm"
-              onClick={() => router.push("/signup")}
-            >
-              <IoMdAdd size={20} /> Sign up
-            </Button>
+            {auth?._id ? (
+              <Link href={'/profile'} >
+              <Profile imgUrl={auth?.profilePicture}/></Link>
+            ) : (
+              <>
+                <Button
+                  variant={"primary-outline"}
+                  className={"flex items-center gap-1 !rounded-full"}
+                  size="sm"
+                  onClick={() => router.push("/login")}
+                >
+                  <CgProfile /> Log in
+                </Button>
+                <Button
+                  variant={"primary"}
+                  className={
+                    "  hidden md:flex items-center gap-1 !rounded-full"
+                  }
+                  size="sm"
+                  onClick={() => router.push("/signup")}
+                >
+                  <IoMdAdd size={20} /> Sign up
+                </Button>
+              </>
+            )}
             {/* Hamburger Menu Icon */}
             <div className="lg:hidden flex items-center cursor-pointer">
               <AiOutlineMenu size={30} onClick={toggleSidebar} />

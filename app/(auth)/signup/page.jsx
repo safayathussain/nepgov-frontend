@@ -3,15 +3,18 @@ import Navbar from "@/components/common/Navbar";
 import Button from "@/components/input/Button";
 import CheckInput from "@/components/input/CheckInput";
 import TextInput from "@/components/input/TextInput";
+import { setAuth } from "@/redux/slices/AuthSlice";
 import { FetchApi } from "@/utils/FetchApi";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
+import { useDispatch } from "react-redux";
 
 const Page = () => {
   const [signUpStep, setSignUpStep] = useState(0);
   const [isNextBtnDisabled, setIsNextBtnDisabled] = useState(true);
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -82,7 +85,7 @@ const Page = () => {
   const handleOtpVerification = async (e) => {
     e.preventDefault();
     try {
-      await FetchApi({
+     const {data} = await FetchApi({
         url: "/auth/verify-otp",
         method: "post",
         data: {
@@ -92,6 +95,7 @@ const Page = () => {
         isToast: true,
         callback: () => setSignUpStep(signUpStep + 1),
       });
+      dispatch(setAuth(data?.data?.user));
     } catch (error) {
       console.error("OTP verification failed:", error);
     }
@@ -242,7 +246,11 @@ const Page = () => {
               </svg>
               <p className="text-2xl pt-5 font-bold">Congratulations</p>
               <p className="py-4">Your account was successfully created.</p>
-              <Button variant="secondary" type="button" onClick={() => router.push("/")}>
+              <Button
+                variant="secondary"
+                type="button"
+                onClick={() => router.push("/")}
+              >
                 Back to Home
               </Button>
             </div>

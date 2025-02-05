@@ -6,8 +6,11 @@ import TextInput from "@/components/input/TextInput";
 import Link from "next/link";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { FetchApi } from "@/utils/FetchApi";
+import { setAuth } from "@/redux/slices/AuthSlice";
+import { useDispatch } from "react-redux";
 
 const SignIn = () => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -27,8 +30,7 @@ const SignIn = () => {
         data: formData,
       });
       if (data?.success) {
-        console.log(data);
-        if (!data.data?.user?.isVerified) {
+        if (!data?.data?.user?.isVerified) {
           await FetchApi({
             method: "post",
             url: "/auth/send-otp",
@@ -36,6 +38,9 @@ const SignIn = () => {
           });
           setStep(2); // Show OTP screen
         } else {
+          console.log(data?.data?.user);
+
+          dispatch(setAuth(data?.data?.user));
           window.location.href = "/";
         }
       } else {
@@ -47,12 +52,13 @@ const SignIn = () => {
 
   const handleVerifyOtp = async () => {
     try {
-      const response = await FetchApi({
+      const { data } = await FetchApi({
         method: "post",
         url: "/auth/verify-otp",
         data: { email: formData.email, otp: formData.code },
-        callback: () => window.location.href = "/"
-      }); 
+      });
+      dispatch(setAuth(data?.data?.user));
+      window.location.href = "/";
     } catch (error) {
       console.error("OTP verification error:", error);
     }
@@ -80,7 +86,12 @@ const SignIn = () => {
                 onChange={handleChange}
               />
               <div className="flex justify-end">
-                <Link className=" underline text-secondary" href={'/forget-pass'}>Forget password?</Link>
+                <Link
+                  className=" underline text-secondary"
+                  href={"/forget-pass"}
+                >
+                  Forget password?
+                </Link>
               </div>
               <Button
                 variant="secondary"
