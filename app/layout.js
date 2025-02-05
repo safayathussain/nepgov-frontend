@@ -1,5 +1,6 @@
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import Providers from "@/components/common/Providers";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -13,13 +14,10 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const theme = {
-    primary: "#3560AD",
-  };
   return (
     <html lang="en">
       <body className={`${dmSans.variable} bg-white text-black`}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
