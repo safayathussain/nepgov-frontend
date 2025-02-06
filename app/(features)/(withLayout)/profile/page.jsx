@@ -66,7 +66,7 @@ export default function ProfilePage() {
         data: formData,
         isToast: true,
       });
-      dispatch(setAuth(data?.data));
+      dispatch(setAuth({...auth, ...data?.data}));
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -225,7 +225,7 @@ export default function ProfilePage() {
               label="Email Address"
               name="email"
               type="email"
-              value={auth.email}
+              value={auth?.email}
               onChange={handleInputChange}
               disabled
             />

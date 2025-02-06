@@ -1,7 +1,9 @@
+"use client";
 import axios from "axios";
-import toast from "react-hot-toast"; 
+import toast from "react-hot-toast";
+import { store } from "@/redux/store";
+import { logout } from "./functions";
 
- 
 export const FetchApi = async ({
   method = "get",
   url = "",
@@ -9,11 +11,12 @@ export const FetchApi = async ({
   callback = () => {},
   isToast = "",
 }) => {
+  let acceptCookie = localStorage.getItem("acceptCookie");
   let instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BASE_API, // Set a base URL for all requests
     headers: {
-      // Authorization: `Bearer ${token || ""}`,
-      // "Content-Type": "application/json",
+      Authorization: `Bearer ${store.getState().auth?.user?.accessToken || ""}`,
+      "x-user-consent": acceptCookie || "",
     },
     withCredentials: true,
   });
@@ -39,6 +42,9 @@ export const FetchApi = async ({
     }
     return res;
   } catch (error) {
+    if (error?.response?.status === 401) {
+      return logout();
+    }
     console.error("Request failed:", error);
     toast.error(
       `${
