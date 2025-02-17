@@ -1,11 +1,27 @@
-import React from 'react'
+"use client";
+import { FetchApi } from "@/utils/FetchApi";
+import React, { useEffect, useState } from "react";
 
 const page = () => {
-  return (
-    <div className='py-20'>
-        
-    </div>
-  )
-}
+  const [content, setcontent] = useState("");
+  const [title, settitle] = useState("");
+  useEffect(() => {
+    const loadData = async () => {
+      const { data } = await FetchApi({ url: "/static-page/page/terms-and-conditions" });
+      setcontent(data?.data?.content);
+      settitle(data?.data?.title);
+    };
+    loadData();
+  }, []);
 
-export default page
+  return (
+    <div className="container">
+      <div className="container py-20">
+        <p className="text-4xl mb-5 font-semibold">{title}</p>
+        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+      </div>
+    </div>
+  );
+};
+
+export default page;

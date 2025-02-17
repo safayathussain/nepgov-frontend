@@ -7,7 +7,7 @@ const page = () => {
   const [title, settitle] = useState("");
   useEffect(() => {
     const loadData = async () => {
-      const { data } = await FetchApi({ url: "/static-page/page/cookie-policy" });
+      const { data } = await FetchApi({ url: "/static-page/page/about-us" });
       setcontent(data?.data?.content);
       settitle(data?.data?.title);
     };

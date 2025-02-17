@@ -26,7 +26,7 @@ const Navbar = () => {
     },
     {
       label: "About Us",
-      link: "/aboutUs",
+      link: "/about-us",
     },
     {
       label: (

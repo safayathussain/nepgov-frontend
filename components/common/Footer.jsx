@@ -36,7 +36,7 @@ const Footer = () => {
       name: "Home",
     },
     {
-      route: "/aboutUs",
+      route: "/about-us",
       name: "About",
     },
     {

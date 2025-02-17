@@ -8,8 +8,10 @@ import Image from "next/image";
 import ArticleStatus from "@/components/common/ArticleStatus";
 import { ImgUrl } from "@/utils/constants";
 import { timeAgo } from "@/utils/functions";
+import { useEffect, useState } from "react";
 
 export default function Articles({ articles }) {
+   
   return (
     <div className="my-20">
       <div className="flex justify-between">
@@ -90,7 +92,7 @@ export default function Articles({ articles }) {
       >
         {articles?.map((item) => (
           <SwiperSlide key={item?._id}>
-            <Link href={"/article/1"}>
+            <Link href={`/article/${item?._id}`}>
               <div className="p-5 border border-[#EBEBEB] shadow-medium h-full">
                 <Image
                   src={ImgUrl + item?.thumbnail}

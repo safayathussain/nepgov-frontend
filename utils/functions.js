@@ -20,6 +20,12 @@ export const isLive = (dateString) => {
   return givenDate > currentDate;
 };
 
+export const formatDateTimeLocal = (date) => {
+  if (!date) return ""; // Handle null/undefined values
+  const parsedDate = new Date(date);
+  if (isNaN(parsedDate.getTime())) return ""; // Handle invalid dates
+  return parsedDate.toISOString().slice(0, 16); // Format for input[type="datetime-local"]
+};
 
 export function timeAgo(postTime) {
   const now = new Date();
@@ -63,3 +69,20 @@ export function timeLeft(futureTime) {
   if (months < 12) return `${months} months left`;
   return `${years} years left`;
 }
+export function formatReadableDate(dateInput) {
+  const date = new Date(dateInput);
+
+  if (isNaN(date)) return "Invalid Date";
+
+  const options = { 
+    day: "2-digit", 
+    month: "short", 
+    year: "numeric", 
+    hour: "2-digit", 
+    minute: "2-digit", 
+    hour12: true 
+  };
+
+  return date.toLocaleString("en-GB", options).replace(",", "");
+}
+ 

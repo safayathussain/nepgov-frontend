@@ -105,3 +105,7 @@ input[type="radio"]:checked {
 .swiper-slide {
   height: auto !important;
 }
+ul {
+  list-style-type: disc; /* Ensure bullets appear */
+  padding-left: 20px; /* Add spacing */
+}
