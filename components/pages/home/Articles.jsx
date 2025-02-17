@@ -6,9 +6,10 @@ import Link from "next/link";
 import { Navigation } from "swiper/modules";
 import Image from "next/image";
 import ArticleStatus from "@/components/common/ArticleStatus";
+import { ImgUrl } from "@/utils/constants";
+import { timeAgo } from "@/utils/functions";
 
-
-export default function Articles() {
+export default function Articles({ articles }) {
   return (
     <div className="my-20">
       <div className="flex justify-between">
@@ -19,7 +20,10 @@ export default function Articles() {
           </Link>
         </div>
         <div className="flex gap-3 relative">
-          <button className="swiper-button-prev-article" aria-label="Previous Slide">
+          <button
+            className="swiper-button-prev-article"
+            aria-label="Previous Slide"
+          >
             <svg
               width="39"
               height="38"
@@ -42,7 +46,10 @@ export default function Articles() {
               />
             </svg>
           </button>
-          <button className="swiper-button-next-article" aria-label="Next Slide">
+          <button
+            className="swiper-button-next-article"
+            aria-label="Next Slide"
+          >
             <svg
               width="38"
               height="38"
@@ -81,62 +88,31 @@ export default function Articles() {
           1024: { slidesPerView: 3 }, // lg
         }}
       >
-        <SwiperSlide>
-          <Link href={'/article/1'}>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <ArticleStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            
-          </div>
-          </Link>
-        </SwiperSlide> 
-        <SwiperSlide>
-          <Link href={'/article/1'}>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <ArticleStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            
-          </div>
-          </Link>
-        </SwiperSlide> 
-        <SwiperSlide>
-          <Link href={'/article/1'}>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <ArticleStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            
-          </div>
-          </Link>
-        </SwiperSlide> 
-        <SwiperSlide>
-          <Link href={'/article/1'}>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <ArticleStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            
-          </div>
-          </Link>
-        </SwiperSlide> 
+        {articles?.map((item) => (
+          <SwiperSlide key={item?._id}>
+            <Link href={"/article/1"}>
+              <div className="p-5 border border-[#EBEBEB] shadow-medium h-full">
+                <Image
+                  src={ImgUrl + item?.thumbnail}
+                  width={363}
+                  height={180}
+                  alt=""
+                  className="w-full coverImage"
+                ></Image>
+                <div className="flex justify-between py-3">
+                  <ArticleStatus />
+                  <p>{item?.categories?.[0]?.name}</p>
+                </div>
+                <p className="text-xl font-semibold leading-tight">
+                  {item?.title}
+                </p>
+                <p className="text-sm text-gray-400">
+                  {timeAgo(item?.createdAt)}
+                </p>
+              </div>
+            </Link>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

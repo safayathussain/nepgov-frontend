@@ -5,6 +5,7 @@ import CheckInput from "@/components/input/CheckInput";
 import TextInput from "@/components/input/TextInput";
 import { setAuth } from "@/redux/slices/AuthSlice";
 import { FetchApi } from "@/utils/FetchApi";
+import { useAuth } from "@/utils/functions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
@@ -12,6 +13,11 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 
 const Page = () => {
+  const router = useRouter();
+  const { auth } = useAuth();
+  useEffect(() => {
+    if (auth?._id) return router.push("/");
+  }, []);
   const [signUpStep, setSignUpStep] = useState(0);
   const [isNextBtnDisabled, setIsNextBtnDisabled] = useState(true);
   const dispatch = useDispatch();
@@ -24,7 +30,6 @@ const Page = () => {
     postCode: "",
     code: "",
   });
-  const router = useRouter();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -85,7 +90,7 @@ const Page = () => {
   const handleOtpVerification = async (e) => {
     e.preventDefault();
     try {
-     const {data} = await FetchApi({
+      const { data } = await FetchApi({
         url: "/auth/verify-otp",
         method: "post",
         data: {

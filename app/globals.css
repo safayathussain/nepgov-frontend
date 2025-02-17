@@ -96,3 +96,12 @@ input[type="radio"]:checked {
   background-color: #f5f7fb;
   color: #3c55a5;
 }
+
+
+.coverImage {
+  aspect-ratio: calc(16/9);
+  object-fit: cover;
+} 
+.swiper-slide {
+  height: auto !important;
+}

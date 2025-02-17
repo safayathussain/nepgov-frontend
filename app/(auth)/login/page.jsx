@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/common/Navbar";
 import Button from "@/components/input/Button";
 import TextInput from "@/components/input/TextInput";
@@ -8,8 +8,15 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { FetchApi } from "@/utils/FetchApi";
 import { setAuth } from "@/redux/slices/AuthSlice";
 import { useDispatch } from "react-redux";
+import { useAuth } from "@/utils/functions";
+import { useRouter } from "next/navigation";
 
 const SignIn = () => {
+  const { auth } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (auth?._id) return router.push("/");
+  }, []);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",

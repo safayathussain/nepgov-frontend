@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoLogOutOutline } from "react-icons/io5";
 import { BiImageAdd } from "react-icons/bi";
 import TextInput from "@/components/input/TextInput";
@@ -10,10 +10,15 @@ import { useDispatch } from "react-redux";
 import { setAuth } from "@/redux/slices/AuthSlice";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const { auth } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (!auth?._id) return router.push("/");
+  }, []);
   const [profileData, setProfileData] = useState({
     firstName: auth?.firstName || "",
     lastName: auth?.lastName || "",
@@ -66,7 +71,7 @@ export default function ProfilePage() {
         data: formData,
         isToast: true,
       });
-      dispatch(setAuth({...auth, ...data?.data}));
+      dispatch(setAuth({ ...auth, ...data?.data }));
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -261,12 +266,7 @@ export default function ProfilePage() {
       </form>
       {/*   Logout Button */}
       <div className="flex flex-wrap gap-4">
-        <Button
-          type="button"
-          variant="primary"
-          size="md"
-          onClick={logout}
-        >
+        <Button type="button" variant="primary" size="md" onClick={logout}>
           Logout
           <IoLogOutOutline className="inline-block w-5 h-5 ml-2" />
         </Button>

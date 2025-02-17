@@ -6,9 +6,20 @@ import Link from "next/link";
 import { Navigation } from "swiper/modules";
 import Image from "next/image";
 import SurveyStatus from "@/components/common/SurveyStatus";
+import { isLive, timeAgo, timeLeft } from "@/utils/functions";
+import { ImgUrl } from "@/utils/constants";
 
+export default function Surveys({ surveys }) {
+  function calculateVotedCount(questions) {
+    const totalVotedCount = questions.reduce((total, question) => {
+      return (
+        total +
+        question.options.reduce((sum, option) => sum + option.votedCount, 0)
+      );
+    }, 0);
 
-export default function Surveys() {
+    return totalVotedCount;
+  }
   return (
     <div className="my-20">
       <div className="flex justify-between">
@@ -75,60 +86,44 @@ export default function Surveys() {
           prevEl: ".swiper-button-prev",
           nextEl: ".swiper-button-next",
         }}
-        className="mt-5"
+        className="mt-5  "
         breakpoints={{
           768: { slidesPerView: 2 }, // md
           1024: { slidesPerView: 3 }, // lg
         }}
       >
-        <SwiperSlide>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <SurveyStatus/>
-              <p>POLITICS</p>
+        {surveys?.map((item) => (
+          <SwiperSlide key={item?._id}>
+            <div className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full">
+              <div>
+                <Image
+                  src={ImgUrl + item?.thumbnail}
+                  width={363}
+                  height={180}
+                  alt=""
+                  className="w-full coverImage"
+                ></Image>
+                <div className="flex justify-between py-3 ">
+                  <SurveyStatus />
+                  <p> {item?.categories?.[0]?.name}</p>
+                </div>
+                <p className="text-xl font-semibold leading-tight">
+                  {item?.topic}
+                </p>
+              </div>
+              <div className="mt-auto">
+                <p className="text-sm text-gray-400 ">
+                  {isLive(item?.liveEndedAt)
+                    ? timeLeft(item?.liveEndedAt)
+                    : timeAgo(item?.liveEndedAt)}
+                </p>
+                <p className="text-primary font-semibold text-xl mt-2">
+                  {calculateVotedCount(item?.questions)} people voted
+                </p>
+              </div>
             </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            <p className="text-primary font-semibold text-xl mt-2">2000 people voted</p>
-          </div>
-        </SwiperSlide> 
-        <SwiperSlide>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <SurveyStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            <p className="text-primary font-semibold text-xl mt-2">2000 people voted</p>
-          </div>
-        </SwiperSlide> 
-        <SwiperSlide>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <SurveyStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            <p className="text-primary font-semibold text-xl mt-2">2000 people voted</p>
-          </div>
-        </SwiperSlide> 
-        <SwiperSlide>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <SurveyStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            <p className="text-primary font-semibold text-xl mt-2">2000 people voted</p>
-          </div>
-        </SwiperSlide> 
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

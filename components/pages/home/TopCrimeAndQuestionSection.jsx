@@ -1,10 +1,11 @@
-"use client"
+"use client";
+import { isLive } from "@/utils/functions";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { GoDotFill } from "react-icons/go";
 
-const TopCrimeAndQuestionSection = () => {
-  const router = useRouter()
+const TopCrimeAndQuestionSection = ({ hero }) => {
+  const router = useRouter();
   return (
     <div>
       <div className="text-white flex flex-col lg:flex-row gap-5 mt-8">
@@ -22,7 +23,10 @@ const TopCrimeAndQuestionSection = () => {
             <p>Your anonymity is 100% guaranteed.</p>
           </div>
           <div className="">
-            <button onClick={() => router.push('/send-crime-info')} className="w-full bg-white text-secondary font-semibold rounded-full py-2">
+            <button
+              onClick={() => router.push("/send-crime-info")}
+              className="w-full bg-white text-secondary font-semibold rounded-full py-2"
+            >
               Give Information Here
             </button>
           </div>
@@ -31,13 +35,14 @@ const TopCrimeAndQuestionSection = () => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <p>Daily Question</p>
-              <p className="flex items-center gap-2">
-                Live <GoDotFill />
-              </p>
+              {isLive(hero?.dailyQuestion?.liveEndedAt) && (
+                <p className="flex items-center gap-2">
+                  Live <GoDotFill />
+                </p>
+              )}
             </div>
             <p className="text-xl font-semibold">
-              Will advice to drink less change how much alcohol you drink this
-              Christmas? Plus, present wrapping, and Christmas pudding
+              {hero?.dailyQuestion?.topic}
             </p>
           </div>
           <button className="w-full bg-white text-secondary font-semibold rounded-full py-2">

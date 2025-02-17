@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/common/Navbar";
 import Button from "@/components/input/Button";
 import TextInput from "@/components/input/TextInput";
@@ -7,8 +7,15 @@ import { IoArrowBackOutline } from "react-icons/io5";
 import { FetchApi } from "@/utils/FetchApi";
 import { useDispatch } from "react-redux";
 import { setAuth } from "@/redux/slices/AuthSlice";
+import { useAuth } from "@/utils/functions";
+import { useRouter } from "next/navigation";
 
 const ResetPassword = () => {
+  const router = useRouter();
+  const { auth } = useAuth();
+  useEffect(() => {
+    if (auth?._id) return router.push("/");
+  }, []);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -27,9 +34,8 @@ const ResetPassword = () => {
         method: "post",
         url: "/auth/send-otp",
         data: { email: formData.email },
-        callback: () =>setStep(2)
-
-      }); 
+        callback: () => setStep(2),
+      });
     } catch (error) {
       console.error("Send OTP error:", error);
     }
@@ -41,8 +47,8 @@ const ResetPassword = () => {
         method: "post",
         url: "/auth/verify-otp-for-pass",
         data: { email: formData.email, otp: formData.otp },
-        callback: () =>setStep(3)
-      }); 
+        callback: () => setStep(3),
+      });
     } catch (error) {
       console.error("OTP verification error:", error);
     }
@@ -53,10 +59,14 @@ const ResetPassword = () => {
       const { data } = await FetchApi({
         method: "post",
         url: "/auth/reset-password",
-        data: { email: formData.email, newPassword: formData.newPassword, otp: formData.otp },
-      }); 
-      dispatch(setAuth(data?.data?.user))
-      window.location.href = "/"
+        data: {
+          email: formData.email,
+          newPassword: formData.newPassword,
+          otp: formData.otp,
+        },
+      });
+      dispatch(setAuth(data?.data?.user));
+      window.location.href = "/";
     } catch (error) {
       console.error("Reset password error:", error);
     }
@@ -70,8 +80,17 @@ const ResetPassword = () => {
           {step === 1 && (
             <>
               <p className="text-2xl mb-5 font-bold">Reset Password</p>
-              <TextInput label="Email Address" name="email" value={formData.email} onChange={handleChange} />
-              <Button variant="secondary" className="w-full" onClick={handleSendOtp}>
+              <TextInput
+                label="Email Address"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={handleSendOtp}
+              >
                 Send OTP
               </Button>
             </>
@@ -79,10 +98,22 @@ const ResetPassword = () => {
 
           {step === 2 && (
             <>
-              <IoArrowBackOutline className="text-2xl cursor-pointer text-secondary" onClick={() => setStep(1)} />
+              <IoArrowBackOutline
+                className="text-2xl cursor-pointer text-secondary"
+                onClick={() => setStep(1)}
+              />
               <p className="text-2xl pt-5 font-bold">Verify OTP</p>
-              <TextInput label="OTP" name="otp" value={formData.otp} onChange={handleChange} />
-              <Button variant="secondary" className="w-full" onClick={handleVerifyOtp}>
+              <TextInput
+                label="OTP"
+                name="otp"
+                value={formData.otp}
+                onChange={handleChange}
+              />
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={handleVerifyOtp}
+              >
                 Verify OTP
               </Button>
             </>
@@ -90,10 +121,23 @@ const ResetPassword = () => {
 
           {step === 3 && (
             <>
-              <IoArrowBackOutline className="text-2xl cursor-pointer text-secondary" onClick={() => setStep(2)} />
+              <IoArrowBackOutline
+                className="text-2xl cursor-pointer text-secondary"
+                onClick={() => setStep(2)}
+              />
               <p className="text-2xl pt-5 font-bold">Enter New Password</p>
-              <TextInput label="New Password" name="newPassword" type="password" value={formData.newPassword} onChange={handleChange} />
-              <Button variant="secondary" className="w-full" onClick={handleResetPassword}>
+              <TextInput
+                label="New Password"
+                name="newPassword"
+                type="password"
+                value={formData.newPassword}
+                onChange={handleChange}
+              />
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={handleResetPassword}
+              >
                 Reset Password
               </Button>
             </>

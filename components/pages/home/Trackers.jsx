@@ -7,9 +7,18 @@ import { Navigation } from "swiper/modules";
 import Image from "next/image";
 import TrackerStatus from "@/components/common/TrackerStatus";
 import SimpleChart from "@/components/chart/SimpleChart";
+import { isLive, timeAgo, timeLeft } from "@/utils/functions";
 
+export default function Trackers({ trackers }) {
+  function calculateVotedCount(options) {
+    const totalVotedCount = options.reduce((total, question) => {
+      return (
+        total + options.reduce((sum, option) => sum + option.votedCount, 0)
+      );
+    }, 0);
 
-export default function Trackers() {
+    return totalVotedCount;
+  }
   return (
     <div className="my-20">
       <div className="flex justify-between">
@@ -20,7 +29,10 @@ export default function Trackers() {
           </Link>
         </div>
         <div className="flex gap-3 relative">
-          <button className="home-tracker-swiper-button-prev" aria-label="Previous Slide">
+          <button
+            className="home-tracker-swiper-button-prev"
+            aria-label="Previous Slide"
+          >
             <svg
               width="39"
               height="38"
@@ -43,7 +55,10 @@ export default function Trackers() {
               />
             </svg>
           </button>
-          <button className="home-tracker-swiper-button-next" aria-label="Next Slide">
+          <button
+            className="home-tracker-swiper-button-next"
+            aria-label="Next Slide"
+          >
             <svg
               width="38"
               height="38"
@@ -82,66 +97,34 @@ export default function Trackers() {
           1024: { slidesPerView: 3 }, // lg
         }}
       >
-        <SwiperSlide>
-          <Link href={'/report/tracker/1'}>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <TrackerStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            <SimpleChart height={150}/>
-            <p className="text-secondary font-semibold text-xl mt-2">2000 people voted</p>
-          </div>
-          </Link>
-        </SwiperSlide>  
-        <SwiperSlide>
-          <Link href={'/report/tracker/1'}>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <TrackerStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            <SimpleChart height={150}/>
-            <p className="text-secondary font-semibold text-xl mt-2">2000 people voted</p>
-          </div>
-          </Link>
-        </SwiperSlide>  
-        <SwiperSlide>
-          <Link href={'/report/tracker/1'}>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <TrackerStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            <SimpleChart height={150}/>
-            <p className="text-secondary font-semibold text-xl mt-2">2000 people voted</p>
-          </div>
-          </Link>
-        </SwiperSlide>  
-        <SwiperSlide>
-          <Link href={'/report/tracker/1'}>
-          <div className="p-5 border border-[#EBEBEB] shadow-medium">
-            <Image src={'https://i.ibb.co.com/r0W0hdP/image-1.png'} width={363} height={180} alt="" className="w-full"></Image>
-            <div className="flex justify-between py-3">
-              <TrackerStatus/>
-              <p>POLITICS</p>
-            </div>
-            <p className="text-xl font-semibold leading-tight">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-            <p className="text-sm text-gray-400">about 2 hours ago</p>
-            <SimpleChart height={150}/>
-            <p className="text-secondary font-semibold text-xl mt-2">2000 people voted</p>
-          </div>
-          </Link>
-        </SwiperSlide>  
+        {trackers?.map((item) => (
+          <SwiperSlide key={item?._id}>
+            <Link href={"/report/tracker/1"}>
+              <div className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex justify-between py-3">
+                    <TrackerStatus />
+                    <p> {item?.categories?.[0]?.name}</p>
+                  </div>
+                  <p className="text-xl font-semibold leading-tight">
+                    {item?.topic}
+                  </p>
+                </div>
+                <div>
+                  <SimpleChart height={150} />
+                  <p className="text-sm text-gray-400">
+                    {isLive(item?.liveEndedAt)
+                      ? timeLeft(item?.liveEndedAt)
+                      : timeAgo(item?.liveEndedAt)}
+                  </p>
+                  <p className="text-secondary font-semibold text-xl mt-2">
+                    {calculateVotedCount(item?.options)} people voted
+                  </p>
+                </div>
+              </div>
+            </Link>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

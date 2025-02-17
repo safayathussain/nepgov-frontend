@@ -1,8 +1,10 @@
 import TextInput from "@/components/input/TextInput";
-import React from "react";
+import Link from "next/link";
+import React, { useState } from "react";
 import { CgClose, CgSearch } from "react-icons/cg";
 
-const Search = ({ open, setOpen }) => {
+const Search = ({ open, setOpen, categories, articles, surveys, trackers }) => {
+  const [search, setsearch] = useState("");
   return (
     <div
       className={`fixed  w-screen overflow-y-scroll h-screen bg-white duration-300 z-50 p-5 ${
@@ -21,6 +23,7 @@ const Search = ({ open, setOpen }) => {
           <TextInput
             placeholder={"Searh here..."}
             className={"w-full"}
+            onChange={(e) => setsearch(e.target.value.toLowerCase())}
           ></TextInput>
           <CgSearch
             size={25}
@@ -40,21 +43,42 @@ const Search = ({ open, setOpen }) => {
               <h3 className="text-2xl font-bold text-gray-900 mb-3">
                 Articles
               </h3>
-              <p className="text-gray-600">
-                Lorem ipsum dolor sit amet consectetur.
-                <br />
-                Enim ultrices quisque proin leo.
-              </p>
+              <div className="flex flex-col gap-3">
+                {articles
+                  .filter((item) => item.title.toLowerCase().includes(search))
+                  .map((item) => (
+                    <Link key={item._id} className="!text-[16px] text-gray-500" href={""}>
+                      {item?.title}
+                    </Link>
+                  ))}
+              </div>
             </div>
 
             {/* Tracker Section */}
             <div className="mb-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Tracker</h3>
-              <p className="text-gray-600">
-                Lorem ipsum dolor sit amet consectetur.
-                <br />
-                Enim ultrices quisque proin leo.
-              </p>
+              <div className="flex flex-col gap-3">
+                {trackers
+                  .filter((item) => item.topic.toLowerCase().includes(search))
+                  .map((item) => (
+                    <Link key={item._id} className="!text-[16px] text-gray-500" href={""}>
+                      {item?.topic}
+                    </Link>
+                  ))}
+              </div>
+            </div>
+            {/* Survey Section */}
+            <div className="mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Survey</h3>
+              <div className="flex flex-col gap-3">
+                {surveys
+                  .filter((item) => item.topic.toLowerCase().includes(search))
+                  .map((item) => (
+                    <Link  key={item._id} className="!text-[16px] text-gray-500" href={""}>
+                      {item?.topic}
+                    </Link>
+                  ))}
+              </div>
             </div>
           </div>
 
@@ -65,42 +89,15 @@ const Search = ({ open, setOpen }) => {
             </h2>
 
             <nav className="space-y-3">
-              <a
-                href="#"
-                className="block text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Business & Economy
-              </a>
-              <a
-                href="#"
-                className="block text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Digital and Technology
-              </a>
-              <a
-                href="#"
-                className="block text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Entertainment, Arts and Culture
-              </a>
-              <a
-                href="#"
-                className="block text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Health, Medicine and Beauty
-              </a>
-              <a
-                href="#"
-                className="block text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                International
-              </a>
-              <a
-                href="#"
-                className="block text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Politics and Current Affairs
-              </a>
+              {categories.map((item) => (
+                <Link
+                  key={item._id}
+                  href={`/category/${item._id}`}
+                  className="block text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  {item.name}
+                </Link>
+              ))}
             </nav>
           </div>
         </div>
