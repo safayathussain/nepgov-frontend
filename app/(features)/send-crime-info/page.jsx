@@ -6,7 +6,6 @@ import CrimeOrIncident from "@/components/pages/crime/CrimeOrIncident";
 import CrimePersonInfo from "@/components/pages/crime/CrimePersonInfo";
 import CrimeType from "@/components/pages/crime/CrimeType";
 import { FetchApi } from "@/utils/FetchApi";
-import dayjs from "dayjs";
 import React, { useState } from "react";
 
 const CrimeReportForm = () => {

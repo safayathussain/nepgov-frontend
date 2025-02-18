@@ -12,6 +12,9 @@
 .p-dropdown-label {
   padding: 9px !important;
 }
+.p-dropdown-items {
+  padding: 0px !important;
+}
 .p-placeholder {
   color: #a1a1a1 !important;
 }
