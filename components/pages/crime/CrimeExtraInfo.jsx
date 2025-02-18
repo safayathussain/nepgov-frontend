@@ -21,7 +21,9 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
                   hasVehicle: "yes",
                 }))
               }
-              variant="primary-outline"
+              variant={
+                formData?.hasVehicle !== "yes" ? "primary-outline" : "primary"
+              }
             >
               Yes
             </Button>
@@ -30,10 +32,12 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               onClick={() =>
                 setFormData((prev) => ({
                   ...prev,
-                  hasVehicle: "No",
+                  hasVehicle: "no",
                 }))
               }
-              variant="primary-outline"
+              variant={
+                formData?.hasVehicle !== "no" ? "primary-outline" : "primary"
+              }
             >
               No
             </Button>
@@ -42,10 +46,14 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               onClick={() =>
                 setFormData((prev) => ({
                   ...prev,
-                  hasVehicle: "dontknow",
+                  hasVehicle: "dontKnow",
                 }))
               }
-              variant="primary-outline"
+              variant={
+                formData?.hasVehicle !== "dontKnow"
+                  ? "primary-outline"
+                  : "primary"
+              }
             >
               Don't Know
             </Button>
@@ -58,7 +66,7 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
             weapon/weapons?
           </h2>
           <div className="flex gap-2 flex-wrap">
-          <Button
+            <Button
               type="button"
               onClick={() =>
                 setFormData((prev) => ({
@@ -66,7 +74,9 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
                   hasWeapon: "yes",
                 }))
               }
-              variant="primary-outline"
+              variant={
+                formData?.hasWeapon !== "yes" ? "primary-outline" : "primary"
+              }
             >
               Yes
             </Button>
@@ -75,10 +85,12 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               onClick={() =>
                 setFormData((prev) => ({
                   ...prev,
-                  hasWeapon: "No",
+                  hasWeapon: "no",
                 }))
               }
-              variant="primary-outline"
+              variant={
+                formData?.hasWeapon !== "no" ? "primary-outline" : "primary"
+              }
             >
               No
             </Button>
@@ -87,14 +99,17 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               onClick={() =>
                 setFormData((prev) => ({
                   ...prev,
-                  hasWeapon: "dontknow",
+                  hasWeapon: "dontKnow",
                 }))
               }
-              variant="primary-outline"
+              variant={
+                formData?.hasWeapon !== "dontKnow"
+                  ? "primary-outline"
+                  : "primary"
+              }
             >
               Don't Know
             </Button>
-             
           </div>
         </div>
 
@@ -110,20 +125,26 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
           <div className="flex gap-4 flex-col sm:flex-row">
             <button
               type="button"
-              className="px-4 py-2 bg-primary text-white rounded"
+              className={`px-4 py-2 rounded cursor-pointer w-full sm:w-1/2 ${
+                formData?.keepInContact
+                  ? "bg-primary text-white"
+                  : "text-primary border"
+              }`}
               onClick={() => {
-                setFormData((prev) => ({ ...prev, keepInContact: "yes" }));
-                handleNext();
+                setFormData((prev) => ({ ...prev, keepInContact: true }));
               }}
             >
               Yes create me an anonymous log in case you have more questions
             </button>
             <button
               type="button"
-              className="px-4 py-2 border rounded"
+              className={`px-4 py-2 rounded cursor-pointer w-full sm:w-1/2 ${
+                !formData?.keepInContact
+                  ? "bg-primary text-white"
+                  : "text-primary border"
+              }`}
               onClick={() => {
-                setFormData((prev) => ({ ...prev, keepInContact: "no" }));
-                handleNext();
+                setFormData((prev) => ({ ...prev, keepInContact: false }));
               }}
             >
               No, I've given you all the info you will need
@@ -152,9 +173,13 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               Go back
             </Button>
             <Button
-              type="button"
-              onClick={handleNext}
+              type="submit"
               className={"flex items-center"}
+              disabled={
+                !formData?.hasVehicle ||
+                !formData?.hasWeapon ||
+                !formData?.acceptTerms
+              }
             >
               Continue
               <CgChevronRight size={25} />

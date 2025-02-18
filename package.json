@@ -9,11 +9,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/lab": "^6.0.0-beta.27",
+    "@mui/material": "^6.4.4",
+    "@mui/x-date-pickers": "^7.27.0",
     "@reduxjs/toolkit": "^2.5.1",
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "chartjs-plugin-annotation": "^3.1.0",
     "cookie": "^1.0.2",
+    "date-fns": "^2.28.0",
+    "dayjs": "^1.11.13",
     "flowbite": "^2.5.2",
     "flowbite-react": "^0.10.2",
     "jwt-decode": "^4.0.0",

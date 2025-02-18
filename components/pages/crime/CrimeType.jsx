@@ -17,9 +17,9 @@ const CrimeType = ({
         <CheckInput
           id="urgentConfirmation"
           label="I confirm that this form is not being used to report something that requires urgent Police attention"
-          value={formData.acceptTerms}
+          value={formData.confirmNoPoliceAttention}
           setValue={(checked) =>
-            setFormData((prev) => ({ ...prev, acceptTerms: checked }))
+            setFormData((prev) => ({ ...prev, confirmNoPoliceAttention: checked }))
           }
           required
         />
@@ -29,10 +29,10 @@ const CrimeType = ({
         </h2>
 
         <DropdownInput
-          name="crimeDescription"
-          value={formData.crimeDescription}
+          name="crimeType"
+          value={formData.crimeType}
           setValue={(value) =>
-            setFormData((prev) => ({ ...prev, crimeDescription: value }))
+            setFormData((prev) => ({ ...prev, crimeType: value }))
           }
           options={crimeOptions}
           className="!rounded-full mb-6"
@@ -53,6 +53,7 @@ const CrimeType = ({
             type="button"
             onClick={handleNext}
             className={"flex items-center"}
+            disabled={!formData?.confirmNoPoliceAttention || !formData?.crimeType}
           >
             Continue
             <CgChevronRight size={25} />

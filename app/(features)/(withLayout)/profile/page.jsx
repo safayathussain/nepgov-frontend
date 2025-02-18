@@ -11,6 +11,7 @@ import { setAuth } from "@/redux/slices/AuthSlice";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { ImgUrl } from "@/utils/constants";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ export default function ProfilePage() {
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePicturePreview, setProfilePicturePreview] = useState(
     auth?.profilePicture
-      ? `${process.env.NEXT_PUBLIC_BASE_IMAGE_API}${auth?.profilePicture}`
+      ? `${ImgUrl}${auth?.profilePicture}`
       : ""
   );
 

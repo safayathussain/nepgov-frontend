@@ -1,5 +1,5 @@
 import Button from "@/components/input/Button";
-import CheckInput from "@/components/input/CheckInput";
+import DateTimePickerComponent from "@/components/input/DateTimePicker";
 import TextArea from "@/components/input/TextArea";
 import TextInput from "@/components/input/TextInput";
 import React from "react";
@@ -11,6 +11,7 @@ const CrimeOrIncident = ({
   handleBack,
   handleNext,
   handleInputChange,
+  handleDateChange
 }) => {
   return (
     <div>
@@ -48,10 +49,10 @@ const CrimeOrIncident = ({
               onClick={() =>
                 setFormData((prev) => ({
                   ...prev,
-                  dateKnown: "yes",
+                  dateKnown: true,
                 }))
               }
-              variant="primary-outline"
+              variant={!formData?.dateKnown ? "primary-outline" : "primary"}
             >
               Yes
             </Button>
@@ -60,21 +61,22 @@ const CrimeOrIncident = ({
               onClick={() =>
                 setFormData((prev) => ({
                   ...prev,
-                  dateKnown: "No",
+                  dateKnown: false,
                 }))
               }
-              variant="primary-outline"
+              variant={formData?.dateKnown ? "primary-outline" : "primary"}
             >
               No
             </Button>
           </div>
-          {formData.dateKnown === "yes" && (
-            <TextInput
+          {formData.dateKnown === true && (
+            <DateTimePickerComponent
               label="When did it happen?"
-              id="dateOfIncident"
-              name="dateOfIncident"
-              value={formData.dateOfIncident}
-              onChange={handleInputChange}
+              id="time"
+              name="time"
+              value={formData.time}
+              onChange={(value) => handleDateChange('time', value)}
+              disableFuture={true}
             />
           )}
         </div>
@@ -107,6 +109,7 @@ const CrimeOrIncident = ({
               type="button"
               onClick={handleNext}
               className={"flex items-center"}
+              disabled={!formData?.location || !formData?.crimeDetails}
             >
               Continue
               <CgChevronRight size={25} />

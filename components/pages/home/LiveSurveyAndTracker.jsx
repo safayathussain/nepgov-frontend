@@ -19,18 +19,28 @@ const LiveSurveyAndTracker = ({ liveSurveyTracker }) => {
             key={item?.data?._id}
             className="p-5 bg-white border border-lightGray"
           >
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                {item?.type === "Survey" ? <SurveyStatus /> : <TrackerStatus />}
-                <LiveStatus />
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    {item?.type === "Survey" ? (
+                      <SurveyStatus />
+                    ) : (
+                      <TrackerStatus />
+                    )}
+                    <LiveStatus />
+                  </div>
+                  <p> {item?.data?.categories?.[0]?.name}</p>
+                </div>
+                <p className="text-xl py-2 font-semibold">
+                  {item?.data?.topic}
+                </p>
               </div>
-              <p> {item?.data?.categories?.[0]?.name}</p>
-            </div>
-            <div className="flex flex-col gap-5 justify-between">
-              <p className="text-xl py-2 font-semibold">{item?.data?.topic}</p>
-              <Button variant="primary-outline" className={"w-full"}>
-                Vote Now
-              </Button>
+              <div className="mt-2">
+                <Button variant="primary-outline" className={"w-full"}>
+                  Vote Now
+                </Button>
+              </div>
             </div>
           </div>
         ))}

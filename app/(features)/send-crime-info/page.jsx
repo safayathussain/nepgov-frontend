@@ -1,31 +1,31 @@
 "use client";
 import Button from "@/components/input/Button";
-import CheckInput from "@/components/input/CheckInput";
-import DropdownInput from "@/components/input/DropdownInput";
-import TextInput from "@/components/input/TextInput";
 import CrimeExtraInfo from "@/components/pages/crime/CrimeExtraInfo";
 import CrimeInfoNavigation from "@/components/pages/crime/CrimeInfoNavigation";
 import CrimeOrIncident from "@/components/pages/crime/CrimeOrIncident";
 import CrimePersonInfo from "@/components/pages/crime/CrimePersonInfo";
 import CrimeType from "@/components/pages/crime/CrimeType";
+import { FetchApi } from "@/utils/FetchApi";
+import dayjs from "dayjs";
 import React, { useState } from "react";
 
 const CrimeReportForm = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    crimeDescription: null,
+    crimeType: null,
     location: "",
     additionalLocationDetails: "",
-    dateKnown: "",
-    dateOfIncident: "",
+    dateKnown: true,
+    time: null,
     crimeDetails: "",
     personDetails: "",
     personAppearance: "",
     personContact: "",
-    hasVehicle: "",
-    hasWeapon: "",
-    keepInContact: "",
+    hasVehicle: null,
+    hasWeapon: null,
+    keepInContact: true,
     acceptTerms: false,
+    confirmNoPoliceAttention: false,
   });
 
   const crimeOptions = [
@@ -42,6 +42,12 @@ const CrimeReportForm = () => {
       [name]: value,
     }));
   };
+  const handleDateChange = (name, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const handleNext = () => {
     setStep((prev) => prev + 1);
@@ -51,9 +57,28 @@ const CrimeReportForm = () => {
     setStep((prev) => prev - 1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setStep(6);
+    const requestBody = {
+      crimeType: formData.crimeType,
+      location: formData.location,
+      additionalLocationDetails: formData.additionalLocationDetails,
+      time: formData?.dateKnown ? formData.time : "",
+      crimeDetails: formData.crimeDetails,
+      personDetails: formData.personDetails,
+      personAppearance: formData.personAppearance,
+      personContact: formData.personContact,
+      hasVehicle: formData.hasVehicle,
+      hasWeapon: formData.hasWeapon,
+      keepInContact: formData.keepInContact,
+    };
+    await FetchApi({
+      url: `/crime/create`,
+      method: "post",
+      data: requestBody,
+      isToast: true,
+      callback: () => setStep(5),
+    });
   };
 
   return (
@@ -80,6 +105,7 @@ const CrimeReportForm = () => {
 
         {step === 2 && (
           <CrimeOrIncident
+            handleDateChange={handleDateChange}
             formData={formData}
             handleBack={handleBack}
             handleNext={handleNext}

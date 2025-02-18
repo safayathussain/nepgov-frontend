@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Button from "@/components/input/Button";
 import UnprocessableInfo from "@/components/pages/crime/UnprocessableInfo";
 import { useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ const page = () => {
         "If the information you give us leads to an arrest or is of significant use you will be rewarded.",
     },
   ];
-  const router = useRouter()
+  const router = useRouter();
   return (
     <div>
       <div className="bg-gradiantBg py-20 text-white space-y-2 px-4">
@@ -36,7 +36,7 @@ const page = () => {
           <Button
             className={" bg-white !text-primary hover:bg-white"}
             variant="primary"
-            onClick={() => router.push('/send-crime-info')}
+            onClick={() => router.push("/send-crime-info")}
           >
             Give Information Here
           </Button>
@@ -45,26 +45,22 @@ const page = () => {
       <div className="container py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {cards.map((card, index) => (
-            <div
-              key={index}
-              className="bg-primary text-white p-6  "
-            >
+            <div key={index} className="bg-primary text-white p-6  ">
               <h2 className="text-2xl font-bold mb-4">{card.title}</h2>
               <p className="  leading-relaxed">{card.description}</p>
             </div>
           ))}
         </div>
       </div>
-      <UnprocessableInfo/>
+      <UnprocessableInfo />
       <div className="flex justify-center my-20">
-          <Button
-            variant="primary"
-            onClick={() => router.push('/send-crime-info')}
-
-          >
-            Give Information Here
-          </Button>
-        </div>
+        <Button
+          variant="primary"
+          onClick={() => router.push("/send-crime-info")}
+        >
+          Give Information Here
+        </Button>
+      </div>
     </div>
   );
 };
