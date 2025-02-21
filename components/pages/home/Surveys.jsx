@@ -96,13 +96,13 @@ export default function Surveys({ surveys }) {
           <SwiperSlide key={item?._id}>
             <div className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full">
               <div>
-                <img
+                <Image
                   src={ImgUrl + item?.thumbnail}
                   width={363}
                   height={180}
                   alt=""
                   className="w-full coverImage"
-                ></img>
+                ></Image>
                 <div className="flex justify-between py-3 ">
                   <SurveyStatus />
                   <p> {item?.categories?.[0]?.name}</p>

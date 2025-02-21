@@ -34,13 +34,13 @@ const page = () => {
         </div>
       ) : (
         <>
-          <img
+          <Image
             src={ImgUrl + article?.thumbnail}
             width={874}
             height={364}
             alt=""
             className="w-full h-[500px] object-cover"
-          ></img>
+          ></Image>
           <div className="container max-w-[950px] py-10 ">
             <p className="text-2xl md:text-4xl text-primary font-semibold">
               {article?.title}
@@ -67,13 +67,13 @@ const page = () => {
                     className="h-full"
                   >
                     <div className="p-5 border border-[#EBEBEB] shadow-medium h-full">
-                      <img
+                      <Image
                         src={ImgUrl + item?.thumbnail}
                         width={363}
                         height={180}
                         alt=""
                         className="w-full coverImage"
-                      ></img>
+                      ></Image>
                       <div className="flex justify-between py-3">
                         <p>{item?.categories?.[0]?.name}</p>
                       </div>
