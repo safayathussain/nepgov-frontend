@@ -94,13 +94,13 @@ export default function Articles({ articles }) {
           <SwiperSlide key={item?._id}>
             <Link href={`/article/${item?._id}`}>
               <div className="p-5 border border-[#EBEBEB] shadow-medium h-full">
-                <Image
+                <img
                   src={ImgUrl + item?.thumbnail}
                   width={363}
                   height={180}
                   alt=""
                   className="w-full coverImage"
-                ></Image>
+                ></img>
                 <div className="flex justify-between py-3">
                   <ArticleStatus />
                   <p>{item?.categories?.[0]?.name}</p>
