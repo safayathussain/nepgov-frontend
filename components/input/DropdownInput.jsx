@@ -10,7 +10,8 @@ const DropdownInput = ({
   options=[],
   value = null,
   setValue = () => {},
-  className
+  className,
+  ...etc
 }) => {
   return (
     <div>
@@ -23,6 +24,8 @@ const DropdownInput = ({
         className={`w-full border shadow-none ${className}`}
         optionLabel="name"
         optionValue="value"
+        
+        {...etc}
       />
     </div>
   );

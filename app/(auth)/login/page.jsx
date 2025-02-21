@@ -45,10 +45,13 @@ const SignIn = () => {
           });
           setStep(2); // Show OTP screen
         } else {
-          console.log(data?.data?.user);
-
           dispatch(setAuth(data?.data?.user));
-          window.location.href = "/";
+          if (sessionStorage.getItem("voteRedirectUrl")) {
+            router.push(sessionStorage.getItem("voteRedirectUrl"));
+            sessionStorage.removeItem('voteRedirectUrl')
+          } else {
+            router.push('/');
+          }
         }
       } else {
       }
@@ -65,7 +68,12 @@ const SignIn = () => {
         data: { email: formData.email, otp: formData.code },
       });
       dispatch(setAuth(data?.data?.user));
-      window.location.href = "/";
+      if (sessionStorage.getItem("voteRedirectUrl")) {
+        router.push(sessionStorage.getItem("voteRedirectUrl"));
+        sessionStorage.removeItem('voteRedirectUrl')
+      } else {
+        router.push('/');
+      }
     } catch (error) {
       console.error("OTP verification error:", error);
     }

@@ -99,7 +99,9 @@ input[type="radio"]:checked {
   background-color: #f5f7fb;
   color: #3c55a5;
 }
-
+.p-inputtext {
+border-radius: 5px !important;
+}
 
 .coverImage {
   aspect-ratio: calc(16/9);

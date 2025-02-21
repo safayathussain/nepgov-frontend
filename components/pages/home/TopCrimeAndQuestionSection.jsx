@@ -45,7 +45,7 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
               {hero?.dailyQuestion?.topic}
             </p>
           </div>
-          <button className="w-full bg-white text-secondary font-semibold rounded-full py-2">
+          <button onClick={() => router.push(`/vote/tracker/${hero?.dailyQuestion?._id}`)} className="w-full bg-white text-secondary font-semibold rounded-full py-2">
             Vote now
           </button>
         </div>

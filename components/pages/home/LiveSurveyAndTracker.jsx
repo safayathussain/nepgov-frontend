@@ -2,9 +2,11 @@ import LiveStatus from "@/components/common/LiveStatus";
 import SurveyStatus from "@/components/common/SurveyStatus";
 import TrackerStatus from "@/components/common/TrackerStatus";
 import Button from "@/components/input/Button";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const LiveSurveyAndTracker = ({ liveSurveyTracker }) => {
+  const router = useRouter()
   return (
     <div className="bg-[#F3F4F6] p-5">
       <div className="flex items-end gap-5">
@@ -37,7 +39,7 @@ const LiveSurveyAndTracker = ({ liveSurveyTracker }) => {
                 </p>
               </div>
               <div className="mt-2">
-                <Button variant="primary-outline" className={"w-full"}>
+                <Button onClick={() => router.push(item?.type === "Survey" ? `/vote/survey/${item?.data?._id}` : `/vote/tracker/${item?.data?._id}`)} variant="primary-outline" className={"w-full"}>
                   Vote Now
                 </Button>
               </div>
