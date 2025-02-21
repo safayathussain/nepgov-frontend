@@ -9,7 +9,7 @@ const OptionsWithColor = ({ options }) => {
             className={`size-4 bg-[${item.color}]`}
             style={{ backgroundColor: item?.color }}
           ></div>
-          <p>{item.content}</p>
+          <p className="font-medium">{item.content}</p>
         </div>
       ))}
     </div>

@@ -1,4 +1,5 @@
-import SimpleChart from "@/components/chart/SimpleChart";
+import TrackerChart from "@/components/chart/TrackerChart";
+import SimpleChart from "@/components/chart/TrackerChart";
 import ApproveDisapproveColor from "@/components/common/ApproveDisapproveColor";
 import OptionsWithColor from "@/components/common/OptionsWithColor";
 import SurveyStatus from "@/components/common/SurveyStatus";
@@ -9,7 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-const FeaturedSurveyAndTracker = ({ featuredSurveyTracker }) => {
+const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
   return (
     <div className="py-10">
       <div className="grid grid-cols-6 gap-5">
@@ -49,11 +50,11 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker }) => {
                   {tracker.categories?.[0]?.name}
                 </p>
               </div>
-              <p className="text-xl font-semibold">{tracker.topic}</p>
+              <p className="text-xl font-semibold mb-2">{tracker.topic}</p>
               <OptionsWithColor options={tracker.options} />
             </div>
             <div className="">
-              <SimpleChart height={190} />
+              <TrackerChart data={allTrackers?.find(item => item._id === tracker._id)} /> 
             </div>
             <p className="text-sm text-lightGray">
               {isLive(tracker?.liveEndedAt)

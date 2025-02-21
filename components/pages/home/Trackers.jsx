@@ -6,8 +6,9 @@ import Link from "next/link";
 import { Navigation } from "swiper/modules";
 import Image from "next/image";
 import TrackerStatus from "@/components/common/TrackerStatus";
-import SimpleChart from "@/components/chart/SimpleChart";
+import TrackerChart from "@/components/chart/TrackerChart";
 import { isLive, timeAgo, timeLeft } from "@/utils/functions";
+import OptionsWithColor from "@/components/common/OptionsWithColor";
 
 export default function Trackers({ trackers }) {
   function calculateVotedCount(options) {
@@ -106,12 +107,14 @@ export default function Trackers({ trackers }) {
                     <TrackerStatus />
                     <p> {item?.categories?.[0]?.name}</p>
                   </div>
-                  <p className="text-xl font-semibold leading-tight">
+                  <p className="text-xl font-semibold leading-tight mb-3">
                     {item?.topic}
                   </p>
+                  <OptionsWithColor options={item?.options} />
                 </div>
+
                 <div>
-                  <SimpleChart height={150} />
+                  <TrackerChart height={150} data={item} />
                   <p className="text-sm text-gray-400">
                     {isLive(item?.liveEndedAt)
                       ? timeLeft(item?.liveEndedAt)

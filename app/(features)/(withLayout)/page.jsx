@@ -60,6 +60,7 @@ const Page = () => {
             <Categories categories={categories} setSearchOpen={setSearchOpen} />
             <TopCrimeAndQuestionSection hero={homePageData?.hero} />
             <FeaturedSurveyAndTracker
+            allTrackers={trackers}
               featuredSurveyTracker={homePageData?.featuredSurveyTracker}
             />
             <LiveSurveyAndTracker
