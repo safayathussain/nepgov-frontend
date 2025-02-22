@@ -24,7 +24,7 @@ const ReportChart = ({ chartData, filters, onFilterChange, isLoading }) => {
           className={"rounded-lg w-full"}
           variant={"primary-outline"}
           onClick={() => {
-            onFilterChange("age", "");
+            onFilterChange("age", "18-100");
             onFilterChange("gender", "");
           }}
         >
