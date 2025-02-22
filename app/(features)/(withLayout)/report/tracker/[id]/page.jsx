@@ -2,6 +2,7 @@
 import CheckInput from "@/components/input/CheckInput";
 import ReportChart from "@/components/pages/report/ReportChart";
 import { FetchApi } from "@/utils/FetchApi";
+import { useAuth } from "@/utils/functions";
 import useDebounce from "@/utils/useDebounce";
 import { useParams, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ const Page = () => {
   const [chartData, setChartData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOption, setSelectedOption] = useState("");
+  const {auth} = useAuth()
   const [filters, setFilters] = useState({
     age: searchParams.get("age") || "",
     gender: searchParams.get("gender") || null,
@@ -26,7 +28,7 @@ const Page = () => {
         const { data } = await FetchApi({
           url: `/tracker/result/${id}?${queryString}`,
         });
-        if (!selectedOption) {
+        if (!selectedOption && auth._id) {
           const { data: checkVote } = await FetchApi({
             url: `/tracker/checkVote/${id}`,
           });
