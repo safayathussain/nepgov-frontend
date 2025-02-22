@@ -40,7 +40,7 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
         {featuredSurveyTracker?.trackers?.map((tracker) => (
           <Link
             key={tracker._id}
-            href={"/report/tracker/1"}
+            href={`/report/tracker/${tracker._id}`}
             className="p-4 shadow-light border border-[#EBEBEB] flex flex-col justify-between gap-5 col-span-6 md:col-span-3 lg:col-span-2"
           >
             <div>

@@ -1,5 +1,5 @@
-"use client"
-import React from 'react';
+"use client";
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -8,10 +8,11 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
-import annotationPlugin from 'chartjs-plugin-annotation';
+  Legend,
+} from "chart.js";
+import { Line } from "react-chartjs-2";
+import annotationPlugin from "chartjs-plugin-annotation";
+import Loading from "@/components/common/Loading";
 
 ChartJS.register(
   CategoryScale,
@@ -24,54 +25,21 @@ ChartJS.register(
   annotationPlugin
 );
 
-const SentimentChart = () => {
-  const labels = ['Dec 2024', 'Jan 2025', 'Feb 2025', 'Mar 2025', 'Apr 2025', 'May 2025', 'Jun 2025'];
-
-  const data = {
-    labels,
-    datasets: [
-      {
-        label: 'Agree',
-        data: [45, 30, 25, 20, 35, 30, 20],
-        borderColor: 'rgb(34, 197, 94)',
-        backgroundColor: 'rgba(34, 197, 94, 0.5)',
-        tension: 0.4,
-      },
-      {
-        label: 'Disagree',
-        data: [60, 35, 30, 15, 60, 35, 15],
-        borderColor: 'rgb(239, 68, 68)',
-        backgroundColor: 'rgba(239, 68, 68, 0.5)',
-        tension: 0.4,
-      },
-      {
-        label: 'Neutral',
-        data: [50, 20, 10, 5, 30, 25, 5],
-        borderColor: 'rgb(234, 179, 8)',
-        backgroundColor: 'rgba(234, 179, 8, 0.5)',
-        tension: 0.4,
-      },
-    ],
-  };
-
+const TrackerChart = ({ chartData, isLoading }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: "bottom",
       },
       tooltip: {
-        mode: 'index',
+        mode: "index",
         intersect: false,
-        position: 'nearest',
+        position: "nearest",
         callbacks: {
-          title: (context) => {
-            return context[0].label;
-          },
-          label: (context) => {
-            return `${context.dataset.label}: ${context.parsed.y}%`;
-          },
+          title: (context) => context[0].label,
+          label: (context) => `${context.dataset.label}: ${context.parsed.y}%`,
         },
       },
     },
@@ -90,11 +58,11 @@ const SentimentChart = () => {
       },
     },
     hover: {
-      mode: 'index',
+      mode: "index",
       intersect: false,
     },
     interaction: {
-      mode: 'index',
+      mode: "index",
       intersect: false,
     },
     elements: {
@@ -104,17 +72,35 @@ const SentimentChart = () => {
       },
       line: {
         borderWidth: 2,
-      }
+      },
     },
   };
+  if (isLoading) {
+    return (
+      <div className="h-[400px] flex items-center justify-center">
+        <Loading />
+      </div>
+    );
+  }
+  if (!chartData && !isLoading) {
+    return (
+      <div className="h-[400px] flex items-center justify-center">
+        No data available
+      </div>
+    );
+  }
 
   return (
-      <div className="h-[400px] relative">
-        <Line 
-          options={options} 
-          data={data}
-          plugins={[{
-            id: 'hoveLine',
+    <div className="h-[400px] relative">
+      <Line
+        options={options}
+        data={{
+          labels: chartData.labels,
+          datasets: chartData.datasets,
+        }}
+        plugins={[
+          {
+            id: "hoveLine",
             beforeDraw: (chart) => {
               if (chart.tooltip?.getActiveElements()?.length) {
                 const activePoint = chart.tooltip.getActiveElements()[0];
@@ -128,15 +114,16 @@ const SentimentChart = () => {
                 ctx.moveTo(x, topY);
                 ctx.lineTo(x, bottomY);
                 ctx.lineWidth = 1;
-                ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
                 ctx.stroke();
                 ctx.restore();
               }
-            }
-          }]}
-        />
-      </div>
+            },
+          },
+        ]}
+      />
+    </div>
   );
 };
 
-export default SentimentChart;
+export default TrackerChart;

@@ -1,63 +1,99 @@
+"use client";
 import CheckInput from "@/components/input/CheckInput";
 import ReportChart from "@/components/pages/report/ReportChart";
-import React from "react";
+import { FetchApi } from "@/utils/FetchApi";
+import useDebounce from "@/utils/useDebounce";
+import { useParams, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Page = () => {
+  const { id } = useParams();
+  const searchParams = useSearchParams();
+  const [chartData, setChartData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [filters, setFilters] = useState({
+    age: searchParams.get("age") || "",
+    gender: searchParams.get("gender") || null,
+    monthDuration: searchParams.get("monthDuration") || "",
+  });
+  const debouncedFilters = useDebounce(filters, 500);
+  useEffect(() => {
+    const fetchTrackerData = async () => {
+      try {
+        setIsLoading(true);
+        const queryString = new URLSearchParams(filters).toString();
+        const { data } = await FetchApi({
+          url: `/tracker/result/${id}?${queryString}`,
+        });
+        if (!selectedOption) {
+          const { data: checkVote } = await FetchApi({
+            url: `/tracker/checkVote/${id}`,
+          });
+          setSelectedOption(checkVote?.data?.option);
+        }
+        setChartData(data?.data);
+      } catch (err) {
+        console.error("Error fetching tracker data:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTrackerData();
+  }, [id, debouncedFilters]);
+
+  const handleFilterChange = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
   return (
     <div className="container">
       <style>
         {`
-                .p-highlight > .p-checkbox-box {
-  background-color: #3560AD !important;
-  border-radius: 999px !important; 
-}
-                `}
+          .p-highlight > .p-checkbox-box {
+            background-color: #3560AD !important;
+            border-radius: 999px !important; 
+          }
+        `}
       </style>
-      <div className="container border border-lightGray rounded-xl py-10  my-10">
+      <div className="container border border-lightGray rounded-xl py-10 my-10">
         <p className="text-center text-xl sm:text-2xl lg:text-4xl font-semibold max-w-[700px] mx-auto">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Velit, ad!
+          {chartData?.topic}
         </p>
         <div className="py-10 max-w-[700px] mx-auto space-y-2">
-          <div className="border border-primary p-4 rounded-lg flex justify-between items-center flex-wrap">
-            <div className="">
-              <CheckInput boxClassName={"outline-primary"} label={"Agree"} />
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <div className=" w-[150px] md:w-[300px] h-1 bg-gray-200 relative">
-                <div className="h-1 bg-primary" style={{ width: "30%" }}></div>
+          {chartData?.options?.map((item, i) => (
+            <div
+              key={i}
+              className="bg-[#F3F4F6] p-4 rounded-lg flex justify-between items-center flex-wrap"
+            >
+              <div className="">
+                <CheckInput
+                  checked={item?._id === selectedOption}
+                  boxClassName={"!outline-primary"}
+                  label={item?.content}
+                />
               </div>
-              <span>30%</span>
-            </div>
-          </div>
-          <div className="bg-[#F3F4F6] p-4 rounded-lg flex justify-between items-center flex-wrap">
-            <div className="">
-              <CheckInput boxClassName={"outline-primary"} label={"Agree"} />
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <div className="w-[150px] md:w-[300px] h-1 bg-gray-200 relative">
-                <div className="h-1 bg-primary" style={{ width: "30%" }}></div>
+              <div className="flex items-center gap-2 text-sm">
+                <div className="w-[150px] md:w-[300px] h-1 bg-gray-200 relative">
+                  <div
+                    className="h-1 bg-primary"
+                    style={{ width: item?.percentage + "%" }}
+                  ></div>
+                </div>
+                <span>{item?.percentage}%</span>
               </div>
-              <span>30%</span>
             </div>
-          </div>
-          <div className="bg-[#F3F4F6] p-4 rounded-lg flex justify-between items-center flex-wrap">
-            <div className="">
-              <CheckInput boxClassName={"outline-primary"} label={"Agree"} />
-            </div>
-            <div className="flex items-center gap-2 text-sm">
-              <div className="w-[150px] md:w-[300px] h-1 bg-gray-200 relative">
-                <div className="h-1 bg-primary" style={{ width: "30%" }}></div>
-              </div>
-              <span>30%</span>
-            </div>
-          </div>
+          ))}
         </div>
-        <ReportChart/>
-      </div>
-      <div>
+        <ReportChart
+          chartData={chartData}
+          filters={filters}
+          isLoading={isLoading}
+          onFilterChange={handleFilterChange}
+        />
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;

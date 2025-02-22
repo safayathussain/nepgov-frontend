@@ -100,7 +100,7 @@ export default function Trackers({ trackers }) {
       >
         {trackers?.map((item) => (
           <SwiperSlide key={item?._id}>
-            <Link href={"/report/tracker/1"}>
+            <Link href={`/report/tracker/${item._id}`}>
               <div className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full">
                 <div>
                   <div className="flex justify-between py-3">
