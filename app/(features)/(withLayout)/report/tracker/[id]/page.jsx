@@ -64,7 +64,7 @@ const Page = () => {
           {chartData?.options?.map((item, i) => (
             <div
               key={i}
-              className="bg-[#F3F4F6] p-4 rounded-lg flex justify-between items-center flex-wrap"
+              className="bg-[#F3F4F6] p-4 rounded-lg flex justify-between items-center flex-wrap flex-col gap-2 md:flex-row"
             >
               <div className="">
                 <CheckInput
