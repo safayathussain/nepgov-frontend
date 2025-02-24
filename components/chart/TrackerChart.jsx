@@ -21,10 +21,10 @@ const TrackerChart = ({ data, height = 200 }) => {
         chartInstance.current.destroy()
       }
 
-      const monthYearVotes = data.monthYearVotes
-      const sortedMonths = Object.keys(monthYearVotes).sort()
-      const formattedMonths = sortedMonths.map(formatMonthYear)
-      const datasets = data.options.map((option) => ({
+      const monthYearVotes = data?.monthYearVotes||{}
+      const sortedMonths = Object.keys(monthYearVotes)?.sort()
+      const formattedMonths = sortedMonths?.map(formatMonthYear)
+      const datasets = data?.options?.map((option) => ({
         label: option.content,
         data: sortedMonths.map((month) => {
           const totalVotes = monthYearVotes[month].total
@@ -81,17 +81,17 @@ const TrackerChart = ({ data, height = 200 }) => {
   }, [data, formatMonthYear])
 
   useEffect(() => {
-    const latestMonth = Object.keys(data.monthYearVotes).sort().pop()
-    const latestData = data.monthYearVotes[latestMonth]
+    const latestMonth = Object.keys(data?.monthYearVotes||{})?.sort().pop()
+    const latestData = data?.monthYearVotes[latestMonth]
     const totalVotes = latestData?.total || 0
 
-    const latestValues = data.options?.map((option) => {
+    const latestValues = data?.options?.map((option) => {
       const votes = latestData?.options[option._id]?.votes || 0
       const percentage = totalVotes > 0 ? (votes / totalVotes) * 100 : 0
       return { value: percentage, color: option.color }
     })
 
-    latestValues.sort((a, b) => b.value - a.value)
+    latestValues?.sort((a, b) => b.value - a.value)
     setSortedData(latestValues)
   }, [data])
 
@@ -101,7 +101,7 @@ const TrackerChart = ({ data, height = 200 }) => {
         <canvas ref={chartRef}></canvas>
       </div>
       <div>
-        {sortedData.map((item, index) => (
+        {sortedData?.map((item, index) => (
           <p key={index} style={{ color: item.color }} className="font-bold my-2">
             {item.value.toFixed(0)}%
           </p>

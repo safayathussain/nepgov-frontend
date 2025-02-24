@@ -28,13 +28,13 @@ const Page = () => {
       setCategories(categoriesData.data);
       const { data: homeData } = await FetchApi({ url: "/home-page" });
       setHomePageData(homeData.data);
+      setloading(false);
       const { data: surveysData } = await FetchApi({ url: "/survey" });
       setSurveys(surveysData.data);
       const { data: trackersData } = await FetchApi({ url: "/tracker" });
       setTrackers(trackersData.data);
       const { data: articlesData } = await FetchApi({ url: "/article" });
       setArticles(articlesData.data);
-      setloading(false);
     };
     fetchData();
   }, []);
@@ -43,8 +43,7 @@ const Page = () => {
     <div>
       {loading ? (
         <div className="min-h-screen flex items-center w-full">
-
-        <Loading />
+          <Loading />
         </div>
       ) : (
         <div>
@@ -60,7 +59,7 @@ const Page = () => {
             <Categories categories={categories} setSearchOpen={setSearchOpen} />
             <TopCrimeAndQuestionSection hero={homePageData?.hero} />
             <FeaturedSurveyAndTracker
-            allTrackers={trackers}
+              allTrackers={trackers}
               featuredSurveyTracker={homePageData?.featuredSurveyTracker}
             />
             <LiveSurveyAndTracker
