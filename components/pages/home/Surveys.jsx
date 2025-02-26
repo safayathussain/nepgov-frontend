@@ -94,7 +94,7 @@ export default function Surveys({ surveys }) {
       >
         {surveys?.map((item) => (
           <SwiperSlide key={item?._id}>
-            <div className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full">
+            <Link href={`/report/survey/${item?._id}`} className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full">
               <div>
                 <Image
                   src={ImgUrl + item?.thumbnail}
@@ -121,7 +121,7 @@ export default function Surveys({ surveys }) {
                   {calculateVotedCount(item?.questions)} people voted
                 </p>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>

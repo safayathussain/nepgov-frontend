@@ -1,12 +1,9 @@
 import TrackerChart from "@/components/chart/TrackerChart";
-import SimpleChart from "@/components/chart/TrackerChart";
-import ApproveDisapproveColor from "@/components/common/ApproveDisapproveColor";
 import OptionsWithColor from "@/components/common/OptionsWithColor";
 import SurveyStatus from "@/components/common/SurveyStatus";
 import TrackerStatus from "@/components/common/TrackerStatus";
 import { ImgUrl } from "@/utils/constants";
 import { isLive, timeAgo, timeLeft } from "@/utils/functions";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -15,7 +12,7 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
     <div className="py-10">
       <div className="grid grid-cols-6 gap-5">
         <Link
-          href={`/report/survey/1`}
+          href={`/report/survey/${featuredSurveyTracker?.surveys[0]?._id}`}
           className="shadow-light  border col-span-6 lg:col-span-4 row-span-2 border-[#EBEBEB]"
         >
           <img

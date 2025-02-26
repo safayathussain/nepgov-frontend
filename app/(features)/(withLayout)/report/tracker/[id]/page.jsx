@@ -1,6 +1,6 @@
 "use client";
 import CheckInput from "@/components/input/CheckInput";
-import ReportChart from "@/components/pages/report/ReportChart";
+import ReportChart from "@/components/pages/report/TrackerReportChart";
 import { FetchApi } from "@/utils/FetchApi";
 import { useAuth } from "@/utils/functions";
 import useDebounce from "@/utils/useDebounce";

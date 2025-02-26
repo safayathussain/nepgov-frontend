@@ -57,8 +57,8 @@ const SurveyFlow = () => {
         setCurrentSurvey(survey);
         // Initialize selected options from URL
         const options =
-          Object.keys(responses[1]?.data?.data).length !== 0
-            ? Object.entries(responses[1]?.data?.data).map(
+          Object.keys(responses[1]?.data?.data||{})?.length !== 0
+            ? Object.entries(responses[1]?.data?.data)?.map(
                 ([key, value]) => `${key}:${value}`
               )
             : searchParams.getAll("options");
@@ -75,7 +75,7 @@ const SurveyFlow = () => {
         const answeredQuestions = survey.questions.filter(
           (q) => initialOptions[q._id]
         );
-        if (Object.keys(await responses[1]?.data?.data).length === 0) {
+        if (Object.keys(await responses[1]?.data?.data||{}).length === 0) {
           answeredQuestions.pop();
         }
         answeredQuestions.reverse();
