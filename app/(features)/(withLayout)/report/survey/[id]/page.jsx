@@ -81,6 +81,7 @@ const Page = () => {
             margin: 5px;
           }
         }
+          
       `}</style>
       {chartData?.map((item, index) => (
         <div key={item._id} className="container border-2 border-lightGray rounded-xl py-10 my-10">
