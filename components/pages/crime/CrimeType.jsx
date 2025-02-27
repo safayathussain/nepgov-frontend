@@ -40,7 +40,7 @@ const CrimeType = ({
         />
         <hr />
         <div className="flex justify-between pt-6">
-          <Button
+          {/* <Button
             type="button"
             variant="primary-outline"
             className={"flex items-center"}
@@ -48,7 +48,8 @@ const CrimeType = ({
           >
             <CgChevronLeft size={25} />
             Go back
-          </Button>
+          </Button> */}
+          <div></div>
           <Button
             type="button"
             onClick={handleNext}

@@ -83,7 +83,6 @@ const Page = () => {
       url: "/auth/register",
       method: "post",
       data: formData,
-      isToast: true,
       callback: () => setSignUpStep(signUpStep + 1),
     });
   };

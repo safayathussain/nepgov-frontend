@@ -16,7 +16,7 @@ export const useCountries = () => {
 export const logout = async () => {
   await FetchApi({ url: "/auth/logout", method: "post" });
   store.dispatch(setAuth({}));
-  window.location.href = "/"
+  window.location.href = "/";
 };
 export const isLive = (dateString) => {
   const currentDate = new Date();
@@ -71,22 +71,21 @@ export function timeLeft(futureTime) {
   if (hours < 24) return `${hours} hours left`;
   if (days < 30) return `${days} days left`;
   if (months < 12) return `${months} months left`;
-  return `${years} years left`;
+  return `${months === 12 ? 1 : years} years left`;
 }
 export function formatReadableDate(dateInput) {
   const date = new Date(dateInput);
 
   if (isNaN(date)) return "Invalid Date";
 
-  const options = { 
-    day: "2-digit", 
-    month: "short", 
-    year: "numeric", 
-    hour: "2-digit", 
-    minute: "2-digit", 
-    hour12: true 
+  const options = {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
   };
 
   return date.toLocaleString("en-GB", options).replace(",", "");
 }
- 
