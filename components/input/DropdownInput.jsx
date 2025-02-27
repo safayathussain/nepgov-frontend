@@ -7,14 +7,16 @@ import { Dropdown } from "primereact/dropdown";
 const DropdownInput = ({
   name,
   placeholder,
-  options=[],
+  options = [],
   value = null,
   setValue = () => {},
   className,
+  label,
   ...etc
 }) => {
   return (
     <div>
+      <label className="block text-black text-[14px] mb-0.5">{label}</label>
       <Dropdown
         value={value}
         onChange={(e) => setValue(e.value)}
@@ -24,7 +26,6 @@ const DropdownInput = ({
         className={`w-full border shadow-none ${className}`}
         optionLabel="name"
         optionValue="value"
-        
         {...etc}
       />
     </div>

@@ -4,7 +4,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { BiImageAdd } from "react-icons/bi";
 import TextInput from "@/components/input/TextInput";
 import Button from "@/components/input/Button";
-import { logout, useAuth } from "@/utils/functions";
+import { logout, useAuth, useCountries } from "@/utils/functions";
 import { FetchApi } from "@/utils/FetchApi";
 import { useDispatch } from "react-redux";
 import { setAuth } from "@/redux/slices/AuthSlice";
@@ -12,14 +12,22 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ImgUrl } from "@/utils/constants";
+import DropdownInput from "@/components/input/DropdownInput";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const { auth } = useAuth();
   const router = useRouter();
+  const { countries } = useCountries();
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [isCitiesLoading, setisCitiesLoading] = useState(false);
+  const [isStatesLoading, setisStatesLoading] = useState(false);
+
   useEffect(() => {
     if (!auth?._id) return router.push("/");
   }, []);
+
   const [profileData, setProfileData] = useState({
     firstName: auth?.firstName || "",
     lastName: auth?.lastName || "",
@@ -27,27 +35,133 @@ export default function ProfilePage() {
     city: auth?.city || "",
     state_province: auth?.state_province || "",
     postCode: auth?.postCode || "",
+    country: auth?.country || "",
   });
+  console.log(profileData.state_province);
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
+
+  // Load states when country changes
+  useEffect(() => {
+    const loadStates = async () => {
+      if (profileData.country) {
+        // Clear state and city when country changes
+        if (profileData.country !== auth.country) {
+          setProfileData((prev) => ({
+            ...prev,
+            state_province: "",
+            city: "",
+          }));
+        }
+        setisStatesLoading(true);
+        try {
+          const response = await fetch(
+            "https://countriesnow.space/api/v0.1/countries/states",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                country: profileData.country,
+              }),
+            }
+          );
+          const { data } = await response.json();
+          if (data?.states) {
+            setStates(
+              data.states.map((item) => {
+                return {
+                  ...item,
+                  value: item.name,
+                };
+              })
+            );
+          }
+        } catch (error) {
+          console.error("Error loading states:", error);
+        }
+      } else {
+        setStates([]);
+      }
+      setisStatesLoading(false);
+    };
+
+    loadStates();
+  }, [profileData.country]);
+
+  // Load cities when state changes
+  useEffect(() => {
+    const loadCities = async () => {
+      if (profileData.country && profileData.state_province) {
+        // Clear city when state changes
+        if (
+          profileData.country !== auth?.country &&
+          profileData.state_province !== auth?.state_province
+        ) {
+          setProfileData((prev) => ({
+            ...prev,
+            city: "",
+          }));
+        }
+        setisCitiesLoading(true);
+        try {
+          const response = await fetch(
+            "https://countriesnow.space/api/v0.1/countries/state/cities",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                country: profileData.country,
+                state: profileData.state_province,
+              }),
+            }
+          );
+          const { data } = await response.json();
+
+          if (data) {
+            setCities([
+              ...data.map((city) => {
+                return {
+                  name: city,
+                  value: city,
+                };
+              }),
+              { name: "Other", value: "Other" },
+            ]);
+          }
+        } catch (error) {
+          console.error("Error loading cities:", error);
+        }
+      } else {
+        setCities([]);
+      }
+      setisCitiesLoading(false);
+    };
+
+    loadCities();
+  }, [profileData.country, profileData.state_province]);
+
   const [profilePicture, setProfilePicture] = useState(null);
   const [profilePicturePreview, setProfilePicturePreview] = useState(
-    auth?.profilePicture
-      ? `${ImgUrl}${auth?.profilePicture}`
-      : ""
+    auth?.profilePicture ? `${ImgUrl}${auth?.profilePicture}` : ""
   );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handlePasswordChange = (e) => {
     const { name, value } = e.target;
     setPasswordData((prev) => ({ ...prev, [name]: value }));
   };
+
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -77,6 +191,7 @@ export default function ProfilePage() {
       console.error("Error updating profile:", error);
     }
   };
+
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     // Validate password fields (ensure new and confirm password match)
@@ -106,8 +221,25 @@ export default function ProfilePage() {
       console.error("Error changing password:", error);
     }
   };
+
   return (
     <div className="container py-10">
+      <style jsx global>{`
+        .p-dropdown-item {
+          white-space: normal !important;
+          max-width: 690px;
+          font-size: 14px;
+        }
+        .p-highlight > .p-checkbox-box {
+          background-color: #3560ad !important;
+          border-radius: 999px !important;
+        }
+        @media (max-width: 768px) {
+          .p-dropdown-panel {
+            margin: 5px;
+          }
+        }
+      `}</style>
       <h1 className="text-2xl md:text-3xl font-bold mb-8">My Profile</h1>
 
       <form onSubmit={handleSubmit} className="space-y-8">
@@ -158,22 +290,42 @@ export default function ProfilePage() {
                 value={profileData.lastName}
                 onChange={handleInputChange}
               />
+              <DropdownInput
+                filter
+                label="Country"
+                name="country"
+                className={"!rounded-full"}
+                value={profileData.country}
+                onChange={handleInputChange}
+                options={countries.map((item) => {
+                  return { name: item.name, value: item.name };
+                })}
+              />
+              <DropdownInput
+                filter
+                label="State/Province"
+                name="state_province"
+                className={"!rounded-full"}
+                value={profileData.state_province}
+                onChange={handleInputChange}
+                options={states}
+                loading={isStatesLoading}
+              />
+              <DropdownInput
+                filter
+                label="City"
+                name="city"
+                className={"!rounded-full"}
+                value={profileData.city}
+                onChange={handleInputChange}
+                options={cities}
+                disabled={!profileData.state_province}
+                loading={isCitiesLoading}
+              />
               <TextInput
                 label="Street"
                 name="street"
                 value={profileData.street}
-                onChange={handleInputChange}
-              />
-              <TextInput
-                label="City"
-                name="city"
-                value={profileData.city}
-                onChange={handleInputChange}
-              />
-              <TextInput
-                label="State/Province"
-                name="state_province"
-                value={profileData.state_province}
                 onChange={handleInputChange}
               />
               <TextInput

@@ -9,6 +9,10 @@ export const useAuth = () => {
     auth: auth,
   };
 };
+export const useCountries = () => {
+  const countries = useSelector((state) => state.countries);
+  return countries;
+};
 export const logout = async () => {
   await FetchApi({ url: "/auth/logout", method: "post" });
   store.dispatch(setAuth({}));
