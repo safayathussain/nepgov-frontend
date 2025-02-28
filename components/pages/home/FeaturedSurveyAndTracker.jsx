@@ -11,6 +11,8 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
   return (
     <div className="py-10">
       <div className="grid grid-cols-6 gap-5">
+        {
+          featuredSurveyTracker?.surveys[0]?._id &&
         <Link
           href={`/report/survey/${featuredSurveyTracker?.surveys[0]?._id}`}
           className="shadow-light  border col-span-6 lg:col-span-4 row-span-2 border-[#EBEBEB]"
@@ -34,6 +36,7 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
             </p>
           </div>
         </Link>
+        }
         {featuredSurveyTracker?.trackers?.map((tracker) => (
           <Link
             key={tracker._id}
