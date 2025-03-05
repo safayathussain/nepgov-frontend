@@ -98,16 +98,16 @@ export function formatReadableDate(dateInput) {
   return date.toLocaleString("en-GB", options).replace(",", "");
 }
 
-const checkIncognitoMode = () => {
-  return new Promise((resolve) => {
-    const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
-    
-    if (fs) {
-      fs(window.TEMPORARY, 1, () => resolve(false), () => resolve(true)); // Incognito mode will trigger the error
-    } else {
-      resolve(false); // Default case, assume it's not incognito if `RequestFileSystem` is not available
-    }
-  });
-};
+function isIncognito() {
+  try {
+      const testKey = 'incognitoTest';
+      window.localStorage.setItem(testKey, 'test');
+     const test =  window.localStorage.getItem(testKey);
+     console.log(test)
+      return false; // Not incognito
+  } catch (e) {
+      return true; // Likely incognito
+  }
+}
 
-console.log(await checkIncognitoMode())
+console.log(isIncognito() ? "Incognito mode" : "Normal mode");
