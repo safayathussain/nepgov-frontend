@@ -97,3 +97,17 @@ export function formatReadableDate(dateInput) {
 
   return date.toLocaleString("en-GB", options).replace(",", "");
 }
+
+const checkIncognitoMode = () => {
+  return new Promise((resolve) => {
+    const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+    
+    if (fs) {
+      fs(window.TEMPORARY, 1, () => resolve(false), () => resolve(true)); // Incognito mode will trigger the error
+    } else {
+      resolve(false); // Default case, assume it's not incognito if `RequestFileSystem` is not available
+    }
+  });
+};
+
+console.log(await checkIncognitoMode())
