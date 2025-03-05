@@ -8,6 +8,7 @@ const CookieModal = () => {
   const [showModal, setshowModal] = useState(true);
   const handleAccept = () => {
     localStorage.setItem("acceptCookie", "accepted");
+    window.location.reload()
     setshowModal(false);
   };
 

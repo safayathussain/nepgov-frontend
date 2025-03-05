@@ -97,17 +97,4 @@ export function formatReadableDate(dateInput) {
 
   return date.toLocaleString("en-GB", options).replace(",", "");
 }
-
-function isIncognito() {
-  try {
-      const testKey = 'incognitoTest';
-      window.localStorage.setItem(testKey, 'test');
-     const test =  window.localStorage.getItem(testKey);
-     console.log(test)
-      return false; // Not incognito
-  } catch (e) {
-      return true; // Likely incognito
-  }
-}
-
-console.log(isIncognito() ? "Incognito mode" : "Normal mode");
+ 
