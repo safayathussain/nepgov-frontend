@@ -56,7 +56,7 @@ const VoteTrackerPage = () => {
           throw new Error("Tracker not found");
         }
 
-        setTrackers(trackersResponse.data.data);
+        setTrackers(trackersResponse.data.data.filter(item => !isScheduled(item.liveStartedAt)));
         setCurrentTracker(tracker);
 
         if (checkVoteResponse?.data?.data) {

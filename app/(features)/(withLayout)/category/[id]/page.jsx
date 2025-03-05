@@ -5,7 +5,7 @@ import LiveSurveyAndTracker from "@/components/pages/home/LiveSurveyAndTracker";
 import Surveys from "@/components/pages/home/Surveys";
 import Trackers from "@/components/pages/home/Trackers";
 import { FetchApi } from "@/utils/FetchApi";
-import { isLive } from "@/utils/functions";
+import { isLive, isScheduled } from "@/utils/functions";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -25,11 +25,11 @@ const Page = () => {
       const { data: surveysData } = await FetchApi({
         url: `/survey?category=${id}`,
       });
-      setSurveys(surveysData.data);
+      setSurveys(surveysData.data.filter(item => !isScheduled(item.liveStartedAt)));
       const { data: trackersData } = await FetchApi({
         url: `/tracker?category=${id}`,
       });
-      setTrackers(trackersData.data);
+      setTrackers(trackersData.data.filter(item => !isScheduled(item.liveStartedAt)));
       const { data: articlesData } = await FetchApi({
         url: `/article?category=${id}`,
       });
@@ -54,12 +54,12 @@ const Page = () => {
               <LiveSurveyAndTracker
                 liveSurveyTracker={[
                   ...surveys
-                    .filter((item) => isLive(item?.liveEndedAt))
+                    .filter((item) => isLive(item?.liveStartedAt, item?.liveEndedAt))
                     .map((item) => {
                       return { data: item, type: "Survey" };
                     }),
                   ...trackers
-                    .filter((item) => isLive(item?.liveEndedAt))
+                    .filter((item) => isLive(item?.liveStartedAt, item?.liveEndedAt))
                     .map((item) => {
                       return { data: item, type: "Tracker" };
                     }),
@@ -67,10 +67,10 @@ const Page = () => {
               />
             </div>
             <Surveys
-              surveys={surveys.filter((item) => !isLive(item?.liveEndedAt))}
+              surveys={surveys.filter((item) => !isLive(item?.liveStartedAt, item?.liveEndedAt))}
             />
             <Trackers
-              trackers={trackers.filter((item) => !isLive(item?.liveEndedAt))}
+              trackers={trackers.filter((item) => !isLive(item?.liveStartedAt, item?.liveEndedAt))}
             />
             <Articles articles={articles} />
           </div>

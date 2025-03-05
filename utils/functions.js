@@ -18,10 +18,18 @@ export const logout = async () => {
   store.dispatch(setAuth({}));
   window.location.href = "/";
 };
-export const isLive = (dateString) => {
+export const isLive = (start, end) => {
   const currentDate = new Date();
-  const givenDate = new Date(dateString);
-  return givenDate > currentDate;
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+
+  return currentDate >= startDate && currentDate <= endDate;
+};
+export const isScheduled = (start) => {
+  const currentDate = new Date();
+  const startDate = new Date(start);
+
+  return currentDate < startDate;
 };
 
 export const formatDateTimeLocal = (date) => {

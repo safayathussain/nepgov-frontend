@@ -10,7 +10,7 @@ import Trackers from "@/components/pages/home/Trackers";
 import Articles from "@/components/pages/home/Articles";
 import Search from "@/components/pages/home/Search";
 import { FetchApi } from "@/utils/FetchApi";
-import { isLive } from "@/utils/functions";
+import { isLive, isScheduled } from "@/utils/functions";
 import Loading from "@/components/common/Loading";
 const Page = () => {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -30,9 +30,9 @@ const Page = () => {
       setHomePageData(homeData.data);
       setloading(false);
       const { data: surveysData } = await FetchApi({ url: "/survey" });
-      setSurveys(surveysData.data);
+      setSurveys(surveysData.data.filter(item => !isScheduled(item.liveStartedAt)));
       const { data: trackersData } = await FetchApi({ url: "/tracker" });
-      setTrackers(trackersData.data);
+      setTrackers(trackersData.data.filter(item => !isScheduled(item.liveStartedAt)));
       const { data: articlesData } = await FetchApi({ url: "/article" });
       setArticles(articlesData.data);
     };
@@ -64,7 +64,7 @@ const Page = () => {
             />
             <LiveSurveyAndTracker
               liveSurveyTracker={homePageData?.liveSurveyTracker?.filter(
-                (item) => isLive(item?.data?.liveEndedAt)
+                (item) => isLive(item?.data?.liveStartedAt, item?.data?.liveEndedAt)
               )}
             />
             <Surveys surveys={surveys} />

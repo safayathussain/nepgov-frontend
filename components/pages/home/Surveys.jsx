@@ -113,7 +113,7 @@ export default function Surveys({ surveys }) {
               </div>
               <div className="mt-auto">
                 <p className="text-sm text-gray-400 ">
-                  {isLive(item?.liveEndedAt)
+                  {isLive(item?.liveStartedAt, item?.liveEndedAt)
                     ? timeLeft(item?.liveEndedAt)
                     : timeAgo(item?.liveEndedAt)}
                 </p>

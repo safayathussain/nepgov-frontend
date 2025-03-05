@@ -116,7 +116,7 @@ export default function Trackers({ trackers }) {
                 <div>
                   <TrackerChart height={150} data={item} />
                   <p className="text-sm text-gray-400">
-                    {isLive(item?.liveEndedAt)
+                    {isLive(item?.liveStartedAt, item?.liveEndedAt)
                       ? timeLeft(item?.liveEndedAt)
                       : timeAgo(item?.liveEndedAt)}
                   </p>

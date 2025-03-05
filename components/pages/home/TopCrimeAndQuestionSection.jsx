@@ -35,7 +35,7 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <p>Daily Question</p>
-              {isLive(hero?.dailyQuestion?.liveEndedAt) && (
+              {isLive(hero?.dailyQuestion?.liveStartedAt, hero?.dailyQuestion?.liveEndedAt) && (
                 <p className="flex items-center gap-2">
                   Live <GoDotFill />
                 </p>

@@ -7,7 +7,7 @@ import Button from "@/components/input/Button";
 import CheckInput from "@/components/input/CheckInput";
 import DropdownInput from "@/components/input/DropdownInput";
 import { FetchApi } from "@/utils/FetchApi";
-import { useAuth } from "@/utils/functions";
+import { isScheduled, useAuth } from "@/utils/functions";
 
 const calculateResults = (options) => {
   const totalVotes = options.reduce((sum, item) => sum + item.votedCount, 0);
@@ -53,7 +53,7 @@ const SurveyFlow = () => {
           throw new Error("Survey not found");
         }
 
-        setSurveys(surveysResponse.data.data);
+        setSurveys(surveysResponse.data.data.filter(item => !isScheduled(item.liveStartedAt)));
         setCurrentSurvey(survey);
         // Initialize selected options from URL
         const options =

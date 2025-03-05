@@ -11,32 +11,34 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
   return (
     <div className="py-10">
       <div className="grid grid-cols-6 gap-5">
-        {
-          featuredSurveyTracker?.surveys[0]?._id &&
-        <Link
-          href={`/report/survey/${featuredSurveyTracker?.surveys[0]?._id}`}
-          className="shadow-light  border col-span-6 lg:col-span-4 row-span-2 border-[#EBEBEB]"
-        >
-          <img
-            src={ImgUrl + featuredSurveyTracker?.surveys[0]?.thumbnail}
-            width={874}
-            height={364}
-            alt=""
-            className="w-full coverImage"
-          ></img>
-          <div className="p-5 space-y-2">
-            <SurveyStatus />
-            <p className="text-2xl md:text-4xl font-semibold">
-              {featuredSurveyTracker?.surveys[0]?.topic}
-            </p>
-            <p className="text-sm text-lightGray">
-              {isLive(featuredSurveyTracker?.surveys[0]?.liveEndedAt)
-                ? timeLeft(featuredSurveyTracker?.surveys[0]?.liveEndedAt)
-                : timeAgo(featuredSurveyTracker?.surveys[0]?.liveEndedAt)}
-            </p>
-          </div>
-        </Link>
-        }
+        {featuredSurveyTracker?.surveys[0]?._id && (
+          <Link
+            href={`/report/survey/${featuredSurveyTracker?.surveys[0]?._id}`}
+            className="shadow-light  border col-span-6 lg:col-span-4 row-span-2 border-[#EBEBEB]"
+          >
+            <img
+              src={ImgUrl + featuredSurveyTracker?.surveys[0]?.thumbnail}
+              width={874}
+              height={364}
+              alt=""
+              className="w-full coverImage"
+            ></img>
+            <div className="p-5 space-y-2">
+              <SurveyStatus />
+              <p className="text-2xl md:text-4xl font-semibold">
+                {featuredSurveyTracker?.surveys[0]?.topic}
+              </p>
+              <p className="text-sm text-lightGray">
+                {isLive(
+                  featuredSurveyTracker?.surveys[0]?.liveStartedAt,
+                  featuredSurveyTracker?.surveys[0]?.liveEndedAt
+                )
+                  ? timeLeft(featuredSurveyTracker?.surveys[0]?.liveEndedAt)
+                  : timeAgo(featuredSurveyTracker?.surveys[0]?.liveEndedAt)}
+              </p>
+            </div>
+          </Link>
+        )}
         {featuredSurveyTracker?.trackers?.map((tracker) => (
           <Link
             key={tracker._id}
@@ -54,10 +56,12 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
               <OptionsWithColor options={tracker.options} />
             </div>
             <div className="">
-              <TrackerChart data={allTrackers?.find(item => item._id === tracker._id)} /> 
+              <TrackerChart
+                data={allTrackers?.find((item) => item._id === tracker._id)}
+              />
             </div>
             <p className="text-sm text-lightGray">
-              {isLive(tracker?.liveEndedAt)
+              {isLive(tracker?.liveStartedAt, tracker?.liveEndedAt)
                 ? timeLeft(tracker?.liveEndedAt)
                 : timeAgo(tracker?.liveEndedAt)}
             </p>
