@@ -7,7 +7,9 @@ const page = () => {
   const [title, settitle] = useState("");
   useEffect(() => {
     const loadData = async () => {
-      const { data } = await FetchApi({ url: "/static-page/page/terms-and-conditions" });
+      const { data } = await FetchApi({
+        url: "/static-page/page/terms-and-conditions",
+      });
       setcontent(data?.data?.content);
       settitle(data?.data?.title);
     };
@@ -18,7 +20,10 @@ const page = () => {
     <div className="container">
       <div className="container py-20">
         <p className="text-4xl mb-5 font-semibold">{title}</p>
-        <div dangerouslySetInnerHTML={{ __html: content }}></div>
+        <div
+          dangerouslySetInnerHTML={{ __html: content }}
+          className="text-editor-styles"
+        ></div>
       </div>
     </div>
   );

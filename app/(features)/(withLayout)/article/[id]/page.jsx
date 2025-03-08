@@ -34,13 +34,15 @@ const page = () => {
         </div>
       ) : (
         <>
-          <Image
-            src={ImgUrl + article?.thumbnail}
-            width={874}
-            height={364}
-            alt=""
-            className="w-full h-[500px] object-cover"
-          ></Image>
+          {article?.thumbnail && (
+            <Image
+              src={ImgUrl + article?.thumbnail}
+              width={1280}
+              height={500}
+              alt=""
+              className="w-full h-[500px] object-cover"
+            ></Image>
+          )}
           <div className="container max-w-[950px] py-10 ">
             <p className="text-2xl md:text-4xl text-primary font-semibold">
               {article?.title}
@@ -49,7 +51,7 @@ const page = () => {
               published on {formatReadableDate(article?.createdAt)}
             </p>
             <div
-              style={{ all: "unset" }}
+              className="text-editor-styles"
               dangerouslySetInnerHTML={{ __html: article?.content }}
             >
               {/* content */}
