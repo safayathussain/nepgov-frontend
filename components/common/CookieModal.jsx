@@ -2,9 +2,10 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import Button from "../input/Button";
+import { isCookieAccepted } from "@/utils/constants";
 
 const CookieModal = () => {
-  let acceptCookie = localStorage.getItem("acceptCookie");
+  let acceptCookie = isCookieAccepted;
   const [showModal, setshowModal] = useState(true);
   const handleAccept = () => {
     localStorage.setItem("acceptCookie", "accepted");
@@ -13,7 +14,7 @@ const CookieModal = () => {
   };
 
   const handleReject = () => {
-    localStorage.setItem("acceptCookie", "declined");
+    sessionStorage.setItem("acceptCookie", "declined");
     setshowModal(false);
   };
   return (

@@ -4,10 +4,11 @@ import { combinedReducers } from './combinedReducers';
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from 'redux-persist';
 import storageLocal from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
+import { isCookieAccepted } from '@/utils/constants';
 
 // Check if we're in the browser environment
 const isBrowser = typeof window !== 'undefined';
-const acceptCookies = isBrowser ? localStorage.getItem("acceptCookie") : null;
+const acceptCookies = isBrowser ? isCookieAccepted : null;
 
 const persistConfig = {
     key: 'root',

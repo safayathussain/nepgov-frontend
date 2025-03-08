@@ -37,7 +37,6 @@ export default function ProfilePage() {
     postCode: auth?.postCode || "",
     country: auth?.country || "",
   });
-  console.log(profileData.state_province);
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",

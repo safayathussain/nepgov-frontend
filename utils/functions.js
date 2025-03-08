@@ -2,6 +2,7 @@ import { store } from "@/redux/store";
 import { FetchApi } from "./FetchApi";
 import { setAuth } from "@/redux/slices/AuthSlice";
 import { useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
 export const useAuth = () => {
   const auth = useSelector((state) => state.auth?.user);
@@ -97,4 +98,13 @@ export function formatReadableDate(dateInput) {
 
   return date.toLocaleString("en-GB", options).replace(",", "");
 }
- 
+export const isTokenExpired = (accessToken) => {
+  if (!accessToken) return true;
+
+  try {
+    const decoded =  jwtDecode(accessToken);
+    return !decoded.exp || decoded.exp * 1000 < Date.now();
+  } catch (error) {
+    return true; // If decoding fails, assume the token is invalid/expired
+  }
+};

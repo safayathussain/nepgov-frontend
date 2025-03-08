@@ -78,7 +78,6 @@ const Page = () => {
   };
   const handleSignUp = async (e) => {
     e.preventDefault();
-    console.log(formData);
     await FetchApi({
       url: "/auth/register",
       method: "post",
@@ -99,6 +98,8 @@ const Page = () => {
         isToast: true,
         callback: () => setSignUpStep(signUpStep + 1),
       });
+      sessionStorage.setItem("accessToken", data?.data?.user?.accessToken);
+      delete data?.data?.user?.accessToken;
       dispatch(setAuth(data?.data?.user));
     } catch (error) {
       console.error("OTP verification failed:", error);

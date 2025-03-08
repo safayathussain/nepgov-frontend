@@ -19,17 +19,13 @@ const Search = ({ open, setOpen, categories, articles, surveys, trackers }) => {
         />
       </div>
       <div className="container ">
-        <div className="relative mt-10 md:mt-0">
+        <div className="relative mt-10 md:mt-0 mr-5">
           <TextInput
             placeholder={"Searh here..."}
             className={"w-full"}
             onChange={(e) => setsearch(e.target.value.toLowerCase())}
           ></TextInput>
-          <CgSearch
-            size={25}
-            className="text-secondary w-max absolute top-2 right-3 cursor-pointer"
-            onClick={() => console.log("hi")}
-          />
+          
         </div>
         <div className="grid md:grid-cols-2 gap-8 mt-5 ">
           {/* Left Column - Content Types */}

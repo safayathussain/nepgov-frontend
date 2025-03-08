@@ -65,6 +65,7 @@ const ResetPassword = () => {
           otp: formData.otp,
         },
       });
+      delete data?.data?.user?.accessToken
       dispatch(setAuth(data?.data?.user));
       window.location.href = "/";
     } catch (error) {
