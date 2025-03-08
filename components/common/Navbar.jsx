@@ -84,12 +84,12 @@ const Navbar = () => {
 
           {/* Language, Log in, Sign up */}
           <div className="flex items-center gap-3">
-            <LanguageSelectInput
+            {/* <LanguageSelectInput
               options={languageOptions}
               setValue={setselectedLanguage}
               value={selectedLanguage}
               className={"!text-[10px] !border-0 hidden md:block"}
-            />
+            /> */}
             {auth?._id ? (
               <Link href={'/profile'} >
               <Profile imgUrl={auth?.profilePicture}/></Link>
@@ -149,12 +149,12 @@ const Navbar = () => {
                 {item?.label}
               </Link>
             ))}
-            <LanguageSelectInput
+            {/* <LanguageSelectInput
               options={languageOptions}
               setValue={setselectedLanguage}
               value={selectedLanguage}
               className={"!text-[10px] !border-0 md:hidden -ml-2 block"}
-            />
+            /> */}
           </div>
         </div>
       </div>
