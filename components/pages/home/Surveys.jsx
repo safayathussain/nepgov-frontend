@@ -17,8 +17,7 @@ export default function Surveys({ surveys }) {
         question.options.reduce((sum, option) => sum + option.votedCount, 0)
       );
     }, 0);
-
-    return totalVotedCount;
+    return totalVotedCount/questions.length;
   }
   return (
     <div className="my-20">
@@ -94,7 +93,10 @@ export default function Surveys({ surveys }) {
       >
         {surveys?.map((item) => (
           <SwiperSlide key={item?._id}>
-            <Link href={`/report/survey/${item?._id}`} className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full">
+            <Link
+              href={`/report/survey/${item?._id}`}
+              className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full"
+            >
               <div>
                 <Image
                   src={ImgUrl + item?.thumbnail}

@@ -12,14 +12,10 @@ import OptionsWithColor from "@/components/common/OptionsWithColor";
 
 export default function Trackers({ trackers }) {
   function calculateVotedCount(options) {
-    const totalVotedCount = options.reduce((total, question) => {
-      return (
-        total + options.reduce((sum, option) => sum + option.votedCount, 0)
-      );
-    }, 0);
-
+    const totalVotedCount = options.reduce((total, option) => total + option.votedCount, 0);
     return totalVotedCount;
   }
+  
   return (
     <div className="my-20">
       <div className="flex justify-between">
