@@ -102,9 +102,34 @@ export const isTokenExpired = (accessToken) => {
   if (!accessToken) return true;
 
   try {
-    const decoded =  jwtDecode(accessToken);
+    const decoded = jwtDecode(accessToken);
     return !decoded.exp || decoded.exp * 1000 < Date.now();
   } catch (error) {
     return true; // If decoding fails, assume the token is invalid/expired
   }
 };
+export function generateChartDurationArray(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const totalMonthsDiff =
+    (end.getFullYear() - start.getFullYear()) * 12 +
+    (end.getMonth() - start.getMonth());
+  const durationArray = [];
+  if (totalMonthsDiff >=1) {
+    durationArray.push({ duration: "1", label: "1M" });
+  }
+  if (totalMonthsDiff >= 3) {
+    durationArray.push({ duration: "3", label: "3M" });
+  }
+  if (totalMonthsDiff >= 6) {
+    durationArray.push({ duration: "6", label: "6M" });
+  }
+  if (totalMonthsDiff >= 12) {
+    durationArray.push({ duration: "12", label: "1YR" });
+  }
+  if (totalMonthsDiff >= 60) {
+    durationArray.push({ duration: "60", label: "5YRS" });
+  }
+  durationArray.push({ duration: "", label: "All" });
+  return durationArray;
+}

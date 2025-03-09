@@ -109,6 +109,8 @@ const Page = () => {
           isLoading={isLoading}
           onFilterChange={handleFilterChange}
           onApplyFilters={fetchTrackerData}
+          liveStartedAt={chartData?.liveStartedAt}
+          liveEndedAt={chartData?.liveEndedAt}
         />
       </div>
     </div>

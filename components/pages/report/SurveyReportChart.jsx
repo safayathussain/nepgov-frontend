@@ -5,9 +5,9 @@ import Button from "@/components/input/Button"
 import DropdownInput from "@/components/input/DropdownInput"
 import Chart from "./Chart"
 import { Slider } from "primereact/slider"
-import { useCountries } from "@/utils/functions"
+import { generateChartDurationArray, useCountries } from "@/utils/functions"
 
-const SurveyReportChart = ({ chartData, onFilterChange, loadingGraphId }) => {
+const SurveyReportChart = ({ chartData, onFilterChange, loadingGraphId, liveStartedAt, liveEndedAt }) => {
   const { countries } = useCountries()
   const [states, setStates] = useState([])
   const [cities, setCities] = useState([])
@@ -21,7 +21,7 @@ const SurveyReportChart = ({ chartData, onFilterChange, loadingGraphId }) => {
     state_province: "",
     city: "",
   })
-
+console.log(liveStartedAt, liveEndedAt)
   const handleInputChange = useCallback((name, value) => {
     setFilters((prev) => {
       const newFilters = { ...prev, [name]: value }
@@ -128,16 +128,8 @@ const SurveyReportChart = ({ chartData, onFilterChange, loadingGraphId }) => {
     [countries],
   )
 
-  const timePeriods = useMemo(
-    () => [
-      { duration: "3", label: "3M" },
-      { duration: "6", label: "6M" },
-      { duration: "12", label: "1YR" },
-      { duration: "60", label: "5YRS" },
-      { duration: "", label: "All" },
-    ],
-    [],
-  )
+  const timePeriods = generateChartDurationArray(liveStartedAt, liveEndedAt)
+    console.log(timePeriods)
 
   return (
     <div className="flex flex-col md:flex-row gap-5">

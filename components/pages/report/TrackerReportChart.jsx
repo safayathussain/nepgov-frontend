@@ -4,13 +4,15 @@ import Button from "@/components/input/Button";
 import DropdownInput from "@/components/input/DropdownInput";
 import Chart from "./Chart";
 import { Slider } from "primereact/slider";
-import { useCountries } from "@/utils/functions";
+import { generateChartDurationArray, useCountries } from "@/utils/functions";
 
 const ReportChart = ({
   chartData,
   filters,
   isLoading,
   onApplyFilters,
+  liveEndedAt,
+  liveStartedAt,
 }) => {
   const { countries } = useCountries();
   const [states, setStates] = useState([]);
@@ -266,26 +268,22 @@ const ReportChart = ({
         <hr className="my-3" />
         <p className="font-medium">Time Period</p>
         <div className="flex gap-2 flex-wrap">
-          {[
-            { label: "3M", value: "3" },
-            { label: "6M", value: "6" },
-            { label: "1YR", value: "12" },
-            { label: "5YRS", value: "60" },
-            { label: "All", value: "" },
-          ].map((period) => (
-            <button
-              key={period.label}
-              className={`border px-2 ${
-                localFilters.monthDuration === period.value
-                  ? "text-primary border-primary"
-                  : "text-[#6B7280]"
-              } rounded-md`}
-              onClick={() => handleDurationChange(period.value)}
-              type="button"
-            >
-              {period.label}
-            </button>
-          ))}
+          {generateChartDurationArray(liveStartedAt, liveEndedAt).map(
+            (period) => (
+              <button
+                key={period.label}
+                className={`border px-2 ${
+                  localFilters.monthDuration === period.value
+                    ? "text-primary border-primary"
+                    : "text-[#6B7280]"
+                } rounded-md`}
+                onClick={() => handleDurationChange(period.value)}
+                type="button"
+              >
+                {period.label}
+              </button>
+            )
+          )}
         </div>
 
         {/* Apply Filters Button */}

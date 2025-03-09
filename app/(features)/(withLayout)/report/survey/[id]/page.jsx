@@ -55,7 +55,6 @@ const Page = () => {
     },
     [],
   )
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex h-full w-full items-center justify-center">
@@ -113,6 +112,8 @@ const Page = () => {
             loadingGraphId={loadingGraphId}
             chartData={item}
             onFilterChange={(filters) => handleFilterChange(item._id, filters)}
+            liveEndedAt={item?.liveEndedAt}
+            liveStartedAt={item?.liveStartedAt}
           />
         </div>
       ))}
