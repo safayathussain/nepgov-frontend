@@ -28,6 +28,9 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
               <p className="text-2xl md:text-4xl font-semibold">
                 {featuredSurveyTracker?.surveys[0]?.topic}
               </p>
+              {featuredSurveyTracker?.surveys[0]?.questions?.map((item) => (
+                <p key={item._id}>{item.question}</p>
+              ))}
               <p className="text-sm text-lightGray">
                 {isLive(
                   featuredSurveyTracker?.surveys[0]?.liveStartedAt,
@@ -55,7 +58,7 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
               <p className="text-xl font-semibold mb-2">{tracker.topic}</p>
               <OptionsWithColor options={tracker.options} />
             </div>
-            <div className="">
+            <div className="-mt-5">
               <TrackerChart
                 data={allTrackers?.find((item) => item._id === tracker._id)}
               />

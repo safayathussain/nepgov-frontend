@@ -97,7 +97,7 @@ const TrackerChart = ({ data, height = 200 }) => {
 
   return (
     <div className="w-full max-w-2xl mx-auto flex items-center gap-5 mt-2">
-      <div className="relative" style={{ width: `85%`,   }}>
+      <div className="relative" style={{ width: `85%`,  }}>
         <canvas ref={chartRef}></canvas>
       </div>
       <div>

@@ -2,14 +2,14 @@ import React from "react";
 
 const OptionsWithColor = ({ options }) => {
   return (
-    <div className="flex items-center flex-wrap gap-3">
+    <div className="flex items-center flex-wrap gap-2">
       {options.map((item) => (
         <div key={item?._id} className="flex items-center gap-2">
           <div
             className={`size-4 bg-[${item.color}]`}
             style={{ backgroundColor: item?.color }}
           ></div>
-          <p className="font-medium">{item.content}</p>
+          <p className="font-medium text-sm">{item.content}</p>
         </div>
       ))}
     </div>
