@@ -1,6 +1,7 @@
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/common/Providers";
+import { usePathname } from "next/navigation";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -17,10 +18,17 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  
+  const handleTranslate = (language) => {
+    // Get current path including query parameters
+    const currentPath = usePathname();
+    const fullUrl = `https://nepgov-frontend.vercel.app${currentPath}`;
+    const translateUrl = `https://translate.google.com/translate?sl=auto&tl=${language}&u=${encodeURIComponent(fullUrl)}`;
+    window.open(translateUrl, '_blank');
+  };
   return (
     <html lang="en">
       <body className={`${dmSans.variable} bg-white text-black`}>
+        <button onClick={handleTranslate}>Change Lang</button>
         <Providers>{children}</Providers>
       </body>
     </html>
