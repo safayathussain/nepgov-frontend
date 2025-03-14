@@ -8,11 +8,11 @@ import { RiShareBoxLine } from "react-icons/ri";
 import { CgProfile } from "react-icons/cg";
 import { IoMdAdd } from "react-icons/io";
 import { usePathname, useRouter } from "next/navigation";
-import LanguageSelectInput from "../input/NavbarLanguageSelectInput";
+import NavbarLanguageSelectInput from "../input/NavbarLanguageSelectInput";
 import Button from "../input/Button";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import useClickOutside from "@/hooks/useClickOutside";
-import { useAuth } from "@/utils/functions";
+import { useAuth, useWindowWidth } from "@/utils/functions";
 import Profile from "./Profile";
 
 const Navbar = () => {
@@ -39,15 +39,6 @@ const Navbar = () => {
     },
   ];
 
-  const languageOptions = [
-    { name: "English ", value: "en" },
-    { name: "Spanish", value: "es" },
-    { name: "French", value: "fr" },
-    { name: "German", value: "de" },
-    { name: "Nepali", value: "ne" },
-  ];
-
-  const [selectedLanguage, setselectedLanguage] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -55,6 +46,7 @@ const Navbar = () => {
   useClickOutside(sidebarRef, () => {
     setSidebarOpen(false);
   });
+  const screenWidth = useWindowWidth();
   return (
     <div className="shadow-lg bg-white">
       <div className="container">
@@ -84,15 +76,13 @@ const Navbar = () => {
 
           {/* Language, Log in, Sign up */}
           <div className="flex items-center gap-3">
-            {/* <LanguageSelectInput
-              options={languageOptions}
-              setValue={setselectedLanguage}
-              value={selectedLanguage}
-              className={"!text-[10px] !border-0 hidden md:block"}
-            /> */}
+            {screenWidth > 1024 &&
+              <NavbarLanguageSelectInput />
+            }
             {auth?._id ? (
-              <Link href={'/profile'} >
-              <Profile imgUrl={auth?.profilePicture}/></Link>
+              <Link href={"/profile"}>
+                <Profile imgUrl={auth?.profilePicture} />
+              </Link>
             ) : (
               <>
                 <Button
@@ -149,12 +139,10 @@ const Navbar = () => {
                 {item?.label}
               </Link>
             ))}
-            {/* <LanguageSelectInput
-              options={languageOptions}
-              setValue={setselectedLanguage}
-              value={selectedLanguage}
-              className={"!text-[10px] !border-0 md:hidden -ml-2 block"}
-            /> */}
+            {
+              screenWidth <= 1024 &&
+            <NavbarLanguageSelectInput />
+            }
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@ import { FetchApi } from "./FetchApi";
 import { setAuth } from "@/redux/slices/AuthSlice";
 import { useSelector } from "react-redux";
 import { jwtDecode } from "jwt-decode";
+import useDebounce from "./useDebounce";
+import { useEffect, useState } from "react";
 
 export const useAuth = () => {
   const auth = useSelector((state) => state.auth?.user);
@@ -133,3 +135,26 @@ export function generateChartDurationArray(startDate, endDate) {
   durationArray.push({ duration: "", label: "All" });
   return durationArray;
 }
+
+export const useWindowWidth = () => {
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    // Add event listener to track window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Debounce the width value before returning it
+  const debouncedWidth = useDebounce(width, 200); // Debouncing for 200ms
+
+  return debouncedWidth;
+};
