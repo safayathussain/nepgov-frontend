@@ -16,7 +16,7 @@ const DropdownInput = ({
 }) => {
   return (
     <div>
-      <label className="block text-black text-[14px] mb-0.5">{label}</label>
+      <label className="block text-black  mb-0.5">{label}</label>
       <Dropdown
         value={value}
         onChange={(e) => setValue(e.value)}
