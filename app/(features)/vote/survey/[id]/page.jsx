@@ -53,11 +53,15 @@ const SurveyFlow = () => {
           throw new Error("Survey not found");
         }
 
-        setSurveys(surveysResponse.data.data.filter(item => !isScheduled(item.liveStartedAt)));
+        setSurveys(
+          surveysResponse.data.data.filter(
+            (item) => !isScheduled(item.liveStartedAt)
+          )
+        );
         setCurrentSurvey(survey);
         // Initialize selected options from URL
         const options =
-          Object.keys(responses[1]?.data?.data||{})?.length !== 0
+          Object.keys(responses[1]?.data?.data || {})?.length !== 0
             ? Object.entries(responses[1]?.data?.data)?.map(
                 ([key, value]) => `${key}:${value}`
               )
@@ -75,7 +79,7 @@ const SurveyFlow = () => {
         const answeredQuestions = survey.questions.filter(
           (q) => initialOptions[q._id]
         );
-        if (Object.keys(await responses[1]?.data?.data||{}).length === 0) {
+        if (Object.keys((await responses[1]?.data?.data) || {}).length === 0) {
           answeredQuestions.pop();
         }
         answeredQuestions.reverse();
@@ -165,9 +169,7 @@ const SurveyFlow = () => {
       });
 
       const lastQuestion = currentSurvey.questions[currentQuestionIndex];
-      const result = calculateResults(
-        lastQuestion.options 
-      );
+      const result = calculateResults(lastQuestion.options);
       setAnsweredQuestions((prev) => [
         {
           ...lastQuestion,
@@ -255,11 +257,11 @@ const SurveyFlow = () => {
       {/* Current Question Section */}
       {currentQuestion && (
         <div className="bg-white p-8 rounded-lg mt-5">
-          <div className="py-2 border-y">
-            <p className="py-2">{currentSurvey?.topic}</p>
+          <div className=" border-y mb-5">
+            <p className="py-3">{currentSurvey?.topic}</p>
           </div>
 
-          <div className="mt-5">
+          <div className="">
             <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
               Question {currentQuestionIndex + 1}
             </p>
@@ -306,6 +308,9 @@ const SurveyFlow = () => {
       {answeredQuestions.length > 0 &&
         answeredQuestions.map((question, index) => (
           <div key={question._id} className="bg-white p-8 rounded-lg mt-5">
+            <div className="border-y mb-5">
+              <p className="py-3">{currentSurvey?.topic}</p>
+            </div>
             <div className="mb-8 border-b pb-6 last:border-b-0">
               <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
                 Question {answeredQuestions.length - index}

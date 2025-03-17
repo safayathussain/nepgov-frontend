@@ -19,7 +19,7 @@ export const useCountries = () => {
 export const logout = async () => {
   await FetchApi({ url: "/auth/logout", method: "post" });
   store.dispatch(setAuth({}));
-  // window.location.href = "/";
+  window.location.href = "/";
 };
 export const isLive = (start, end) => {
   const currentDate = new Date();
