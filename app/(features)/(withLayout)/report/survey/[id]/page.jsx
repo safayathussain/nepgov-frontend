@@ -109,6 +109,7 @@ const Page = () => {
             ))}
           </div>
           <SurveyReportChart
+          id={id}
             loadingGraphId={loadingGraphId}
             chartData={item}
             onFilterChange={(filters) => handleFilterChange(item._id, filters)}

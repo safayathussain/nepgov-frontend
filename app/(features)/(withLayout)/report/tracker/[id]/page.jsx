@@ -104,6 +104,7 @@ const Page = () => {
           ))}
         </div>
         <ReportChart
+        id={id}
           chartData={chartData}
           filters={filters}
           isLoading={isLoading}

@@ -6,6 +6,8 @@ import DropdownInput from "@/components/input/DropdownInput";
 import Chart from "./Chart";
 import { Slider } from "primereact/slider";
 import { generateChartDurationArray, useCountries } from "@/utils/functions";
+import { TbDownload } from "react-icons/tb";
+import { useChartDataDownload } from "@/utils/useChartDataDownload";
 
 const SurveyReportChart = ({
   chartData,
@@ -13,6 +15,7 @@ const SurveyReportChart = ({
   loadingGraphId,
   liveStartedAt,
   liveEndedAt,
+  id
 }) => {
   const { countries } = useCountries();
   const [states, setStates] = useState([]);
@@ -147,7 +150,7 @@ const SurveyReportChart = ({
   );
 
   const timePeriods = generateChartDurationArray(liveStartedAt, liveEndedAt);
-  console.log(timePeriods);
+  const { downloadChartDataAsCSV } = useChartDataDownload();
 
   return (
     <div className="flex flex-col md:flex-row gap-5">
@@ -172,7 +175,7 @@ const SurveyReportChart = ({
         </div>
 
         <DropdownInput
-        label={"Gender"}
+          label={"Gender"}
           placeholder="Gender"
           value={filters.gender}
           onChange={(e) => handleInputChange("gender", e.value)}
@@ -245,6 +248,16 @@ const SurveyReportChart = ({
           chartData={chartData}
           isLoading={loadingGraphId === chartData._id}
         />
+        <div className="mt-5 md:px-5">
+          <button
+            className="flex items-center   "
+            onClick={() =>
+              downloadChartDataAsCSV(chartData, `question_${id}.csv`)
+            }
+          >
+            Download csv <TbDownload size={20} />
+          </button>
+        </div>
       </div>
     </div>
   );

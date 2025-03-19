@@ -5,6 +5,8 @@ import DropdownInput from "@/components/input/DropdownInput";
 import Chart from "./Chart";
 import { Slider } from "primereact/slider";
 import { generateChartDurationArray, useCountries } from "@/utils/functions";
+import { useChartDataDownload } from "@/utils/useChartDataDownload";
+import { TbDownload } from "react-icons/tb";
 
 const ReportChart = ({
   chartData,
@@ -13,6 +15,7 @@ const ReportChart = ({
   onApplyFilters,
   liveEndedAt,
   liveStartedAt,
+  id,
 }) => {
   const { countries } = useCountries();
   const [states, setStates] = useState([]);
@@ -199,6 +202,7 @@ const ReportChart = ({
       ...countries.map((item) => ({ name: item.name, value: item.name })),
     ];
   }, [countries]);
+  const { downloadChartDataAsCSV } = useChartDataDownload();
 
   return (
     <div className="flex flex-col md:flex-row gap-5">
@@ -297,6 +301,16 @@ const ReportChart = ({
       </div>
       <div className="w-full md:w-4/5 bg-[#F9FAFB] rounded-xl p-2 md:px-5 md:py-7">
         <Chart chartData={chartData} isLoading={isLoading} />
+        <div className="mt-5 md:px-5">
+          <button
+          className="flex items-center   "
+            onClick={() =>
+              downloadChartDataAsCSV(chartData, `tracker_${id}.csv`)
+            }
+          >
+             Download csv <TbDownload size={20}/>
+          </button>
+        </div>
       </div>
     </div>
   );
