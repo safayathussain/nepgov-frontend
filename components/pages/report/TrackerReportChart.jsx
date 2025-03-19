@@ -7,6 +7,7 @@ import { Slider } from "primereact/slider";
 import { generateChartDurationArray, useCountries } from "@/utils/functions";
 import { useChartDataDownload } from "@/utils/useChartDataDownload";
 import { TbDownload } from "react-icons/tb";
+import ShareButtons from "@/components/common/ShareButtons";
 
 const ReportChart = ({
   chartData,
@@ -301,7 +302,7 @@ const ReportChart = ({
       </div>
       <div className="w-full md:w-4/5 bg-[#F9FAFB] rounded-xl p-2 md:px-5 md:py-7">
         <Chart chartData={chartData} isLoading={isLoading} />
-        <div className="mt-5 md:px-5">
+        <div className="mt-5 md:px-5 flex justify-between flex-wrap">
           <button
           className="flex items-center   "
             onClick={() =>
@@ -310,6 +311,7 @@ const ReportChart = ({
           >
              Download csv <TbDownload size={20}/>
           </button>
+          <ShareButtons/>
         </div>
       </div>
     </div>

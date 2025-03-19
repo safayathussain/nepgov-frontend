@@ -1,70 +1,69 @@
-"use client"
+"use client";
 
-import { useEffect, useState, useCallback } from "react"
-import { useParams, useSearchParams } from "next/navigation"
-import { FetchApi } from "@/utils/FetchApi"
-import { useAuth } from "@/utils/functions"
-import CheckInput from "@/components/input/CheckInput"
-import ReportChart from "@/components/pages/report/TrackerReportChart"
- 
+import { useEffect, useState, useCallback } from "react";
+import { useParams, useSearchParams } from "next/navigation";
+import { FetchApi } from "@/utils/FetchApi";
+import { useAuth } from "@/utils/functions";
+import CheckInput from "@/components/input/CheckInput";
+import ReportChart from "@/components/pages/report/TrackerReportChart";
 
 const Page = () => {
-  const { id } = useParams()
-  const searchParams = useSearchParams()
-  const [chartData, setChartData] = useState (null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [selectedOption, setSelectedOption] = useState("")
-  const { auth } = useAuth()
+  const { id } = useParams();
+  const searchParams = useSearchParams();
+  const [chartData, setChartData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedOption, setSelectedOption] = useState("");
+  const { auth } = useAuth();
 
-  const [filters, setFilters] = useState ({
+  const [filters, setFilters] = useState({
     age: searchParams.get("age") || "0-100",
     gender: searchParams.get("gender") || "",
     monthDuration: searchParams.get("monthDuration") || "",
     country: searchParams.get("country") || "",
     state_province: searchParams.get("state_province") || "",
     city: searchParams.get("city") || "",
-  })
+  });
 
   const fetchTrackerData = useCallback(
     async (localFilters = filters) => {
       try {
-        setIsLoading(true)
-        const queryString = new URLSearchParams(localFilters ).toString()
+        setIsLoading(true);
+        const queryString = new URLSearchParams(localFilters).toString();
         const { data } = await FetchApi({
           url: `/tracker/result/${id}?${queryString}`,
-        })
+        });
 
         if (!selectedOption && auth._id) {
           const { data: checkVote } = await FetchApi({
             url: `/tracker/checkVote/${id}`,
-          })
-          setSelectedOption(checkVote?.data?.option || "")
+          });
+          setSelectedOption(checkVote?.data?.option || "");
         }
 
-        setChartData(data?.data)
+        setChartData(data?.data);
       } catch (err) {
-        console.error("Error fetching tracker data:", err)
+        console.error("Error fetching tracker data:", err);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     },
-    [id, auth._id, selectedOption, filters],
-  )
+    [id, auth._id, selectedOption, filters]
+  );
 
   useEffect(() => {
-    fetchTrackerData()
-  }, [fetchTrackerData])
+    fetchTrackerData();
+  }, [fetchTrackerData]);
 
-  const handleFilterChange = useCallback((key ) => {
-    setFilters((prev) => ({ ...prev, [key]: value }))
-  }, [])
+  const handleFilterChange = useCallback((key) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
   return (
     <div className="container">
       <style jsx global>{`
         .p-highlight > .p-checkbox-box {
-          background-color: #3560AD !important;
-          border-radius: 999px !important; 
+          background-color: #3560ad !important;
+          border-radius: 999px !important;
         }
         .p-dropdown-item {
           white-space: normal !important;
@@ -96,7 +95,10 @@ const Page = () => {
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="w-[150px] md:w-[300px] h-1 bg-gray-200 relative">
-                  <div className="h-1 bg-primary" style={{ width: `${item?.percentage}%` }} />
+                  <div
+                    className="h-1 bg-primary"
+                    style={{ width: `${item?.percentage}%` }}
+                  />
                 </div>
                 <span>{item?.percentage}%</span>
               </div>
@@ -104,7 +106,7 @@ const Page = () => {
           ))}
         </div>
         <ReportChart
-        id={id}
+          id={id}
           chartData={chartData}
           filters={filters}
           isLoading={isLoading}
@@ -115,8 +117,7 @@ const Page = () => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Page
-
+export default Page;
