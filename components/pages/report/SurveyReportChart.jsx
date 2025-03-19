@@ -8,6 +8,8 @@ import { Slider } from "primereact/slider";
 import { generateChartDurationArray, useCountries } from "@/utils/functions";
 import { TbDownload } from "react-icons/tb";
 import { useChartDataDownload } from "@/utils/useChartDataDownload";
+import ShareButtons from "@/components/common/ShareButtons";
+import { usePathname } from "next/navigation";
 
 const SurveyReportChart = ({
   chartData,
@@ -15,7 +17,7 @@ const SurveyReportChart = ({
   loadingGraphId,
   liveStartedAt,
   liveEndedAt,
-  id
+  id,
 }) => {
   const { countries } = useCountries();
   const [states, setStates] = useState([]);
@@ -152,8 +154,9 @@ const SurveyReportChart = ({
   const timePeriods = generateChartDurationArray(liveStartedAt, liveEndedAt);
   const { downloadChartDataAsCSV } = useChartDataDownload();
 
+  
   return (
-    <div className="flex flex-col md:flex-row gap-5">
+    <div className="flex flex-col md:flex-row gap-5"  >
       <div className="w-full md:w-1/5 space-y-3">
         <Button
           className="rounded-lg w-full"
@@ -248,7 +251,7 @@ const SurveyReportChart = ({
           chartData={chartData}
           isLoading={loadingGraphId === chartData._id}
         />
-        <div className="mt-5 md:px-5">
+        <div className="mt-5 md:px-5 flex justify-between flex-wrap">
           <button
             className="flex items-center   "
             onClick={() =>
@@ -257,6 +260,8 @@ const SurveyReportChart = ({
           >
             Download csv <TbDownload size={20} />
           </button>
+          <ShareButtons shareUrl={document?.location?.href + `#${id}`}/>
+
         </div>
       </div>
     </div>
