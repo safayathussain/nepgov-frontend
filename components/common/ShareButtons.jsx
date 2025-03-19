@@ -12,7 +12,6 @@ import {
   FacebookIcon,
   FacebookMessengerIcon,
   WhatsappIcon,
-  TwitterIcon,
   XIcon,
 } from "react-share";
 
@@ -26,10 +25,10 @@ const ShareButtons = ({
         <FacebookIcon size={30} round />
       </FacebookShareButton>
 
-      {/* Messenger */}
+      {/* Messenger
       <FacebookMessengerShareButton url={shareUrl} appId="YOUR_FACEBOOK_APP_ID">
         <FacebookMessengerIcon size={30} round />
-      </FacebookMessengerShareButton>
+      </FacebookMessengerShareButton> */}
 
       {/* WhatsApp */}
       <WhatsappShareButton url={shareUrl} separator=" - ">
