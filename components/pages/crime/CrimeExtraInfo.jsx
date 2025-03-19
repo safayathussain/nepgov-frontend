@@ -114,54 +114,57 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
         </div>
 
         <div className="space-y-5 bg-white p-10">
-          <h2 className="text-2xl font-semibold">
-            Keep in contact (your details will always be completely anonymous):
-          </h2>
-          <p className="text-sm">
-            If we need to clarify any information or you think there might be
-            extra information you can give, are you prepared to create an
-            anonymous log-in case you have more questions?
-          </p>
-          <div className="flex gap-4 flex-col sm:flex-row">
-            <button
-              type="button"
-              className={`px-4 py-2 rounded cursor-pointer w-full sm:w-1/2 ${
-                formData?.keepInContact
-                  ? "bg-primary text-white"
-                  : "text-primary border"
-              }`}
-              onClick={() => {
-                setFormData((prev) => ({ ...prev, keepInContact: true }));
-              }}
-            >
-              Yes create me an anonymous log in case you have more questions
-            </button>
-            <button
-              type="button"
-              className={`px-4 py-2 rounded cursor-pointer w-full sm:w-1/2 ${
-                !formData?.keepInContact
-                  ? "bg-primary text-white"
-                  : "text-primary border"
-              }`}
-              onClick={() => {
-                setFormData((prev) => ({ ...prev, keepInContact: false }));
-              }}
-            >
-              No, I've given you all the info you will need
-            </button>
-          </div>
+          {/* <>
+            <h2 className="text-2xl font-semibold">
+              Keep in contact (your details will always be completely
+              anonymous):
+            </h2>
+            <p className="text-sm">
+              If we need to clarify any information or you think there might be
+              extra information you can give, are you prepared to create an
+              anonymous log-in case you have more questions?
+            </p>
+            <div className="flex gap-4 flex-col sm:flex-row">
+              <button
+                type="button"
+                className={`px-4 py-2 rounded cursor-pointer w-full sm:w-1/2 ${
+                  formData?.keepInContact
+                    ? "bg-primary text-white"
+                    : "text-primary border"
+                }`}
+                onClick={() => {
+                  setFormData((prev) => ({ ...prev, keepInContact: true }));
+                }}
+              >
+                Yes create me an anonymous log in case you have more questions
+              </button>
+              <button
+                type="button"
+                className={`px-4 py-2 rounded cursor-pointer w-full sm:w-1/2 ${
+                  !formData?.keepInContact
+                    ? "bg-primary text-white"
+                    : "text-primary border"
+                }`}
+                onClick={() => {
+                  setFormData((prev) => ({ ...prev, keepInContact: false }));
+                }}
+              >
+                No, I've given you all the info you will need
+              </button>
+            </div>
 
-          <CheckInput
-            id="terms"
-            label="By opting in to the Keep in Contact portal I understand I am setting up an anonymous User communication with Crimestoppers. I understand that Crimestoppers guarantee that any information I provide is shared with police 100% anonymously, and that police may ask follow-up questions through the portal"
-            value={formData.acceptTerms}
-            setValue={(checked) =>
-              setFormData((prev) => ({ ...prev, acceptTerms: checked }))
-            }
-            required
-          />
+            <CheckInput
+              id="terms"
+              label="By opting in to the Keep in Contact portal I understand I am setting up an anonymous User communication with Crimestoppers. I understand that Crimestoppers guarantee that any information I provide is shared with police 100% anonymously, and that police may ask follow-up questions through the portal"
+              value={formData.acceptTerms}
+              setValue={(checked) =>
+                setFormData((prev) => ({ ...prev, acceptTerms: checked }))
+              }
+              required
+            />
 
-          <hr />
+            <hr />
+          </> */}
           <div className="flex justify-between pt-6">
             <Button
               type="button"
@@ -177,11 +180,11 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               className={"flex items-center"}
               disabled={
                 !formData?.hasVehicle ||
-                !formData?.hasWeapon ||
-                !formData?.acceptTerms
+                !formData?.hasWeapon 
+                // !formData?.acceptTerms
               }
             >
-              Continue
+              Submit
               <CgChevronRight size={25} />
             </Button>
           </div>

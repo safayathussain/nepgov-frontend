@@ -1,7 +1,6 @@
 "use client";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { store } from "@/redux/store";
 import { isTokenExpired, logout } from "./functions";
 import { isCookieAccepted } from "./constants";
 

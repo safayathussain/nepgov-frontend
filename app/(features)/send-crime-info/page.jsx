@@ -22,8 +22,6 @@ const CrimeReportForm = () => {
     personContact: "",
     hasVehicle: null,
     hasWeapon: null,
-    keepInContact: true,
-    acceptTerms: false,
     confirmNoPoliceAttention: false,
   });
 
@@ -69,7 +67,6 @@ const CrimeReportForm = () => {
       personContact: formData.personContact,
       hasVehicle: formData.hasVehicle,
       hasWeapon: formData.hasWeapon,
-      keepInContact: formData.keepInContact,
     };
     await FetchApi({
       url: `/crime/create`,
