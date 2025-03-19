@@ -11,7 +11,7 @@ const CrimeOrIncident = ({
   handleBack,
   handleNext,
   handleInputChange,
-  handleDateChange
+  handleDateChange,
 }) => {
   return (
     <div>
@@ -53,6 +53,9 @@ const CrimeOrIncident = ({
                 }))
               }
               variant={!formData?.dateKnown ? "primary-outline" : "primary"}
+              className={
+                formData?.dateKnown && "hover:!bg-primary hover:!text-white"
+              }
             >
               Yes
             </Button>
@@ -65,6 +68,9 @@ const CrimeOrIncident = ({
                 }))
               }
               variant={formData?.dateKnown ? "primary-outline" : "primary"}
+              className={
+                !formData?.dateKnown && "hover:!bg-primary  hover:!text-white"
+              }
             >
               No
             </Button>
@@ -75,7 +81,7 @@ const CrimeOrIncident = ({
               id="time"
               name="time"
               value={formData.time}
-              onChange={(value) => handleDateChange('time', value)}
+              onChange={(value) => handleDateChange("time", value)}
               disableFuture={true}
             />
           )}

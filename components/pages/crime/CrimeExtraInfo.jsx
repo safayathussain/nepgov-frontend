@@ -24,6 +24,9 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               variant={
                 formData?.hasVehicle !== "yes" ? "primary-outline" : "primary"
               }
+              className={
+                formData?.hasVehicle === "yes" && "hover:!bg-primary  hover:!text-white"
+              }
             >
               Yes
             </Button>
@@ -38,7 +41,11 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               variant={
                 formData?.hasVehicle !== "no" ? "primary-outline" : "primary"
               }
+              className={
+                formData?.hasVehicle === "no" && "hover:!bg-primary  hover:!text-white"
+              }
             >
+
               No
             </Button>
             <Button
@@ -53,6 +60,9 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
                 formData?.hasVehicle !== "dontKnow"
                   ? "primary-outline"
                   : "primary"
+              }
+              className={
+                formData?.hasVehicle === "dontKnow" && "hover:!bg-primary  hover:!text-white"
               }
             >
               Don't Know
@@ -77,6 +87,9 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               variant={
                 formData?.hasWeapon !== "yes" ? "primary-outline" : "primary"
               }
+              className={
+                formData?.hasWeapon === "yes" && "hover:!bg-primary  hover:!text-white"
+              }
             >
               Yes
             </Button>
@@ -90,6 +103,9 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
               }
               variant={
                 formData?.hasWeapon !== "no" ? "primary-outline" : "primary"
+              }
+              className={
+                formData?.hasWeapon === "no" && "hover:!bg-primary  hover:!text-white"
               }
             >
               No
@@ -106,6 +122,9 @@ const CrimeExtraInfo = ({ formData, handleBack, handleNext, setFormData }) => {
                 formData?.hasWeapon !== "dontKnow"
                   ? "primary-outline"
                   : "primary"
+              }
+              className={
+                formData?.hasWeapon === "dontKnow" && "hover:!bg-primary  hover:!text-white"
               }
             >
               Don't Know

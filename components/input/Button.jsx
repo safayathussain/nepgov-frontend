@@ -44,7 +44,7 @@ const Button = ({
 
   return (
     <button
-    disabled={disabled}
+      disabled={disabled}
       className={`font-medium duration-300 ${variantClassName} ${sizeClassName} ${className} ${
         disabled && "opacity-60"
       } whitespace-nowrap`}
