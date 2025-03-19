@@ -39,14 +39,19 @@ const Page = () => {
   useEffect(() => {
     fetchInitialData();
   }, [fetchInitialData]);
-  const pathname = usePathname();
 
-  useEffect(() => {
-    const id = pathname.split("#")[1];
-    if (id) {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [pathname]);
+  const hash = window.location.hash.replace("#", "");
+  if (hash) {
+    setTimeout(() => {
+      const element = document.getElementById(hash);
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, 100);
+  }
   const handleFilterChange = useCallback(async (questionId, filters) => {
     try {
       setLoadingGraphId(questionId);
@@ -90,7 +95,7 @@ const Page = () => {
       `}</style>
       {chartData?.map((item, index) => (
         <div
-        id={item?._id}
+          id={item?._id}
           key={item._id}
           className="container border-2 border-lightGray rounded-xl py-10 my-10"
         >
