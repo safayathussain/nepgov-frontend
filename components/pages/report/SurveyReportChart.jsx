@@ -260,7 +260,7 @@ const SurveyReportChart = ({
           >
             Download csv <TbDownload size={20} />
           </button>
-          <ShareButtons shareUrl={document?.location?.href + `#${id}`}/>
+          <ShareButtons shareUrl={window.location.href.split('#')[0] + `#${id}`}/>
 
         </div>
       </div>
