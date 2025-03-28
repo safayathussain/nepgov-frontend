@@ -258,14 +258,16 @@ const SurveyFlow = () => {
       {currentQuestion && (
         <div className="bg-white p-8 rounded-lg mt-5">
           <div className=" border-y mb-5">
-            <p className="py-3">{currentSurvey?.topic}</p>
+            <p className="py-3 font-medium text-xl">{currentSurvey?.topic}</p>
           </div>
 
           <div className="">
             <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
               Question {currentQuestionIndex + 1}
             </p>
-            <p className="font-medium mb-4">{currentQuestion?.question}</p>
+            <p className="font-medium mb-4 text-lg">
+              {currentQuestion?.question}
+            </p>
 
             <div className="space-y-4">
               {currentQuestion?.options?.map((option) => (

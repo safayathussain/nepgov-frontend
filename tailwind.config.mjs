@@ -12,7 +12,8 @@ export default {
         sans: ['DM Sans', 'sans-serif'], 
       },
       colors: {
-        lightGray: "#D1D5DB",
+        // lightGray: "#D1D5DB",
+        lightGray: "#808DA5",
         primary: "#3560AD",
         secondary: "#EF4634",
         darkGray: "#4B4B4B",

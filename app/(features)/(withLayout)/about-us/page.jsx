@@ -16,7 +16,7 @@ const page = () => {
 
   return (
     <div className="container">
-      <div className="container py-20">
+      <div className="max-w-[846px] mx-auto py-20">
         <p className="text-4xl mb-5 font-semibold">{title}</p>
         <div
           dangerouslySetInnerHTML={{ __html: content }}

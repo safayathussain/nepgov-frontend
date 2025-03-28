@@ -9,11 +9,11 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
   return (
     <div>
       <div className="text-white flex flex-col lg:flex-row gap-5 mt-8">
-        <div className="bg-gradiantBg p-5 flex flex-col justify-between w-full gap-8">
+        <div className="bg-gradiantBg p-5 flex flex-col justify-between w-full gap-16">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <p>CRIME REPORT</p>
-              <p className="flex items-center gap-2">
+              <p className="flex items-center gap-2 blink">
                 Live <GoDotFill />
               </p>
             </div>
@@ -36,7 +36,7 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
             <div className="flex justify-between items-center">
               <p>Daily Question</p>
               {isLive(hero?.dailyQuestion?.liveStartedAt, hero?.dailyQuestion?.liveEndedAt) && (
-                <p className="flex items-center gap-2">
+                <p className="flex items-center gap-2 blink">
                   Live <GoDotFill />
                 </p>
               )}

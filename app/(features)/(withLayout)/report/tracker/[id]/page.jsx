@@ -5,7 +5,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { FetchApi } from "@/utils/FetchApi";
 import { useAuth } from "@/utils/functions";
 import CheckInput from "@/components/input/CheckInput";
-import ReportChart from "@/components/pages/report/TrackerReportChart";
+import TrackerReportChart from "@/components/pages/report/TrackerReportChart";
 
 const Page = () => {
   const { id } = useParams();
@@ -76,7 +76,7 @@ const Page = () => {
           }
         }
       `}</style>
-      <div className="container border border-lightGray rounded-xl py-10 my-10">
+      <div className="container border border-[#EBEBEB] rounded-xl py-10 my-10">
         <p className="text-center text-xl sm:text-2xl lg:text-4xl font-semibold max-w-[700px] mx-auto">
           {chartData?.topic}
         </p>
@@ -105,7 +105,7 @@ const Page = () => {
             </div>
           ))}
         </div>
-        <ReportChart
+        <TrackerReportChart
           id={id}
           chartData={chartData}
           filters={filters}

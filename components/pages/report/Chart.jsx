@@ -91,7 +91,7 @@ const TrackerChart = ({ chartData, isLoading }) => {
   }
 
   return (
-    <div className="h-[400px] relative">
+    <div className="h-[400px] relative" >
       <Line
         options={options}
         data={{

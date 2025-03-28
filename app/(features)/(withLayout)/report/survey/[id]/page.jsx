@@ -97,7 +97,7 @@ const Page = () => {
         <div
           id={item?._id}
           key={item._id}
-          className="container border-2 border-lightGray rounded-xl py-10 my-10"
+          className="container border-2 border-[#EBEBEB] rounded-xl py-10 my-10"
         >
           <p className="text-center bg-[#EF4634] text-white w-max px-2 mx-auto">
             Question {index + 1}

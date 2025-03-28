@@ -43,11 +43,11 @@ const page = () => {
               className="w-full h-[500px] object-cover"
             ></Image>
           )}
-          <div className="container max-w-[950px] py-10 ">
+          <div className="container max-w-[846px] py-10 ">
             <p className="text-2xl md:text-4xl text-primary font-semibold">
               {article?.title}
             </p>
-            <p className="py-3 font-medium italic text-[#808DA5]">
+            <p className="pt-5 font-medium italic text-[#808DA5]">
               published on {formatReadableDate(article?.createdAt)}
             </p>
             <div

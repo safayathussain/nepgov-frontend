@@ -52,15 +52,7 @@ const page = () => {
           ))}
         </div>
       </div>
-      <UnprocessableInfo />
-      <div className="flex justify-center my-20">
-        <Button
-          variant="primary"
-          onClick={() => router.push("/send-crime-info")}
-        >
-          Give Information Here
-        </Button>
-      </div>
+      <UnprocessableInfo /> 
     </div>
   );
 };

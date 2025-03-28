@@ -5,8 +5,8 @@ const LiveStatus = () => {
   return (
     <div>
       {" "}
-      <p className="flex items-center ">
-        Live <GoDotFill className="text-error text-3xl" />
+      <p className="flex items-center blink ">
+        Live <GoDotFill className="text-error text-2xl" />
       </p>
     </div>
   );

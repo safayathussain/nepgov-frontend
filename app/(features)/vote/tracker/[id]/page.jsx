@@ -177,8 +177,8 @@ const VoteTrackerPage = () => {
         role="main"
         aria-label="Voting tracker"
       >
-        <div className="py-2 border-y">
-          <p className="font-medium">{currentTracker?.topic}</p>
+        <div className="py-3 border-y">
+          <p className="font-medium text-xl">{currentTracker?.topic}</p>
         </div>
 
         {!result.length ? (

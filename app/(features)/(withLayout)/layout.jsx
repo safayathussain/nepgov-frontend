@@ -6,8 +6,8 @@ const layout = ({ children }) => {
   return (
     <div>
       <Navbar />
-      {children}
-      <Footer/>
+      <div className="min-h-screen">{children}</div>
+      <Footer />
     </div>
   );
 };

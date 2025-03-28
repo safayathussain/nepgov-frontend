@@ -38,11 +38,7 @@ const Footer = () => {
     {
       route: "/about-us",
       name: "About",
-    },
-    {
-      route: "/vote",
-      name: "Vote",
-    },
+    }, 
     {
       route: "/crime-info",
       name: "Crime information",
@@ -73,7 +69,7 @@ const Footer = () => {
   return (
     <div className="bg-primary text-white py-16">
       <div className="container">
-        <div className=" flex flex-wrap justify-between gap-10">
+        <div className=" flex flex-wrap flex-col sm:flex-row justify-between gap-10">
           <div className="max-w-[400px]">
             <div>
               <p className="text-3xl font-bold">NepGov</p>
@@ -96,14 +92,14 @@ const Footer = () => {
               ))}
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col space-y-2">
             {routes?.map((item, i) => (
               <Link key={i} href={item?.route}>
                 {item?.name}
               </Link>
             ))}
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col space-y-2">
             {routes2?.map((item, i) => (
               <Link key={i} href={item?.route}>
                 {item?.name}

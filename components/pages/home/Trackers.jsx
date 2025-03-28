@@ -21,7 +21,7 @@ export default function Trackers({ trackers }) {
       <div className="flex justify-between">
         <div className="flex items-center gap-5">
           <p className="text-3xl font-semibold">Trackers</p>
-          <Link href={""} className="text-primary font-semibold">
+          <Link href={"/trackers"} className="text-primary font-semibold">
             View More
           </Link>
         </div>

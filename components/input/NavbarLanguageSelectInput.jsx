@@ -7,16 +7,16 @@ const NavbarLanguageSelectInput = () => {
   useEffect(() => {
     const addGoogleTranslateScript = () => {
       if (document.getElementById("google-translate-script")) return;
-      
+
       const script = document.createElement("script");
       script.id = "google-translate-script";
       script.type = "text/javascript";
-      script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.src =
+        "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
       script.async = true;
       document.body.appendChild(script);
     };
 
-    // Define the Google Translate initialization function
     window.googleTranslateElementInit = () => {
       new window.google.translate.TranslateElement(
         {
@@ -28,15 +28,19 @@ const NavbarLanguageSelectInput = () => {
         "google_translate_element"
       );
 
-      // MutationObserver to modify the dropdown options
       const observer = new MutationObserver((mutations, obs) => {
         const select = document.querySelector(".goog-te-combo");
         if (select) {
-          obs.disconnect(); // Stop observing once the dropdown is found
+          obs.disconnect();  
           const options = Array.from(select.options);
+          options.forEach((option) => {
+            option.innerText = option.innerText
+              .replace(/[\(\[].*?[\)\]]/g, "")
+              .trim();
+          });
           const englishOption = options.find((opt) => !opt.value);
           if (englishOption) {
-            englishOption.innerText = "English (Change)";
+            englishOption.innerText = "English";
           }
         }
       });
@@ -49,8 +53,13 @@ const NavbarLanguageSelectInput = () => {
 
   return (
     <div className="flex items-center font-medium relative w-min">
-      <div aria-label="test" id="google_translate_element"  ></div>
-      <div id="text" className="  absolute   right-0 flex items-center  pointer-events-none"><FaAngleDown size={20}/></div>
+      <div aria-label="test" id="google_translate_element"></div>
+      <div
+        id="text"
+        className="  absolute  right-2 flex items-center text-secondary pointer-events-none"
+      >
+        <FaAngleDown size={20} />
+      </div>
     </div>
   );
 };

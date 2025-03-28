@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState, useMemo, useRef } from "react";
 import Button from "@/components/input/Button";
 import DropdownInput from "@/components/input/DropdownInput";
 import Chart from "./Chart";
@@ -8,8 +8,9 @@ import { generateChartDurationArray, useCountries } from "@/utils/functions";
 import { useChartDataDownload } from "@/utils/useChartDataDownload";
 import { TbDownload } from "react-icons/tb";
 import ShareButtons from "@/components/common/ShareButtons";
+import TrackerChartPdfTamplate from "./TrackerChartPdfTamplate";
 
-const ReportChart = ({
+const TrackerReportChart = ({
   chartData,
   filters,
   isLoading,
@@ -203,8 +204,8 @@ const ReportChart = ({
       ...countries.map((item) => ({ name: item.name, value: item.name })),
     ];
   }, [countries]);
-  const { downloadChartDataAsCSV } = useChartDataDownload();
-
+  const { downloadChartDataAsCSV, downloadChartDataAsPdf } = useChartDataDownload();
+const chartRef = useRef();
   return (
     <div className="flex flex-col md:flex-row gap-5">
       <div className="w-full md:w-1/5 space-y-3">
@@ -303,19 +304,33 @@ const ReportChart = ({
       <div className="w-full md:w-4/5 bg-[#F9FAFB] rounded-xl p-2 md:px-5 md:py-7">
         <Chart chartData={chartData} isLoading={isLoading} />
         <div className="mt-5 md:px-5 flex justify-between flex-wrap">
-          <button
-          className="flex items-center   "
-            onClick={() =>
-              downloadChartDataAsCSV(chartData, `tracker_${id}.csv`)
-            }
-          >
-             Download csv <TbDownload size={20}/>
-          </button>
-          <ShareButtons/>
+          <div className="flex gap-2 items-center">
+            <p>Download as:</p>
+            <button
+              className="flex items-center   "
+              onClick={() =>
+                downloadChartDataAsCSV(chartData, `tracker_${id}.csv`)
+              }
+            >
+              Csv <TbDownload size={20} />
+            </button>
+            <button
+              className="flex items-center   "
+              onClick={() =>
+                downloadChartDataAsPdf(chartRef, `tracker_${id}.pdf`)
+              }
+            >
+              Pdf <TbDownload size={20} />
+            </button>
+          </div>
+          <ShareButtons />
         </div>
       </div>
+      {/* <div className="hidden">
+        <TrackerChartPdfTamplate data={chartData} ref={chartRef}/>
+      </div> */}
     </div>
   );
 };
 
-export default ReportChart;
+export default TrackerReportChart;

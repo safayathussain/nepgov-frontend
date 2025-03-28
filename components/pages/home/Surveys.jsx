@@ -24,7 +24,7 @@ export default function Surveys({ surveys }) {
       <div className="flex justify-between">
         <div className="flex items-center gap-5">
           <p className="text-3xl font-semibold">Surveys</p>
-          <Link href={""} className="text-primary font-semibold">
+          <Link href={"/surveys"} className="text-primary font-semibold">
             View More
           </Link>
         </div>

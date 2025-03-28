@@ -125,7 +125,7 @@ ul {
 .text-editor-styles {
   all: initial;
   display: block;
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: "DM Sans", -apple-system, sans-serif;
   line-height: 1.5;
   color: #333;
   * {
@@ -138,22 +138,29 @@ ul {
     font-weight: bold;
     color: #333;
     margin-bottom: 1rem;
+    color: #3560ad;
   }
-
   h2 {
     font-size: 1.75rem;
     font-weight: 600; /* semi-bold */
     color: #333;
     margin-bottom: 1rem;
+    color: #3560ad;
   }
-
   h3 {
     font-size: 1.5rem;
     font-weight: 500; /* medium */
     color: #333;
     margin-bottom: 1rem;
+    color: #3560ad;
   }
-
+  h4 {
+    font-size: 1.25rem; /* Size of h4 text */
+    font-weight: medium;
+    color: #333;
+    margin-bottom: 1rem;
+    color: #3560ad;
+  }
   /* Paragraphs */
   p {
     font-size: 1rem;
@@ -288,6 +295,21 @@ ul {
 .dm_sans_1bf42944-module__3H8arW__variable {
   top: 0 !important;
 }
-.__variable_8b1690  {
+.__variable_8b1690 {
   top: 0 !important;
+}
+.blink {
+  animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
 }

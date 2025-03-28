@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const LiveSurveyAndTracker = ({ liveSurveyTracker }) => {
-  const router = useRouter()
+  const router = useRouter();
   return (
     <div className="bg-[#F3F4F6] p-5">
       <div className="flex items-end gap-5">
@@ -19,27 +19,33 @@ const LiveSurveyAndTracker = ({ liveSurveyTracker }) => {
         {liveSurveyTracker?.map((item) => (
           <div
             key={item?.data?._id}
-            className="p-5 bg-white border border-lightGray"
+            className="p-5 bg-white border border-[#EBEBEB] "
           >
-            <div className="flex flex-col justify-between h-full">
-              <div>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    {item?.type === "Survey" ? (
-                      <SurveyStatus />
-                    ) : (
-                      <TrackerStatus />
-                    )}
-                    <LiveStatus />
-                  </div>
-                  <p> {item?.data?.categories?.[0]?.name}</p>
+            <div className="flex flex-col justify-between h-full space-y-3">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  {item?.type === "Survey" ? (
+                    <SurveyStatus />
+                  ) : (
+                    <TrackerStatus />
+                  )}
+                  <LiveStatus />
                 </div>
-                <p className="text-xl py-2 font-semibold">
-                  {item?.data?.topic}
-                </p>
+                <p> {item?.data?.categories?.[0]?.name}</p>
               </div>
-              <div className="mt-2">
-                <Button onClick={() => router.push(item?.type === "Survey" ? `/vote/survey/${item?.data?._id}` : `/vote/tracker/${item?.data?._id}`)} variant="primary-outline" className={"w-full"}>
+              <p className="text-xl py-2 font-semibold">{item?.data?.topic}</p>
+              <div className="mt-3">
+                <Button
+                  onClick={() =>
+                    router.push(
+                      item?.type === "Survey"
+                        ? `/vote/survey/${item?.data?._id}`
+                        : `/vote/tracker/${item?.data?._id}`
+                    )
+                  }
+                  variant="primary-outline"
+                  className={"w-full"}
+                >
                   Vote Now
                 </Button>
               </div>

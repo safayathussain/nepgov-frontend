@@ -17,7 +17,7 @@ export default function Articles({ articles }) {
       <div className="flex justify-between">
         <div className="flex items-center gap-5">
           <p className="text-3xl font-semibold">Article</p>
-          <Link href={""} className="text-primary font-semibold">
+          <Link href={"/articles"} className="text-primary font-semibold">
             View More
           </Link>
         </div>
