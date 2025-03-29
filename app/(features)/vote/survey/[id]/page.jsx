@@ -23,7 +23,6 @@ const SurveyFlow = () => {
   const { id } = useParams();
   const searchParams = useSearchParams();
   const { auth } = useAuth();
-
   const [loading, setLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -33,6 +32,8 @@ const SurveyFlow = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
+  const [isModifyingPrevious, setIsModifyingPrevious] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -59,7 +60,7 @@ const SurveyFlow = () => {
           )
         );
         setCurrentSurvey(survey);
-        // Initialize selected options from URL
+
         const options =
           Object.keys(responses[1]?.data?.data || {})?.length !== 0
             ? Object.entries(responses[1]?.data?.data)?.map(
@@ -74,8 +75,6 @@ const SurveyFlow = () => {
           }
         });
         setSelectedOptions(initialOptions);
-
-        // Set answered questions based on URL options
         const answeredQuestions = survey.questions.filter(
           (q) => initialOptions[q._id]
         );
@@ -87,11 +86,9 @@ const SurveyFlow = () => {
           answeredQuestions.map((q) => ({
             ...q,
             selectedOption: initialOptions[q._id],
-            results: calculateResults(q.options),
+            results: calculateResults(q.options, initialOptions[q._id]),
           }))
         );
-
-        // Set current question index
         setCurrentQuestionIndex(answeredQuestions.length);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -104,36 +101,63 @@ const SurveyFlow = () => {
     if (id) {
       fetchData();
     }
-  }, [id, auth?._id, searchParams]);
+  }, [id, searchParams, auth?._id]);
 
-  const handleOptionSelect = (questionId, optionId) => {
+  const handleOptionSelect = async (
+    questionId,
+    optionId,
+    isPrevious = false
+  ) => {
+    if (isPrevious) {
+      setIsModifyingPrevious(true);
+    }
+
     setSelectedOptions((prev) => ({
       ...prev,
       [questionId]: optionId,
     }));
-  };
-
-  const handleNext = async () => {
-    const currentQuestion = currentSurvey.questions[currentQuestionIndex];
-
-    if (!selectedOptions[currentQuestion._id]) {
-      setError("Please select an option before continuing");
-      return;
-    }
-
     try {
-      const results = calculateResults(currentQuestion.options);
+      const currentQuestion = isPrevious
+        ? answeredQuestions.find((q) => q._id === questionId)
+        : currentSurvey.questions?.[currentQuestionIndex];
 
-      setAnsweredQuestions((prev) => [
-        {
-          ...currentQuestion,
-          results: results,
-          selectedOption: selectedOptions[currentQuestion._id],
-        },
-        ...prev,
-      ]);
+      if (!currentQuestion) {
+        return;
+      }
+      if (isPrevious) {
+        // Update an already answered question
+        setAnsweredQuestions((prev) =>
+          prev.map((q) =>
+            q._id === questionId
+              ? {
+                  ...q,
+                  selectedOption: optionId,
+                  results: calculateResults(q.options, optionId),
+                }
+              : q
+          )
+        );
+        setIsModifyingPrevious(false);
+      } else {
+        // Process a new answer
+        const results = calculateResults(currentQuestion.options, optionId);
 
-      setCurrentQuestionIndex((prev) => prev + 1);
+        // Only add if not already answered
+        if (!answeredQuestions.some((q) => q._id === currentQuestion._id)) {
+          setAnsweredQuestions((prev) => [
+            {
+              ...currentQuestion,
+              results: results,
+              selectedOption: optionId,
+            },
+            ...prev,
+          ]);
+
+          if (currentQuestionIndex < currentSurvey.questions.length - 1) {
+            setCurrentQuestionIndex((prev) => prev + 1);
+          }
+        }
+      }
       setError(null);
     } catch (error) {
       console.error("Error processing question:", error);
@@ -161,23 +185,13 @@ const SurveyFlow = () => {
           optionId,
         })
       );
-      FetchApi({
+      await FetchApi({
         url: `/survey/${id}/vote`,
         method: "post",
         data: { votes },
         isToast: true,
       });
 
-      const lastQuestion = currentSurvey.questions[currentQuestionIndex];
-      const result = calculateResults(lastQuestion.options);
-      setAnsweredQuestions((prev) => [
-        {
-          ...lastQuestion,
-          results: result,
-          selectedOption: selectedOptions[lastQuestion._id],
-        },
-        ...prev,
-      ]);
       setCurrentQuestionIndex(-1);
     } catch (error) {
       console.error("Error submitting votes:", error);
@@ -191,17 +205,6 @@ const SurveyFlow = () => {
     return (
       <div className="min-h-[80vh] flex h-full w-full items-center justify-center">
         <Loading />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 border border-red-200 p-8 rounded-lg mt-5">
-        <p className="text-red-600">{error}</p>
-        <Button onClick={() => router.refresh()} className="mt-4">
-          Try Again
-        </Button>
       </div>
     );
   }
@@ -224,7 +227,7 @@ const SurveyFlow = () => {
   const currentQuestion = currentSurvey.questions?.[currentQuestionIndex];
   const isLastQuestion =
     currentQuestionIndex === currentSurvey.questions?.length - 1;
-
+  console.log(answeredQuestions);
   return (
     <div>
       <style jsx global>{`
@@ -257,7 +260,7 @@ const SurveyFlow = () => {
       {/* Current Question Section */}
       {currentQuestion && (
         <div className="bg-white p-8 rounded-lg mt-5">
-          <div className=" border-y mb-5">
+          <div className="border-y mb-5">
             <p className="py-3 font-medium text-xl">{currentSurvey?.topic}</p>
           </div>
 
@@ -269,13 +272,18 @@ const SurveyFlow = () => {
               {currentQuestion?.question}
             </p>
 
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+
             <div className="space-y-4">
               {currentQuestion?.options?.map((option) => (
                 <CheckInput
                   key={option._id}
                   boxClassName="!outline-primary"
                   label={option.content}
-                  checked={selectedOptions[currentQuestion._id] === option._id}
+                  checked={
+                    selectedOptions[currentQuestion._id] === option._id ||
+                    answeredQuestions[currentQuestion._id] === option._id
+                  }
                   onChange={() =>
                     handleOptionSelect(currentQuestion._id, option._id)
                   }
@@ -283,62 +291,55 @@ const SurveyFlow = () => {
               ))}
             </div>
 
-            <div className="flex justify-end mt-6">
-              {isLastQuestion ? (
-                <Button
-                  onClick={handleSubmit}
-                  disabled={
-                    submitLoading || !selectedOptions[currentQuestion?._id]
-                  }
-                >
+            {isLastQuestion && selectedOptions[currentQuestion._id] && (
+              <div className="flex justify-end mt-6">
+                <Button onClick={handleSubmit} disabled={submitLoading}>
                   {submitLoading ? "Submitting..." : "Submit All"}
                 </Button>
-              ) : (
-                <Button
-                  onClick={handleNext}
-                  disabled={!selectedOptions[currentQuestion?._id]}
-                >
-                  Next
-                </Button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {/* Previous Questions Results Section */}
-      {answeredQuestions.length > 0 &&
-        answeredQuestions.map((question, index) => (
-          <div key={question._id} className="bg-white p-8 rounded-lg mt-5">
-            <div className="border-y mb-5">
-              <p className="py-3">{currentSurvey?.topic}</p>
-            </div>
-            <div className="mb-8 border-b pb-6 last:border-b-0">
+      {answeredQuestions.length > 0 && (
+        <div className=" ">
+          {answeredQuestions.map((question, index) => (
+            <div key={question._id} className=" bg-white  p-8 rounded-lg mt-5">
+              <div className="border-y mb-5">
+                <p className="py-3 font-medium text-xl">
+                  {currentSurvey?.topic}
+                </p>
+              </div>
               <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
                 Question {answeredQuestions.length - index}
               </p>
-              <p className="font-medium text-lg">{question.question}</p>
-              <div className="space-y-4 mt-5">
+              <p className="font-medium text-lg mb-4">{question.question}</p>
+              <div className="space-y-4">
                 {question.results.map((option) => (
                   <div key={option._id} className="w-full">
                     <div className="flex justify-between items-center mb-2">
-                      <span className="flex items-center">
+                      <span className="flex items-center w-full">
                         <CheckInput
                           boxClassName="!outline-primary"
                           checked={question.selectedOption === option._id}
-                          readOnly
+                          onChange={() =>
+                            handleOptionSelect(question._id, option._id, true)
+                          }
                         />
-                        <span className="ml-2">{option.content}</span>
+                        <span className="ml-2 flex-1">{option.content}</span>
                       </span>
-                      <span>{option.percentage}%</span>
+                      <span className="ml-4">{option.percentage}%</span>
                     </div>
                     <ProgressBar progress={option.percentage} />
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      )}
     </div>
   );
 };

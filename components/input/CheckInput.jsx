@@ -15,9 +15,9 @@ const CheckInput = ({
   setValue = () => {},
   ...etc
 }) => {
-if(!id){
-  id = useId()
-}
+  if (!id) {
+    id = useId();
+  }
   return (
     <PrimeReactProvider>
       <div className={`${className}`}>
@@ -32,7 +32,11 @@ if(!id){
             className={`outline outline-[2px]  outline-secondary size-4 rounded-full ${boxClassName} `}
             {...etc}
           />
-          <label onClick={() => setValue(!value)} htmlFor={id} className="block text-black text-sm">
+          <label
+            onClick={() => setValue(!value)}
+            htmlFor={id}
+            className="block text-black text-sm"
+          >
             {label}
           </label>
         </div>

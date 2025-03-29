@@ -2,16 +2,16 @@ import React, { useId } from "react";
 
 const TextInput = ({
   label,
-  id  ,
+  id,
   name,
   type = "text",
   className,
   placeholder,
   ...etc
 }) => {
-    if(!id){
-        id = useId()
-      }
+  if (!id) {
+    id = useId();
+  }
   return (
     <div>
       <div>
