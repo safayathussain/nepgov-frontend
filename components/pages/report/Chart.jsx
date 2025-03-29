@@ -25,7 +25,7 @@ ChartJS.register(
   annotationPlugin
 );
 
-const TrackerChart = ({ chartData, isLoading }) => {
+const Chart = React.forwardRef(({ chartData, isLoading }, ref) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -75,6 +75,29 @@ const TrackerChart = ({ chartData, isLoading }) => {
       },
     },
   };
+
+  const hoverLinePlugin = {
+    id: "hoverLine",
+    beforeDraw: (chart) => {
+      if (chart.tooltip?.getActiveElements()?.length) {
+        const activePoint = chart.tooltip.getActiveElements()[0];
+        const ctx = chart.ctx;
+        const x = activePoint.element.x;
+        const topY = chart.scales.y.top;
+        const bottomY = chart.scales.y.bottom;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x, topY);
+        ctx.lineTo(x, bottomY);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
+        ctx.stroke();
+        ctx.restore();
+      }
+    },
+  };
+
   if (isLoading) {
     return (
       <div className="h-[400px] flex items-center justify-center">
@@ -82,6 +105,7 @@ const TrackerChart = ({ chartData, isLoading }) => {
       </div>
     );
   }
+
   if (!chartData && !isLoading) {
     return (
       <div className="h-[400px] flex items-center justify-center">
@@ -91,39 +115,18 @@ const TrackerChart = ({ chartData, isLoading }) => {
   }
 
   return (
-    <div className="h-[400px] relative" >
+    <div className="h-[400px] relative" ref={ref}>
       <Line
+      
         options={options}
         data={{
-          labels: chartData.labels,
-          datasets: chartData.datasets,
+          labels: chartData?.labels || [],
+          datasets: chartData?.datasets || [],
         }}
-        plugins={[
-          {
-            id: "hoveLine",
-            beforeDraw: (chart) => {
-              if (chart.tooltip?.getActiveElements()?.length) {
-                const activePoint = chart.tooltip.getActiveElements()[0];
-                const ctx = chart.ctx;
-                const x = activePoint.element.x;
-                const topY = chart.scales.y.top;
-                const bottomY = chart.scales.y.bottom;
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.moveTo(x, topY);
-                ctx.lineTo(x, bottomY);
-                ctx.lineWidth = 1;
-                ctx.strokeStyle = "rgba(0, 0, 0, 0.1)";
-                ctx.stroke();
-                ctx.restore();
-              }
-            },
-          },
-        ]}
+        plugins={[hoverLinePlugin]}
       />
     </div>
   );
-};
+});
 
-export default TrackerChart;
+export default Chart;

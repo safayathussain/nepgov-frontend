@@ -204,8 +204,10 @@ const TrackerReportChart = ({
       ...countries.map((item) => ({ name: item.name, value: item.name })),
     ];
   }, [countries]);
-  const { downloadChartDataAsCSV, downloadChartDataAsPdf } = useChartDataDownload();
-const chartRef = useRef();
+  const { downloadChartDataAsCSV, downloadChartDataAsPdf } =
+    useChartDataDownload();
+  const chartRef = useRef();
+  console.log(chartData)
   return (
     <div className="flex flex-col md:flex-row gap-5">
       <div className="w-full md:w-1/5 space-y-3">
@@ -302,7 +304,7 @@ const chartRef = useRef();
         </Button>
       </div>
       <div className="w-full md:w-4/5 bg-[#F9FAFB] rounded-xl p-2 md:px-5 md:py-7">
-        <Chart chartData={chartData} isLoading={isLoading} />
+        <Chart chartData={chartData} isLoading={isLoading} ref={chartRef}/>
         <div className="mt-5 md:px-5 flex justify-between flex-wrap">
           <div className="flex gap-2 items-center">
             <p>Download as:</p>
@@ -317,7 +319,11 @@ const chartRef = useRef();
             <button
               className="flex items-center   "
               onClick={() =>
-                downloadChartDataAsPdf(chartRef, `tracker_${id}.pdf`)
+                downloadChartDataAsPdf(chartRef, `tracker_${id}.pdf`, {
+                  topic:  "Topic : " + chartData?.topic,
+                  type: "Tracker Report :",
+                  includeTimestamp: true
+                })
               }
             >
               Pdf <TbDownload size={20} />
@@ -325,10 +331,7 @@ const chartRef = useRef();
           </div>
           <ShareButtons />
         </div>
-      </div>
-      {/* <div className="hidden">
-        <TrackerChartPdfTamplate data={chartData} ref={chartRef}/>
-      </div> */}
+      </div> 
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import Button from "@/components/input/Button";
 import DropdownInput from "@/components/input/DropdownInput";
 import Chart from "./Chart";
@@ -32,7 +32,6 @@ const SurveyReportChart = ({
     state_province: "",
     city: "",
   });
-  console.log(liveStartedAt, liveEndedAt);
   const handleInputChange = useCallback((name, value) => {
     setFilters((prev) => {
       const newFilters = { ...prev, [name]: value };
@@ -152,11 +151,12 @@ const SurveyReportChart = ({
   );
 
   const timePeriods = generateChartDurationArray(liveStartedAt, liveEndedAt);
-  const { downloadChartDataAsCSV } = useChartDataDownload();
-
-  
+  const { downloadChartDataAsCSV, downloadChartDataAsPdf } =
+    useChartDataDownload();
+  const chartRef = useRef(null);
+  console.log(chartData);
   return (
-    <div className="flex flex-col md:flex-row gap-5"  >
+    <div className="flex flex-col md:flex-row gap-5">
       <div className="w-full md:w-1/5 space-y-3">
         <Button
           className="rounded-lg w-full"
@@ -250,18 +250,34 @@ const SurveyReportChart = ({
         <Chart
           chartData={chartData}
           isLoading={loadingGraphId === chartData._id}
+          ref={chartRef}
         />
         <div className="mt-5 md:px-5 flex justify-between flex-wrap">
-          <button
-            className="flex items-center   "
-            onClick={() =>
-              downloadChartDataAsCSV(chartData, `question_${id}.csv`)
-            }
-          >
-            Download csv <TbDownload size={20} />
-          </button>
-          <ShareButtons shareUrl={window.location.href.split('#')[0] + `#${id}`}/>
-
+          <div className="flex gap-2 items-center">
+            <p>Download as:</p>
+            <button
+              className="flex items-center   "
+              onClick={() =>
+                downloadChartDataAsCSV(chartData, `survey_${id}.csv`)
+              }
+            >
+              Csv <TbDownload size={20} />
+            </button>
+            <button
+              className="flex items-center   "
+              onClick={() =>
+                downloadChartDataAsPdf(chartRef, `survey_${id}.pdf`, {
+                  topic: "Topic : " + chartData?.topic,
+                  type: "Survey Report :",
+                  question: "Question : " + chartData.question,
+                  includeTimestamp: true
+                })
+              }
+            >
+              Pdf <TbDownload size={20} />
+            </button>
+          </div>
+          <ShareButtons />
         </div>
       </div>
     </div>

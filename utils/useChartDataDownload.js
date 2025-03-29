@@ -48,35 +48,155 @@ export const useChartDataDownload = () => {
     }
   };
 
-  const downloadChartDataAsPdf = async (ref, fileName) => {
+  const downloadChartDataAsPdf = async (
+    ref,
+    fileName = "chart-report.pdf",
+    options = {}
+  ) => {
     try {
-      // Capture the component as a canvas
-      const canvas = await html2canvas(ref.current, {
-        scale: 2, // Increase resolution
-        useCORS: true, // Handle cross-origin images if any
+      if (!ref?.current) throw new Error("Chart reference is not available");
+
+      const canvas = ref.current.querySelector("canvas");
+      if (!canvas) throw new Error("Canvas element not found in chart");
+
+      // Lower resolution: 150 DPI (instead of 300 DPI)
+      const a4WidthPx = 1240; // 210mm * 150 DPI / 25.4
+      const a4HeightPx = 1754; // 297mm * 150 DPI / 25.4
+      const marginPx = 59; // ~10mm at 150 DPI
+
+      // Preserve original aspect ratio
+      const originalAspectRatio = canvas.width / canvas.height;
+
+      const tempContainer = document.createElement("div");
+      tempContainer.style.position = "fixed";
+      tempContainer.style.left = "-10000px";
+      tempContainer.style.top = "0";
+      tempContainer.style.width = `${a4WidthPx}px`;
+      tempContainer.style.backgroundColor = "white";
+      tempContainer.style.padding = `${marginPx}px`;
+
+      // Header setup with adjusted sizes for lower DPI
+      const header = document.createElement("div");
+      header.style.marginBottom = "30px";
+      header.style.borderBottom = "1px solid #eee";
+      header.style.paddingBottom = "15px";
+
+      const type = document.createElement("h1");
+      type.textContent = options.type || "";
+      type.style.margin = "0";
+      type.style.color = "#333";
+      type.style.fontSize = "40px"; // Adjusted for 150 DPI
+      header.appendChild(type);
+
+      tempContainer.appendChild(header);
+      const topic = document.createElement("h1");
+      topic.textContent = options.topic || "Chart Report";
+      topic.style.margin = "0";
+      topic.style.color = "#333";
+      topic.style.fontSize = "30px"; // Adjusted for 150 DPI
+      tempContainer.appendChild(topic);
+      if (options.question) {
+        const question = document.createElement("p");
+        question.textContent = options.question;
+        question.style.margin = "8px 0 0";
+        question.style.color = "#666";
+        question.style.fontSize = "26px";
+        tempContainer.appendChild(question);
+      }
+
+      // Capture chart
+      const chartImage = canvas.toDataURL("image/png", 1);  
+      const chartImgElement = document.createElement("img");
+      chartImgElement.src = chartImage;
+
+      const headerHeight = header.offsetHeight || 75; 
+      const maxChartWidth = a4WidthPx - 2 * marginPx;
+      const maxChartHeight = a4HeightPx - 2 * marginPx - headerHeight - 60;
+
+      let chartWidth, chartHeight;
+      if (originalAspectRatio > 1) {
+        // Wide chart
+        chartWidth = maxChartWidth;
+        chartHeight = chartWidth / originalAspectRatio;
+        if (chartHeight > maxChartHeight) {
+          chartHeight = maxChartHeight;
+          chartWidth = chartHeight * originalAspectRatio;
+        }
+      } else {
+        // Tall or square chart
+        chartHeight = maxChartHeight;
+        chartWidth = chartHeight * originalAspectRatio;
+        if (chartWidth > maxChartWidth) {
+          chartWidth = maxChartWidth;
+          chartHeight = chartWidth / originalAspectRatio;
+        }
+      }
+
+      chartImgElement.style.width = `${chartWidth}px`;
+      chartImgElement.style.height = `${chartHeight}px`;
+      chartImgElement.style.objectFit = "contain";
+
+      const chartContainer = document.createElement("div");
+      chartContainer.style.margin = "30px 0";
+      chartContainer.style.textAlign = "center";
+      chartContainer.appendChild(chartImgElement);
+      tempContainer.appendChild(chartContainer);
+
+      if (options.includeTimestamp) {
+        const timestamp = document.createElement("div");
+        timestamp.style.marginTop = "30px";
+        timestamp.style.fontSize = "18px";
+        timestamp.style.color = "#999";
+        timestamp.style.textAlign = "right";
+        timestamp.textContent = `Generated on ${new Date().toLocaleString()}`;
+        tempContainer.appendChild(timestamp);
+      }
+
+      document.body.appendChild(tempContainer);
+
+      const pdfCanvas = await html2canvas(tempContainer, {
+        scale: 1,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        allowTaint: true,
+        width: a4WidthPx,
+        height: a4HeightPx,
       });
 
-      // Convert canvas to image data
-      const imgData = canvas.toDataURL("image/png");
-
-      // Initialize jsPDF
-      const doc = new jsPDF({
+      const imgData = pdfCanvas.toDataURL("image/png", 1); 
+      const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
       });
 
-      // Calculate dimensions to fit the PDF page
-      const pdfWidth = doc.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const widthInMm = (a4WidthPx * 25.4) / 150;
+      const heightInMm = (a4HeightPx * 25.4) / 150;
 
-      // Add the image to the PDF
-      doc.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.addImage(
+        imgData,
+        "PNG",
+        (pageWidth - widthInMm) / 2,
+        (pageHeight - heightInMm) / 2,
+        widthInMm,
+        heightInMm,
+        null,
+        "FAST" 
+      );
 
-      // Download the PDF with the provided file name
-      doc.save(`${fileName}.pdf`);
+      document.body.removeChild(tempContainer);
+
+      if (options.returnBlob) {
+        return pdf.output("blob");
+      } else {
+        pdf.save(fileName);
+      }
     } catch (error) {
       console.error("Error generating PDF:", error);
+      if (options.onError) options.onError(error);
     }
   };
 

@@ -27,7 +27,6 @@ const Page = () => {
         });
         setSelectedOption(checkVote?.data || {});
       }
-
       setChartData(data?.data || []);
     } catch (err) {
       console.error("Error fetching initial data:", err);
@@ -93,6 +92,9 @@ const Page = () => {
           }
         }
       `}</style>
+      <p className="text-3xl md:text-4xl font-semibold text-center mt-12">
+        {chartData?.[0]?.topic}
+      </p>
       {chartData?.map((item, index) => (
         <div
           id={item?._id}
@@ -103,7 +105,7 @@ const Page = () => {
             Question {index + 1}
           </p>
           <p className="text-center text-xl sm:text-2xl font-semibold max-w-[700px] mx-auto pt-2">
-            {item?.topic}
+            {item?.question}
           </p>
           <div className="py-10 max-w-[700px] mx-auto space-y-2">
             {item?.options?.map((option) => (
