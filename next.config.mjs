@@ -6,6 +6,7 @@ const nextConfig = {
       "i.ibb.co.com",
       "localhost",
       "nepgov-backend-production.up.railway.app",
+      "res.cloudinary.com"
     ],
   },
   transpilePackages: ["@mui/x-date-pickers"],
