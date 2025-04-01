@@ -17,7 +17,7 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
                 Live <GoDotFill />
               </p>
             </div>
-            <p className="text-2xl font-semibold">
+            <p className="text-3xl font-semibold">
               Give crime information anonymously
             </p>
             <p>Your anonymity is 100% guaranteed.</p>
