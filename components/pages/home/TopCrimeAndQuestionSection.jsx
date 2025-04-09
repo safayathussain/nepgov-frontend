@@ -9,7 +9,7 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
   return (
     <div>
       <div className="text-white flex flex-col lg:flex-row gap-5 mt-8">
-        <div className="bg-gradiantBg p-5 flex flex-col justify-between w-full gap-16">
+        <div className="bg-gradiantBg p-5 flex flex-col justify-between w-full gap-8">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <p>CRIME REPORT</p>
@@ -17,7 +17,7 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
                 Live <GoDotFill />
               </p>
             </div>
-            <p className="text-3xl font-semibold">
+            <p className="text-[35px] font-semibold leading-tight lg:mr-8">
               Give crime information anonymously
             </p>
             <p>Your anonymity is 100% guaranteed.</p>
