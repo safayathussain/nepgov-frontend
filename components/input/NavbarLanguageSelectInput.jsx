@@ -21,7 +21,7 @@ const NavbarLanguageSelectInput = () => {
       new window.google.translate.TranslateElement(
         {
           pageLanguage: "en",
-          includedLanguages: "ar,en,es,jv,ko,pa,pt,ru,zh-CN",
+          includedLanguages: "en,ne",
           layout: window.google.translate.TranslateElement.InlineLayout.NORMAL,
           autoDisplay: false,
         },
@@ -56,9 +56,9 @@ const NavbarLanguageSelectInput = () => {
       <div aria-label="test" id="google_translate_element"></div>
       <div
         id="text"
-        className="  absolute  right-2 flex items-center text-secondary pointer-events-none"
+        className="  absolute  -right-1 flex items-center text-secondary pointer-events-none"
       >
-        <FaAngleDown size={20} />
+        <FaAngleDown size={22} />
       </div>
     </div>
   );
