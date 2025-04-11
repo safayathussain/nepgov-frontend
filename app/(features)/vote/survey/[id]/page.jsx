@@ -302,7 +302,7 @@ const SurveyFlow = () => {
         </div>
       )}
 
-      {/* Previous Questions Results Section ++++ SHOW A ANIMATION LIKE SLIDE IN OR BETTER YOU LIKE ON EACH ANSWEREDQUESTION ADDED */}
+      {/* Previous Questions Results Section */}
       {answeredQuestions.length > 0 && (
         <div className="space-y-5 mt-5">
           <AnimatePresence>
