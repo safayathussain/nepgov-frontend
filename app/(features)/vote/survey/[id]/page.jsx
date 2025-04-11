@@ -8,6 +8,7 @@ import CheckInput from "@/components/input/CheckInput";
 import DropdownInput from "@/components/input/DropdownInput";
 import { FetchApi } from "@/utils/FetchApi";
 import { isScheduled, useAuth } from "@/utils/functions";
+import { motion, AnimatePresence } from "framer-motion";
 
 const calculateResults = (options) => {
   const totalVotes = options.reduce((sum, item) => sum + item.votedCount, 0);
@@ -227,7 +228,6 @@ const SurveyFlow = () => {
   const currentQuestion = currentSurvey.questions?.[currentQuestionIndex];
   const isLastQuestion =
     currentQuestionIndex === currentSurvey.questions?.length - 1;
-  console.log(answeredQuestions);
   return (
     <div>
       <style jsx global>{`
@@ -302,42 +302,69 @@ const SurveyFlow = () => {
         </div>
       )}
 
-      {/* Previous Questions Results Section */}
+      {/* Previous Questions Results Section ++++ SHOW A ANIMATION LIKE SLIDE IN OR BETTER YOU LIKE ON EACH ANSWEREDQUESTION ADDED */}
       {answeredQuestions.length > 0 && (
-        <div className=" ">
-          {answeredQuestions.map((question, index) => (
-            <div key={question._id} className=" bg-white  p-8 rounded-lg mt-5">
-              <div className="border-y mb-5">
-                <p className="py-3 font-medium text-xl">
-                  {currentSurvey?.topic}
+        <div className="space-y-5 mt-5">
+          <AnimatePresence>
+            {answeredQuestions.map((question, index) => (
+              <motion.div
+                key={question._id} 
+                layout
+                initial={{ opacity: 0, y: -20, height: 0, overflow: "hidden" }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  height: "auto",
+                  overflow: "hidden",
+                  transition: {
+                    height: { type: "spring", stiffness: 0, damping: 30 },
+                    opacity: { duration: 0.2 },
+                  },
+                }}
+                exit={{
+                  opacity: 0,
+                  y: 20,
+                  height: 0,
+                  overflow: "hidden",
+                  transition: {
+                    height: { type: "spring", stiffness: 0, damping: 30 },
+                    opacity: { duration: 0.2 },
+                  },
+                }}
+                className="bg-white p-8 rounded-lg"
+              >
+                <div className="border-y mb-5">
+                  <p className="py-3 font-medium text-xl">
+                    {currentSurvey?.topic}
+                  </p>
+                </div>
+                <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
+                  Question {answeredQuestions.length - index}
                 </p>
-              </div>
-              <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
-                Question {answeredQuestions.length - index}
-              </p>
-              <p className="font-medium text-lg mb-4">{question.question}</p>
-              <div className="space-y-4">
-                {question.results.map((option) => (
-                  <div key={option._id} className="w-full">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="flex items-center w-full">
-                        <CheckInput
-                          boxClassName="!outline-primary"
-                          checked={question.selectedOption === option._id}
-                          onChange={() =>
-                            handleOptionSelect(question._id, option._id, true)
-                          }
-                        />
-                        <span className="ml-2 flex-1">{option.content}</span>
-                      </span>
-                      <span className="ml-4">{option.percentage}%</span>
+                <p className="font-medium text-lg mb-4">{question.question}</p>
+                <div className="space-y-4">
+                  {question.results.map((option) => (
+                    <div key={option._id} className="w-full">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="flex items-center w-full">
+                          <CheckInput
+                            boxClassName="!outline-primary"
+                            checked={question.selectedOption === option._id}
+                            onChange={() =>
+                              handleOptionSelect(question._id, option._id, true)
+                            }
+                          />
+                          <span className="ml-2 flex-1">{option.content}</span>
+                        </span>
+                        <span className="ml-4">{option.percentage}%</span>
+                      </div>
+                      <ProgressBar progress={option.percentage} />
                     </div>
-                    <ProgressBar progress={option.percentage} />
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
+                  ))}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       )}
     </div>
