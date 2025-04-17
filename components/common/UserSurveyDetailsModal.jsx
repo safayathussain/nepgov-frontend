@@ -6,8 +6,7 @@ import { refetchAuth, useAuth } from "@/utils/functions";
 import { FetchApi } from "@/utils/FetchApi";
 
 const UserSurveyDetailsModal = ({ open, setOpen }) => {
-  const [step, setstep] = useState(0);
-  const { auth } = useAuth();
+  const [step, setstep] = useState(0); 
   const handleSurveyDataSubmit = async (data) => {
     await FetchApi({
       url: `/auth/user-profile-survey`,
@@ -44,7 +43,10 @@ const UserSurveyDetailsModal = ({ open, setOpen }) => {
               visit our privacy notice for further information.
             </p>
             <div className="flex justify-between pt-5">
-              <Button variant="primary-outline">I Disagree</Button>
+              <Button variant="primary-outline" onClick={() => {
+                sessionStorage.setItem("showUserProfileSurveyModal", false)
+                setOpen(false)
+              }}>I Disagree</Button>
               <Button onClick={() => setstep(1)}>I Agree</Button>
             </div>
           </>
