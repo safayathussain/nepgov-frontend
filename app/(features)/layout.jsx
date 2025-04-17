@@ -50,7 +50,7 @@ const Layout = ({ children }) => {
     <div>
       {children}
       <CookieModal />
-      {/* survey modal */}
+      {/* user survey modal */}
       {isUserDetailsModalOpen && (
         <UserSurveyDetailsModal
           open={isUserDetailsModalOpen}
