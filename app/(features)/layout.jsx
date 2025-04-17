@@ -1,7 +1,7 @@
 "use client";
 import CookieModal from "@/components/common/CookieModal";
 import { setCountries } from "@/redux/slices/CountriesSlice";
-import { logout, useAuth, useCountries } from "@/utils/functions";
+import { logout, refetchAuth, useAuth, useCountries } from "@/utils/functions";
 import { jwtDecode } from "jwt-decode";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -37,6 +37,7 @@ const layout = ({ children }) => {
         logout();
       }
     }
+    if (auth._id) refetchAuth();
   }, []);
   return (
     <div>

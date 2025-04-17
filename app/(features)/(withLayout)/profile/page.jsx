@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { ImgUrl } from "@/utils/constants";
 import DropdownInput from "@/components/input/DropdownInput";
+import UserSurveyDetailsModal from "@/components/common/UserSurveyDetailsModal";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -23,7 +24,9 @@ export default function ProfilePage() {
   const [cities, setCities] = useState([]);
   const [isCitiesLoading, setisCitiesLoading] = useState(false);
   const [isStatesLoading, setisStatesLoading] = useState(false);
-
+  const [isUserDetailsModalOpen, setisUserDetailsModalOpen] = useState(
+    auth.survey ? false : true
+  );
   useEffect(() => {
     if (!auth?._id) return router.push("/");
   }, []);
@@ -423,6 +426,14 @@ export default function ProfilePage() {
           <IoLogOutOutline className="inline-block w-5 h-5 ml-2" />
         </Button>
       </div>
+
+      {/* survey modal */}
+      {isUserDetailsModalOpen && (
+        <UserSurveyDetailsModal
+          open={isUserDetailsModalOpen}
+          setOpen={setisUserDetailsModalOpen}
+        />
+      )}
     </div>
   );
 }

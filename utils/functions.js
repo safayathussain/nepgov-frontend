@@ -21,6 +21,11 @@ export const logout = async () => {
   store.dispatch(setAuth({}));
   window.location.href = "/";
 };
+export const refetchAuth = async () => {
+  const { data } = await FetchApi({ url: "/auth/me", method: "post" });
+  store.dispatch(setAuth(data.data));
+  localStorage.setItem("lastAuthFetch", Date.now());
+};
 export const isLive = (start, end) => {
   const currentDate = new Date();
   const startDate = new Date(start);
@@ -117,7 +122,7 @@ export function generateChartDurationArray(startDate, endDate) {
     (end.getFullYear() - start.getFullYear()) * 12 +
     (end.getMonth() - start.getMonth());
   const durationArray = [];
-  if (totalMonthsDiff >=1) {
+  if (totalMonthsDiff >= 1) {
     durationArray.push({ duration: "1", label: "1M" });
   }
   if (totalMonthsDiff >= 3) {
