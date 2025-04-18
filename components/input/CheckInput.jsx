@@ -35,7 +35,7 @@ const CheckInput = ({
           <label
             onClick={() => setValue(!value)}
             htmlFor={id}
-            className="block text-black text-sm"
+            className="block text-black text-[15px]"
           >
             {label}
           </label>

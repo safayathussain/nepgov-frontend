@@ -28,6 +28,7 @@ const SurveyFlow = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showLoginScreen, setShowLoginScreen] = useState(false);
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
   const [surveys, setSurveys] = useState([]);
   const [currentSurvey, setCurrentSurvey] = useState({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -193,7 +194,7 @@ const SurveyFlow = () => {
         isToast: true,
       });
 
-      setCurrentQuestionIndex(-1);
+      setShowSuccessScreen(true);
     } catch (error) {
       console.error("Error submitting votes:", error);
       setError(error.message || "Failed to submit votes");
@@ -256,63 +257,99 @@ const SurveyFlow = () => {
         }))}
         onChange={(e) => router.push("/vote/survey/" + e.target.value)}
       />
-
-      {/* Current Question Section */}
-      {currentQuestion && (
-        <div className="bg-white p-8 mt-5 rounded-lg ">
-          <motion.div
-            key={currentQuestion._id}
-            initial={{ height: 0, opacity: 1 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="p-1 overflow-y-hidden"
+      {showSuccessScreen ? (
+        <div className="bg-white p-8 py-20 rounded-lg mt-5 flex flex-col items-center justify-center min-h-[300px]">
+          <svg
+            width="127"
+            height="127"
+            viewBox="0 0 127 127"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <div className="">
-              <div className="border-y mb-5">
-                <p className="py-3 font-medium text-xl">
-                  {currentSurvey?.topic}
-                </p>
-              </div>
-
-              <div className="">
-                <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
-                  Question {currentQuestionIndex + 1}
-                </p>
-                <p className="font-medium mb-4 text-lg">
-                  {currentQuestion?.question}
-                </p>
-
-                {error && <p className="text-red-500 mb-4">{error}</p>}
-
-                <div className="space-y-4">
-                  {currentQuestion?.options?.map((option) => (
-                    <CheckInput
-                      key={option._id}
-                      boxClassName="!outline-primary"
-                      label={option.content}
-                      checked={
-                        selectedOptions[currentQuestion._id] === option._id ||
-                        answeredQuestions[currentQuestion._id] === option._id
-                      }
-                      onChange={() =>
-                        handleOptionSelect(currentQuestion._id, option._id)
-                      }
-                    />
-                  ))}
-                </div>
-
-                {isLastQuestion && selectedOptions[currentQuestion._id] && (
-                  <div className="flex justify-end mt-6">
-                    <Button onClick={handleSubmit} disabled={submitLoading}>
-                      {submitLoading ? "Submitting..." : "Submit All"}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </motion.div>
+            <path
+              d="M116.416 63.4999C116.416 34.2748 92.7245 10.5833 63.4997 10.5833C34.2746 10.5833 10.583 34.2748 10.583 63.4999C10.583 92.7247 34.2746 116.417 63.4997 116.417C92.7245 116.417 116.416 92.7247 116.416 63.4999Z"
+              stroke="#0E9F6E"
+              strokeWidth="3.02381"
+            />
+            <path
+              d="M42.333 66.1458L55.5622 79.375L84.6663 47.625"
+              stroke="#0E9F6E"
+              strokeWidth="3.02381"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <h2 className="text-2xl font-semibold mb-2 mt-5">
+            Submitted Successfully!
+          </h2>
+          <p className="text-gray-600 mb-6 text-center">
+            Your response was stored successfully in NepGov.
+          </p>
+          <Button variant="secondary" onClick={() => router.push("/")}>
+            Back to Home
+          </Button>
         </div>
+      ) : (
+        <>
+          {currentQuestion && (
+            <div className="bg-white p-8 mt-5 rounded-lg ">
+              <motion.div
+                key={currentQuestion._id}
+                initial={{ height: 0, opacity: 1 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="p-1 overflow-y-hidden"
+              >
+                <div className="">
+                  <div className="border-y mb-5">
+                    <p className="py-3 font-medium text-xl">
+                      {currentSurvey?.topic}
+                    </p>
+                  </div>
+
+                  <div className="">
+                    <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
+                      Question {currentQuestionIndex + 1}
+                    </p>
+                    <p className="font-medium mb-4 text-lg">
+                      {currentQuestion?.question}
+                    </p>
+
+                    {error && <p className="text-red-500 mb-4">{error}</p>}
+
+                    <div className="space-y-4">
+                      {currentQuestion?.options?.map((option) => (
+                        <CheckInput
+                          key={option._id}
+                          boxClassName="!outline-primary"
+                          label={option.content}
+                          value={
+                            selectedOptions[currentQuestion._id] ===
+                              option._id ||
+                            answeredQuestions[currentQuestion._id] ===
+                              option._id
+                          }
+                          setValue={() =>
+                            handleOptionSelect(currentQuestion._id, option._id)
+                          }
+                        />
+                      ))}
+                    </div>
+
+                    {isLastQuestion && selectedOptions[currentQuestion._id] && (
+                      <div className="flex justify-end mt-6">
+                        <Button onClick={handleSubmit} disabled={submitLoading}>
+                          {submitLoading ? "Submitting..." : "Submit All"}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </>
       )}
 
       {/* Previous Questions Results Section */}
