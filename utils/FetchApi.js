@@ -2,7 +2,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 import { isTokenExpired, logout } from "./functions";
-import { isCookieAccepted } from "./constants";
 
 export const FetchApi = async ({
   method = "get",
@@ -11,7 +10,6 @@ export const FetchApi = async ({
   callback = () => {},
   isToast = "",
 }) => {
-  let acceptCookie = isCookieAccepted;
   const accessToken = sessionStorage.getItem("accessToken")
   let instance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BASE_API, // Set a base URL for all requests
@@ -19,7 +17,6 @@ export const FetchApi = async ({
       Authorization: `Bearer ${
         (!isTokenExpired(accessToken) && accessToken) || ""
       }`,
-      "x-user-consent": acceptCookie || "",
     },
     withCredentials: true,
   });

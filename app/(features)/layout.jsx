@@ -1,5 +1,4 @@
 "use client";
-import CookieModal from "@/components/common/CookieModal";
 import UserSurveyDetailsModal from "@/components/common/UserSurveyDetailsModal";
 import { setCountries } from "@/redux/slices/CountriesSlice";
 import { logout, refetchAuth, useAuth, useCountries } from "@/utils/functions";
@@ -49,7 +48,6 @@ const Layout = ({ children }) => {
   return (
     <div>
       {children}
-      <CookieModal />
       {/* user survey modal */}
       {isUserDetailsModalOpen && (
         <UserSurveyDetailsModal
