@@ -9,6 +9,7 @@ import DropdownInput from "@/components/input/DropdownInput";
 import { FetchApi } from "@/utils/FetchApi";
 import { isScheduled, useAuth } from "@/utils/functions";
 import { motion, AnimatePresence } from "framer-motion";
+import ShareButtons from "@/components/common/ShareButtons";
 
 const calculateResults = (options) => {
   const totalVotes = options.reduce((sum, item) => sum + item.votedCount, 0);
@@ -345,6 +346,10 @@ const SurveyFlow = () => {
                       </div>
                     )}
                   </div>
+                  <div className="flex items-center justify-end gap-3 mt-5">
+                  <p>Share with:</p>
+                  <ShareButtons/>
+                </div>
                 </div>
               </motion.div>
             </div>
@@ -395,6 +400,10 @@ const SurveyFlow = () => {
                       <ProgressBar progress={option.percentage} />
                     </div>
                   ))}
+                </div>
+                <div className="flex items-center justify-end gap-3 mt-5">
+                  <p>Share with:</p>
+                  <ShareButtons/>
                 </div>
               </motion.div>
             ))}

@@ -8,6 +8,7 @@ import CheckInput from "@/components/input/CheckInput";
 import DropdownInput from "@/components/input/DropdownInput";
 import { FetchApi } from "@/utils/FetchApi";
 import { isScheduled, useAuth } from "@/utils/functions";
+import ShareButtons from "@/components/common/ShareButtons";
 
 const calculateResults = (options, selectedOptionId = null) => {
   const updatedOptions = options.map((item) => ({
@@ -245,6 +246,10 @@ const VoteTrackerPage = () => {
                     </Button>
                   </div>
                 )}
+                <div className="flex items-center justify-end gap-3 mt-5">
+                  <p>Share with:</p>
+                  <ShareButtons/>
+                </div>
               </>
             )}
           </>

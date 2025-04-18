@@ -2,15 +2,11 @@
 
 import {
   FacebookShareButton,
-  FacebookMessengerShareButton,
   WhatsappShareButton,
   TwitterShareButton,
   LinkedinShareButton,
   LinkedinIcon,
-} from "react-share";
-import {
   FacebookIcon,
-  FacebookMessengerIcon,
   WhatsappIcon,
   XIcon,
 } from "react-share";
@@ -18,6 +14,7 @@ import {
 const ShareButtons = ({
   shareUrl = typeof window !== "undefined" && window.location.href,
 }) => {
+  console.log(shareUrl)
   return (
     <div className="flex gap-1">
       {/* Facebook */}
