@@ -1,6 +1,7 @@
 "use client";
 import { persistor, store } from "@/redux/store";
-import React  from "react";
+import Script from "next/script";
+import React from "react";
 import { CookiesProvider } from "react-cookie";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
@@ -15,6 +16,20 @@ const Providers = ({ children }) => {
         </PersistGate>
       </Provider>
       <Toaster />
+      {/* Usercentrics Autoblocker */}
+      <Script
+        src="https://web.cmp.usercentrics.eu/modules/autoblocker.js"
+        strategy="afterInteractive"
+      />
+
+      {/* Usercentrics CMP */}
+      <Script
+        id="usercentrics-cmp"
+        src="https://web.cmp.usercentrics.eu/ui/loader.js"
+        data-settings-id="ZFztTHYVi2c-b4"
+        strategy="afterInteractive"
+        async
+      />
     </div>
   );
 };
