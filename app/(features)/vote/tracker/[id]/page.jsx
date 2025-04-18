@@ -56,7 +56,11 @@ const VoteTrackerPage = () => {
           throw new Error("Tracker not found");
         }
 
-        setTrackers(trackersResponse.data.data.filter(item => !isScheduled(item.liveStartedAt)));
+        setTrackers(
+          trackersResponse.data.data.filter(
+            (item) => !isScheduled(item.liveStartedAt)
+          )
+        );
         setCurrentTracker(tracker);
 
         if (checkVoteResponse?.data?.data) {
@@ -110,30 +114,14 @@ const VoteTrackerPage = () => {
       setSubmitLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-[80vh] flex h-full w-full items-center justify-center">
-        <Loading />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="bg-red-50 border border-red-200 p-8 rounded-lg mt-5">
-        <p className="text-red-600">{error}</p>
-        <Button onClick={() => router.refresh()} className="mt-4">
-          Try Again
-        </Button>
-      </div>
-    );
-  }
+ 
 
   if (showLoginScreen) {
     return (
       <div className="bg-white p-8 rounded-lg mt-5">
-        <p className="text-2xl font-semibold">Please log in to submit your answers</p>
+        <p className="text-2xl font-semibold">
+          Please log in to submit your answers
+        </p>
         <p>Your responses will be saved after logging in.</p>
         <div className="flex items-center gap-2 mt-5">
           <Button onClick={() => router.push("/login")}>Log in</Button>
@@ -177,71 +165,80 @@ const VoteTrackerPage = () => {
         role="main"
         aria-label="Voting tracker"
       >
-        <div className="py-3 border-y">
-          <p className="font-medium text-xl">{currentTracker?.topic}</p>
-        </div>
+        {loading ? (
+          <div className="min-h-[300px] flex items-center justify-center h-full">
 
-        {!result.length ? (
-          <>
-            <div
-              className="lg:m-3 space-y-5 pt-5"
-              role="radiogroup"
-              aria-label="Voting options"
-            >
-              {currentTracker?.options?.map((item) => (
-                <CheckInput
-                  key={item._id}
-                  boxClassName="!outline-primary"
-                  label={item.content}
-                  value={item._id}
-                  setValue={() => setSelectedOption(item._id)}
-                  checked={selectedOption === item._id}
-                  aria-label={item.content}
-                />
-              ))}
-            </div>
-            <div className="flex justify-end mt-5">
-              <Button
-                onClick={handleSubmit}
-                disabled={submitLoading || !selectedOption}
-                aria-busy={submitLoading}
-              >
-                {submitLoading ? "Submitting..." : "Submit"}
-              </Button>
-            </div>
-          </>
-        ) : (
-          <div
-            className="lg:m-3 space-y-5 pt-5 w-full"
-            role="region"
-            aria-label="Voting results"
-          >
-            {result.map((item) => (
-              <div key={item._id} className="flex items-center">
-                <CheckInput
-                  boxClassName="!outline-primary"
-                  checked={selectedOption === item._id}
-                  readOnly
-                />
-                <div className="w-full">
-                  <div className="flex justify-between w-full">
-                    <p>{item.content}</p>
-                    <p aria-label={`${item.percentage}% of votes`}>
-                      {item.percentage}%
-                    </p>
-                  </div>
-                  <div>
-                    <ProgressBar
-                      progress={item.percentage}
-                      aria-valuenow={item.percentage}
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
+          <Loading />
           </div>
+        ) : (
+          <>
+            <div className="py-3 border-y">
+              <p className="font-medium text-xl">{currentTracker?.topic}</p>
+            </div>
+
+            {!result.length ? (
+              <>
+                <div
+                  className="lg:m-3 space-y-5 pt-5"
+                  role="radiogroup"
+                  aria-label="Voting options"
+                >
+                  {currentTracker?.options?.map((item) => (
+                    <CheckInput
+                      key={item._id}
+                      boxClassName="!outline-primary"
+                      label={item.content}
+                      value={item._id}
+                      setValue={() => setSelectedOption(item._id)}
+                      checked={selectedOption === item._id}
+                      aria-label={item.content}
+                    />
+                  ))}
+                </div>
+                <div className="flex justify-end mt-5">
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={submitLoading || !selectedOption}
+                    aria-busy={submitLoading}
+                  >
+                    {submitLoading ? "Submitting..." : "Submit"}
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div
+                className="lg:m-3 space-y-5 pt-5 w-full"
+                role="region"
+                aria-label="Voting results"
+              >
+                {result.map((item) => (
+                  <div key={item._id} className="flex items-center">
+                    <CheckInput
+                      boxClassName="!outline-primary"
+                      checked={selectedOption === item._id}
+                      readOnly
+                    />
+                    <div className="w-full">
+                      <div className="flex justify-between w-full">
+                        <p>{item.content}</p>
+                        <p aria-label={`${item.percentage}% of votes`}>
+                          {item.percentage}%
+                        </p>
+                      </div>
+                      <div>
+                        <ProgressBar
+                          progress={item.percentage}
+                          aria-valuenow={item.percentage}
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
