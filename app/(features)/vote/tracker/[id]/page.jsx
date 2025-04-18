@@ -39,7 +39,6 @@ const VoteTrackerPage = () => {
         setLoading(true);
         setError(null);
 
-        // Only fetch checkVote if user is authenticated
         const requests = [FetchApi({ url: "/tracker" })];
         if (auth?._id) {
           requests.push(FetchApi({ url: `/tracker/checkVote/${id}` }));
@@ -76,8 +75,8 @@ const VoteTrackerPage = () => {
     }
   }, [id, auth?._id]);
 
-  const handleSubmit = async () => {
-    if (!selectedOption) {
+  const handleSubmit = async (optionId) => {
+    if (!optionId) {
       setError("Please select an option before submitting");
       return;
     }
@@ -85,7 +84,7 @@ const VoteTrackerPage = () => {
     if (!auth?._id) {
       sessionStorage.setItem(
         "voteRedirectUrl",
-        `/vote/tracker/${id}?option=${selectedOption}`
+        `/vote/tracker/${id}?option=${optionId}`
       );
       setShowLoginScreen(true);
       return;
@@ -97,7 +96,7 @@ const VoteTrackerPage = () => {
 
       const { data } = await FetchApi({
         url: `tracker/${id}/vote`,
-        data: { optionId: selectedOption },
+        data: { optionId },
         method: "post",
         isToast: true,
       });
@@ -182,34 +181,27 @@ const VoteTrackerPage = () => {
         </div>
 
         {!result.length ? (
-          <>
-            <div
-              className="lg:m-3 space-y-5 pt-5"
-              role="radiogroup"
-              aria-label="Voting options"
-            >
-              {currentTracker?.options?.map((item) => (
-                <CheckInput
-                  key={item._id}
-                  boxClassName="!outline-primary"
-                  label={item.content}
-                  value={item._id}
-                  setValue={() => setSelectedOption(item._id)}
-                  checked={selectedOption === item._id}
-                  aria-label={item.content}
-                />
-              ))}
-            </div>
-            <div className="flex justify-end mt-5">
-              <Button
-                onClick={handleSubmit}
-                disabled={submitLoading || !selectedOption}
-                aria-busy={submitLoading}
-              >
-                {submitLoading ? "Submitting..." : "Submit"}
-              </Button>
-            </div>
-          </>
+          <div
+            className="lg:m-3 space-y-5 pt-5"
+            role="radiogroup"
+            aria-label="Voting options"
+          >
+            {currentTracker?.options?.map((item) => (
+              <CheckInput
+                key={item._id}
+                boxClassName="!outline-primary"
+                label={item.content}
+                value={item._id}
+                setValue={() => {
+                  setSelectedOption(item._id);
+                  handleSubmit(item._id);
+                }}
+                checked={selectedOption === item._id}
+                disabled={submitLoading}
+                aria-label={item.content}
+              />
+            ))}
+          </div>
         ) : (
           <div
             className="lg:m-3 space-y-5 pt-5 w-full"

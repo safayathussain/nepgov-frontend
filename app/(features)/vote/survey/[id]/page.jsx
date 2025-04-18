@@ -259,46 +259,59 @@ const SurveyFlow = () => {
 
       {/* Current Question Section */}
       {currentQuestion && (
-        <div className="bg-white p-8 rounded-lg mt-5">
-          <div className="border-y mb-5">
-            <p className="py-3 font-medium text-xl">{currentSurvey?.topic}</p>
-          </div>
-
-          <div className="">
-            <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
-              Question {currentQuestionIndex + 1}
-            </p>
-            <p className="font-medium mb-4 text-lg">
-              {currentQuestion?.question}
-            </p>
-
-            {error && <p className="text-red-500 mb-4">{error}</p>}
-
-            <div className="space-y-4">
-              {currentQuestion?.options?.map((option) => (
-                <CheckInput
-                  key={option._id}
-                  boxClassName="!outline-primary"
-                  label={option.content}
-                  checked={
-                    selectedOptions[currentQuestion._id] === option._id ||
-                    answeredQuestions[currentQuestion._id] === option._id
-                  }
-                  onChange={() =>
-                    handleOptionSelect(currentQuestion._id, option._id)
-                  }
-                />
-              ))}
-            </div>
-
-            {isLastQuestion && selectedOptions[currentQuestion._id] && (
-              <div className="flex justify-end mt-6">
-                <Button onClick={handleSubmit} disabled={submitLoading}>
-                  {submitLoading ? "Submitting..." : "Submit All"}
-                </Button>
+        <div className="bg-white p-8 mt-5 rounded-lg ">
+          <motion.div
+            key={currentQuestion._id}
+            initial={{ height: 0, opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="p-1 overflow-y-hidden"
+          >
+            <div className="">
+              <div className="border-y mb-5">
+                <p className="py-3 font-medium text-xl">
+                  {currentSurvey?.topic}
+                </p>
               </div>
-            )}
-          </div>
+
+              <div className="">
+                <p className="font-medium mb-4 bg-[#808DA5] text-white px-2 w-min whitespace-nowrap">
+                  Question {currentQuestionIndex + 1}
+                </p>
+                <p className="font-medium mb-4 text-lg">
+                  {currentQuestion?.question}
+                </p>
+
+                {error && <p className="text-red-500 mb-4">{error}</p>}
+
+                <div className="space-y-4">
+                  {currentQuestion?.options?.map((option) => (
+                    <CheckInput
+                      key={option._id}
+                      boxClassName="!outline-primary"
+                      label={option.content}
+                      checked={
+                        selectedOptions[currentQuestion._id] === option._id ||
+                        answeredQuestions[currentQuestion._id] === option._id
+                      }
+                      onChange={() =>
+                        handleOptionSelect(currentQuestion._id, option._id)
+                      }
+                    />
+                  ))}
+                </div>
+
+                {isLastQuestion && selectedOptions[currentQuestion._id] && (
+                  <div className="flex justify-end mt-6">
+                    <Button onClick={handleSubmit} disabled={submitLoading}>
+                      {submitLoading ? "Submitting..." : "Submit All"}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
         </div>
       )}
 
@@ -308,28 +321,12 @@ const SurveyFlow = () => {
           <AnimatePresence>
             {answeredQuestions.map((question, index) => (
               <motion.div
-                key={question._id} 
-                layout
-                initial={{ opacity: 0, y: -20, height: 0, overflow: "hidden" }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  height: "auto",
-                  overflow: "hidden",
-                  transition: {
-                    height: { type: "spring", stiffness: 0, damping: 30 },
-                    opacity: { duration: 0.2 },
-                  },
-                }}
-                exit={{
-                  opacity: 0,
-                  y: 20,
-                  height: 0,
-                  overflow: "hidden",
-                  transition: {
-                    height: { type: "spring", stiffness: 0, damping: 30 },
-                    opacity: { duration: 0.2 },
-                  },
+                key={question._id}
+                initial={{ y: -100, opacity: 1 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                  duration: 0.6,
+                  ease: [0.25, 0.1, 0.25, 1], // ease-in-out
                 }}
                 className="bg-white p-8 rounded-lg"
               >
