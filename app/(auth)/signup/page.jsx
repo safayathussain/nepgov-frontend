@@ -3,9 +3,10 @@ import Navbar from "@/components/common/Navbar";
 import Button from "@/components/input/Button";
 import CheckInput from "@/components/input/CheckInput";
 import TextInput from "@/components/input/TextInput";
+import DropdownInput from "@/components/input/DropdownInput";
 import { setAuth } from "@/redux/slices/AuthSlice";
 import { FetchApi } from "@/utils/FetchApi";
-import { useAuth } from "@/utils/functions";
+import { useAuth, useCountries } from "@/utils/functions";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
@@ -15,18 +16,30 @@ import { useDispatch } from "react-redux";
 const Page = () => {
   const router = useRouter();
   const { auth } = useAuth();
-  useEffect(() => {
-    if (auth?._id) return router.push("/");
-  }, []);
+  const { countries } = useCountries();
+  const dispatch = useDispatch();
   const [signUpStep, setSignUpStep] = useState(0);
   const [isNextBtnDisabled, setIsNextBtnDisabled] = useState(true);
-  const dispatch = useDispatch();
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [isStatesLoading, setIsStatesLoading] = useState(false);
+  const [isCitiesLoading, setIsCitiesLoading] = useState(false);
+
+  useEffect(() => {
+    if (auth?._id) return router.push("/");
+  }, [ router]);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     agreeTerms: false,
+    firstName: "",
+    lastName: "",
     dob: "",
     gender: "",
+    country: "Nepal",
+    state_province: "",
+    city: "",
     postCode: "",
     code: "",
   });
@@ -39,18 +52,93 @@ const Page = () => {
     });
   };
 
+  // Load states when country changes
+  useEffect(() => {
+    const loadStates = async () => {
+      if (formData.country) {
+        setIsStatesLoading(true);
+        try {
+          const response = await fetch(
+            "https://countriesnow.space/api/v0.1/countries/states",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ country: formData.country }),
+            }
+          );
+          const { data } = await response.json();
+          if (data?.states) {
+            setStates(
+              data.states.map((item) => ({ ...item, value: item.name }))
+            );
+          } else {
+            setStates([]);
+          }
+        } catch (error) {
+          console.error("Error loading states:", error);
+        }
+        setIsStatesLoading(false);
+      } else {
+        setStates([]);
+        setFormData((prev) => ({ ...prev, state_province: "", city: "" }));
+      }
+    };
+    loadStates();
+  }, [formData.country]);
+
+  // Load cities when state changes
+  useEffect(() => {
+    const loadCities = async () => {
+      if (formData.country && formData.state_province) {
+        setIsCitiesLoading(true);
+        try {
+          const response = await fetch(
+            "https://countriesnow.space/api/v0.1/countries/state/cities",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                country: formData.country,
+                state: formData.state_province,
+              }),
+            }
+          );
+          const { data } = await response.json();
+          if (data) {
+            setCities([
+              ...data.map((city) => ({ name: city, value: city })),
+              { name: "Other", value: "Other" },
+            ]);
+          } else {
+            setCities([]);
+          }
+        } catch (error) {
+          console.error("Error loading cities:", error);
+        }
+        setIsCitiesLoading(false);
+      } else {
+        setCities([]);
+        setFormData((prev) => ({ ...prev, city: "" }));
+      }
+    };
+    loadCities();
+  }, [formData.country, formData.state_province]);
+
   const validateStep = () => {
     switch (signUpStep) {
-      case 0:
-        // Validate email, password, and terms
+      case 0: // Email, Password, Terms
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return (
           emailRegex.test(formData.email) &&
           formData.password.length >= 6 &&
           formData.agreeTerms
         );
-      case 1:
-        // Validate year of birth
+      case 1: // First Name, Last Name
+        return (
+          formData.firstName.trim().length > 0 &&
+          formData.lastName.trim().length > 0
+        );
+      case 2: // Date of Birth
         const year = parseInt(formData.dob);
         const currentYear = new Date().getFullYear();
         return (
@@ -59,23 +147,27 @@ const Page = () => {
           year <= currentYear &&
           formData.dob.length === 4
         );
-      case 2:
-        // Validate gender selection
+      case 3: // Gender
         return formData.gender !== "";
-      case 3:
-        //Validate worldwide postCode
+      case 4: // Country
+        return formData.country !== "";
+      case 5: // State/Province
+        return formData.state_province !== "";
+      case 6: // City
+        return formData.city !== "";
+      case 7: // Postcode
         const postcodeRegex = /^[A-Za-z0-9\s-]{2,10}$/;
         return (
           formData.postCode.trim().length > 0 &&
           postcodeRegex.test(formData.postCode)
         );
-      case 4:
-        // Validate verification code
+      case 8: // OTP
         return formData.code.length === 6;
       default:
         return false;
     }
   };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     await FetchApi({
@@ -85,6 +177,7 @@ const Page = () => {
       callback: () => setSignUpStep(signUpStep + 1),
     });
   };
+
   const handleOtpVerification = async (e) => {
     e.preventDefault();
     try {
@@ -105,6 +198,7 @@ const Page = () => {
       console.error("OTP verification failed:", error);
     }
   };
+
   useEffect(() => {
     setIsNextBtnDisabled(!validateStep());
   }, [formData, signUpStep]);
@@ -121,8 +215,7 @@ const Page = () => {
             <>
               <p className="text-2xl font-bold">Welcome to Nepgov</p>
               <p className="my-5">
-                Let's get started with some basic questions. Please confirm that
-                you live in the United Kingdom.
+                Let's get started with some basic questions.
               </p>
               <div className="py-5 space-y-3">
                 <TextInput
@@ -155,6 +248,31 @@ const Page = () => {
                 className="text-2xl cursor-pointer text-secondary"
                 onClick={() => setSignUpStep(signUpStep - 1)}
               />
+              <p className="text-2xl py-7 font-bold">Your Name</p>
+              <div className="py-5 space-y-3">
+                <TextInput
+                  label="First Name"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+                <TextInput
+                  label="Last Name"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </>
+          )}
+          {signUpStep === 2 && (
+            <>
+              <IoArrowBackOutline
+                className="text-2xl cursor-pointer text-secondary"
+                onClick={() => setSignUpStep(signUpStep - 1)}
+              />
               <p className="text-2xl py-7 font-bold">
                 In what year were you born?
               </p>
@@ -169,7 +287,7 @@ const Page = () => {
               </div>
             </>
           )}
-          {signUpStep === 2 && (
+          {signUpStep === 3 && (
             <>
               <IoArrowBackOutline
                 className="text-2xl cursor-pointer text-secondary"
@@ -186,7 +304,7 @@ const Page = () => {
                     className={`w-full capitalize ${
                       formData.gender === gender
                         ? "!bg-secondary text-white"
-                        : " "
+                        : ""
                     } hover:border-secondary`}
                     onClick={() => setFormData({ ...formData, gender })}
                   >
@@ -196,7 +314,74 @@ const Page = () => {
               </div>
             </>
           )}
-          {signUpStep === 3 && (
+          {signUpStep === 4 && (
+            <>
+              <IoArrowBackOutline
+                className="text-2xl cursor-pointer text-secondary"
+                onClick={() => setSignUpStep(signUpStep - 1)}
+              />
+              <p className="text-2xl py-7 font-bold">Your Country</p>
+              <div className="py-5 space-y-3">
+                <DropdownInput
+                  filter
+                  label="Country"
+                  name="country"
+                  className="!rounded-full"
+                  value={formData.country}
+                  onChange={handleChange}
+                  options={countries.map((item) => ({
+                    name: item.name,
+                    value: item.name,
+                  }))}
+                />
+              </div>
+            </>
+          )}
+          {signUpStep === 5 && (
+            <>
+              <IoArrowBackOutline
+                className="text-2xl cursor-pointer text-secondary"
+                onClick={() => setSignUpStep(signUpStep - 1)}
+              />
+              <p className="text-2xl py-7 font-bold">Your State/Province</p>
+              <div className="py-5 space-y-3">
+                <DropdownInput
+                  filter
+                  label="State/Province"
+                  name="state_province"
+                  className="!rounded-full"
+                  value={formData.state_province}
+                  onChange={handleChange}
+                  options={states}
+                  loading={isStatesLoading}
+                  disabled={!formData.country}
+                />
+              </div>
+            </>
+          )}
+          {signUpStep === 6 && (
+            <>
+              <IoArrowBackOutline
+                className="text-2xl cursor-pointer text-secondary"
+                onClick={() => setSignUpStep(signUpStep - 1)}
+              />
+              <p className="text-2xl py-7 font-bold">Your City</p>
+              <div className="py-5 space-y-3">
+                <DropdownInput
+                  filter
+                  label="City"
+                  name="city"
+                  className="!rounded-full"
+                  value={formData.city}
+                  onChange={handleChange}
+                  options={cities}
+                  loading={isCitiesLoading}
+                  disabled={!formData.state_province}
+                />
+              </div>
+            </>
+          )}
+          {signUpStep === 7 && (
             <>
               <IoArrowBackOutline
                 className="text-2xl cursor-pointer text-secondary"
@@ -207,14 +392,14 @@ const Page = () => {
                 <TextInput
                   label="Postcode"
                   name="postCode"
-                  placeholder="Ex. SW1W 0NY"
+                  placeholder="Ex. 44600"
                   value={formData.postCode}
                   onChange={handleChange}
                 />
               </div>
             </>
           )}
-          {signUpStep === 4 && (
+          {signUpStep === 8 && (
             <>
               <IoArrowBackOutline
                 className="text-2xl cursor-pointer text-secondary"
@@ -235,7 +420,7 @@ const Page = () => {
               </div>
             </>
           )}
-          {signUpStep === 5 && (
+          {signUpStep === 9 && (
             <div className="py-20 px-10">
               <svg
                 width="67"
@@ -260,7 +445,7 @@ const Page = () => {
               </Button>
             </div>
           )}
-          {signUpStep !== 5 && (
+          {signUpStep !== 9 && (
             <>
               <hr className="my-5" />
               <div className="flex justify-between flex-wrap-reverse gap-3 items-center">
@@ -277,14 +462,11 @@ const Page = () => {
                   className="ml-auto"
                   type="button"
                   onClick={() => {
-                    if (signUpStep === 3) {
-                      // For postcode step, trigger form submission
+                    if (signUpStep === 7) {
                       document.querySelector("form").requestSubmit();
-                    } else if (signUpStep === 4) {
-                      // For OTP verification step
+                    } else if (signUpStep === 8) {
                       handleOtpVerification(new Event("submit"));
                     } else {
-                      // For other steps, just move to next step
                       setSignUpStep(signUpStep + 1);
                     }
                   }}
