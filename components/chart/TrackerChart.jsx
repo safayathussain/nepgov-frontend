@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState, useCallback } from "react"
 import Chart from "chart.js/auto"
 
-const TrackerChart = ({ data, height = 200 }) => {
+const TrackerChart = ({ data, height = "auto" }) => {
   const chartRef = useRef(null)
   const chartInstance = useRef(null)
   const [sortedData, setSortedData] = useState([])
@@ -68,7 +68,7 @@ const TrackerChart = ({ data, height = 200 }) => {
           },
           responsive: true,
           maintainAspectRatio: true,
-          aspectRatio: 1.5,
+          // aspectRatio: 1.5,
         },
       })
     }
@@ -97,7 +97,7 @@ const TrackerChart = ({ data, height = 200 }) => {
 
   return (
     <div className="w-full max-w-2xl mx-auto flex items-center gap-5 mt-2">
-      <div className="relative" style={{ width: `85%`,  }}>
+      <div className="relative" style={{ width: `85%`,  height: height}}>
         <canvas ref={chartRef}></canvas>
       </div>
       <div>

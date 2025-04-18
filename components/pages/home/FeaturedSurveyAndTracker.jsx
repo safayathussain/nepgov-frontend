@@ -12,7 +12,7 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
   return (
     <div className="py-10 max-w-[1440px]">
       <div className="grid grid-cols-6 gap-5">
-        {featuredSurveyTracker?.surveys[0]?._id && (
+        {/* {featuredSurveyTracker?.surveys[0]?._id && (
           <Link
             href={`/report/survey/${featuredSurveyTracker?.surveys[0]?._id}`}
             className="shadow-light  border col-span-6 flex flex-col md:flex-row items-center border-[#EBEBEB]"
@@ -39,12 +39,45 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
               </p>
             </div>
           </Link>
-        )}
+        )} */}
+        {featuredSurveyTracker?.articles?.map((article) => (
+          <Link
+            key={article._id}
+            href={`/article/${article?._id}`}
+            className="p-5 shadow-light border border-[#EBEBEB] flex flex-col  gap-5 col-span-6 lg:col-span-4 row-span-2"
+          >
+            <img
+              src={process.env.NEXT_PUBLIC_BASE_IMAGE_API + article?.thumbnail}
+              width={300}
+              height={150}
+              alt=""
+              className="w-full object-cover coverImage"
+            />
+            <div>
+              <div className="flex justify-between">
+                <ArticleStatus />
+                <p className="text-lightGray">
+                  {article.categories?.[0]?.name || "Uncategorized"}
+                </p>
+              </div>
+              <p className="text-3xl font-semibold mt-3">{article.title}</p>
+            </div>
+            <p className=" text-lightGray ">
+              {article.createdAt
+                ? timeAgo(article.createdAt)
+                : "Published recently"}
+            </p>
+            <div
+              dangerouslySetInnerHTML={{ __html: article.content }}
+              className="line-clamp-3 text-lg -mt-2"
+            ></div>
+          </Link>
+        ))}
         {featuredSurveyTracker?.trackers?.map((tracker) => (
           <Link
             key={tracker._id}
             href={`/report/tracker/${tracker._id}`}
-            className="p-5 shadow-light border border-[#EBEBEB] flex flex-col justify-between gap-5 col-span-6 md:col-span-3 lg:col-span-2"
+            className="p-5 shadow-light border border-[#EBEBEB] flex flex-col justify-between gap-5 col-span-6 sm:col-span-3 lg:col-span-2"
           >
             <div>
               <div className="flex justify-between">
@@ -68,41 +101,6 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
             </p>
           </Link>
         ))}
-        {featuredSurveyTracker?.articles?.map((article) => (
-          <Link
-          key={article._id}
-          href={`/article/${article?._id}`}
-          className="p-5 shadow-light border border-[#EBEBEB] flex flex-col  gap-5 col-span-6 md:col-span-3 lg:col-span-2"
-        >
-          <img
-            src={
-              process.env.NEXT_PUBLIC_BASE_IMAGE_API +
-              article?.thumbnail
-            }
-            width={300}
-            height={150}
-            alt=""
-            className="w-full object-cover coverImage"
-          />
-          <div>
-            <div className="flex justify-between">
-              <ArticleStatus/>
-              <p className="text-lightGray">
-                {article.categories?.[0]?.name || "Uncategorized"}
-              </p>
-            </div>
-            <p className="text-xl font-semibold mt-3">
-              {article.title}
-            </p>
-          </div>
-          <p className="text-sm text-lightGray mt-auto">
-            {article.createdAt
-              ? timeAgo(article.createdAt)
-              : "Published recently"}
-          </p>
-        </Link>
-        ))}
-
       </div>
     </div>
   );

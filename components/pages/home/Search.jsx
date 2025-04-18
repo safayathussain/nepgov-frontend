@@ -23,9 +23,13 @@ const Search = ({ open, setOpen, categories, articles, surveys, trackers }) => {
           <TextInput
             placeholder={"Searh here..."}
             className={"w-full"}
+            value={search}
             onChange={(e) => setsearch(e.target.value.toLowerCase())}
           ></TextInput>
-          
+          <CgClose
+            className="absolute top-3 text-xl right-3 cursor-pointer"
+            onClick={() => setsearch("")}
+          />
         </div>
         <div className="grid md:grid-cols-2 gap-8 mt-5 ">
           {/* Left Column - Content Types */}
@@ -33,20 +37,27 @@ const Search = ({ open, setOpen, categories, articles, surveys, trackers }) => {
             <h2 className="text-xl font-medium text-gray-700 mb-6">
               Browse Content by Type
             </h2>
-
-            {/* Articles Section */}
+            {/* Survey Section */}
             <div className="mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                Articles
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Survey</h3>
               <div className="flex flex-col gap-3">
-                {articles
-                  .filter((item) => item.title.toLowerCase().includes(search))
-                  .map((item) => (
-                    <Link key={item._id} className="!text-[16px] text-gray-500" href={""}>
-                      {item?.title}
-                    </Link>
-                  ))}
+                {surveys.filter((item) =>
+                  item.topic.toLowerCase().includes(search)
+                ).length > 0 ? (
+                  surveys
+                    .filter((item) => item.topic.toLowerCase().includes(search))
+                    .map((item) => (
+                      <Link
+                        key={item._id}
+                        className="!text-[16px] text-gray-500"
+                        href={""}
+                      >
+                        {item?.topic}
+                      </Link>
+                    ))
+                ) : (
+                  <p className="text-gray-500">No surveys found</p>
+                )}
               </div>
             </div>
 
@@ -54,26 +65,49 @@ const Search = ({ open, setOpen, categories, articles, surveys, trackers }) => {
             <div className="mb-8">
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Tracker</h3>
               <div className="flex flex-col gap-3">
-                {trackers
-                  .filter((item) => item.topic.toLowerCase().includes(search))
-                  .map((item) => (
-                    <Link key={item._id} className="!text-[16px] text-gray-500" href={""}>
-                      {item?.topic}
-                    </Link>
-                  ))}
+                {trackers.filter((item) =>
+                  item.topic.toLowerCase().includes(search)
+                ).length > 0 ? (
+                  trackers
+                    .filter((item) => item.topic.toLowerCase().includes(search))
+                    .map((item) => (
+                      <Link
+                        key={item._id}
+                        className="!text-[16px] text-gray-500"
+                        href={""}
+                      >
+                        {item?.topic}
+                      </Link>
+                    ))
+                ) : (
+                  <p className="text-gray-500">No trackers found</p>
+                )}
               </div>
             </div>
-            {/* Survey Section */}
+
+            {/* Articles Section */}
             <div className="mb-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Survey</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                Articles
+              </h3>
               <div className="flex flex-col gap-3">
-                {surveys
-                  .filter((item) => item.topic.toLowerCase().includes(search))
-                  .map((item) => (
-                    <Link  key={item._id} className="!text-[16px] text-gray-500" href={""}>
-                      {item?.topic}
-                    </Link>
-                  ))}
+                {articles.filter((item) =>
+                  item.title.toLowerCase().includes(search)
+                ).length > 0 ? (
+                  articles
+                    .filter((item) => item.title.toLowerCase().includes(search))
+                    .map((item) => (
+                      <Link
+                        key={item._id}
+                        className="!text-[16px] text-gray-500"
+                        href={""}
+                      >
+                        {item?.title}
+                      </Link>
+                    ))
+                ) : (
+                  <p className="text-gray-500">No articles found</p>
+                )}
               </div>
             </div>
           </div>

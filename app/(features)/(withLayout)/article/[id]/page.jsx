@@ -56,8 +56,8 @@ const page = () => {
             >
               {/* content */}
             </div>
-            <div>
-              <p className="text-xl md:text-3xl font-semibold text-">
+            <div className="mt-16">
+              <p className="text-xl md:text-3xl font-semibold">
                 Read more
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 mt-5 gap-5">
