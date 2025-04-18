@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import { ImgUrl } from "@/utils/constants";
 import { formatReadableDate, timeAgo } from "@/utils/functions";
 import Loading from "@/components/common/Loading";
+import ShareButtons from "@/components/common/ShareButtons";
 const page = () => {
   const [loading, setloading] = useState(false);
   const [article, setArticle] = useState({});
@@ -56,6 +57,10 @@ const page = () => {
             >
               {/* content */}
             </div>
+            <div className="flex items-center justify-end gap-3 mt-10">
+                  <p>Share with:</p>
+                  <ShareButtons/>
+                </div>
             <div className="mt-16">
               <p className="text-xl md:text-3xl font-semibold">
                 Read more
