@@ -32,12 +32,7 @@ const NavbarLanguageSelectInput = () => {
         const select = document.querySelector(".goog-te-combo");
         if (select) {
           obs.disconnect();  
-          const options = Array.from(select.options);
-          options.forEach((option) => {
-            option.innerText = option.innerText
-              .replace(/[\(\[].*?[\)\]]/g, "")
-              .trim();
-          });
+          const options = Array.from(select.options); 
           const englishOption = options.find((opt) => !opt.value);
           if (englishOption) {
             englishOption.innerText = "English";

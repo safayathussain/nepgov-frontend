@@ -73,8 +73,8 @@ const VoteTrackerPage = () => {
         if (checkVoteResponse?.data?.data) {
           setIsAlreadyVoted(true);
           setSelectedOption(checkVoteResponse.data.data.option);
-          setResult(calculateResults(tracker.options));
         }
+        setResult(calculateResults(tracker.options));
       } catch (error) {
         console.error("Error fetching data:", error); 
       } finally {

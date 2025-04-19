@@ -26,7 +26,7 @@ const Providers = ({ children }) => {
       <Script
         id="usercentrics-cmp"
         src="https://web.cmp.usercentrics.eu/ui/loader.js"
-        data-settings-id="ZFztTHYVi2c-b4"
+        data-settings-id="ZFztTHYVi2c-b4"  
         strategy="afterInteractive"
         async
       />

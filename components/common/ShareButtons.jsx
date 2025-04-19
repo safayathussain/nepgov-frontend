@@ -13,8 +13,7 @@ import {
 
 const ShareButtons = ({
   shareUrl = typeof window !== "undefined" && window.location.href,
-}) => {
-  console.log(shareUrl)
+}) => { 
   return (
     <div className="flex gap-1">
       {/* Facebook */}

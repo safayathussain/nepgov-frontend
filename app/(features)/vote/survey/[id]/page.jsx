@@ -78,12 +78,20 @@ const SurveyFlow = () => {
           }
         });
         setSelectedOptions(initialOptions);
+
         const answeredQuestions = survey.questions.filter(
           (q) => initialOptions[q._id]
         );
-        if (Object.keys((await responses[1]?.data?.data) || {}).length === 0) {
+
+        // Do not pop the last question if options come from searchParams
+        if (
+          Object.keys((await responses[1]?.data?.data) || {}).length !== 0 &&
+          options.length > 0 &&
+          !searchParams.getAll("options").length
+        ) {
           answeredQuestions.pop();
         }
+
         answeredQuestions.reverse();
         setAnsweredQuestions(
           answeredQuestions.map((q) => ({
@@ -92,7 +100,13 @@ const SurveyFlow = () => {
             results: calculateResults(q.options, initialOptions[q._id]),
           }))
         );
-        setCurrentQuestionIndex(answeredQuestions.length);
+
+        // Set currentQuestionIndex to the next unanswered question or the last question if all are answered
+        const nextQuestionIndex = answeredQuestions.length < survey.questions.length
+          ? answeredQuestions.length
+          : survey.questions.length - 1;
+
+        setCurrentQuestionIndex(nextQuestionIndex);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError(error.message || "Failed to load survey data");
@@ -119,6 +133,7 @@ const SurveyFlow = () => {
       ...prev,
       [questionId]: optionId,
     }));
+
     try {
       const currentQuestion = isPrevious
         ? answeredQuestions.find((q) => q._id === questionId)
@@ -127,6 +142,9 @@ const SurveyFlow = () => {
       if (!currentQuestion) {
         return;
       }
+
+      const results = calculateResults(currentQuestion.options, optionId);
+
       if (isPrevious) {
         // Update an already answered question
         setAnsweredQuestions((prev) =>
@@ -135,18 +153,33 @@ const SurveyFlow = () => {
               ? {
                   ...q,
                   selectedOption: optionId,
-                  results: calculateResults(q.options, optionId),
+                  results: results,
                 }
               : q
           )
         );
         setIsModifyingPrevious(false);
       } else {
-        // Process a new answer
-        const results = calculateResults(currentQuestion.options, optionId);
+        // Check if the question is already in answeredQuestions
+        const isAlreadyAnswered = answeredQuestions.some(
+          (q) => q._id === currentQuestion._id
+        );
 
-        // Only add if not already answered
-        if (!answeredQuestions.some((q) => q._id === currentQuestion._id)) {
+        if (isAlreadyAnswered) {
+          // Update the existing answered question
+          setAnsweredQuestions((prev) =>
+            prev.map((q) =>
+              q._id === currentQuestion._id
+                ? {
+                    ...q,
+                    selectedOption: optionId,
+                    results: results,
+                  }
+                : q
+            )
+          );
+        } else {
+          // Add new answer
           setAnsweredQuestions((prev) => [
             {
               ...currentQuestion,
@@ -156,6 +189,7 @@ const SurveyFlow = () => {
             ...prev,
           ]);
 
+          // Only increment index if not the last question
           if (currentQuestionIndex < currentSurvey.questions.length - 1) {
             setCurrentQuestionIndex((prev) => prev + 1);
           }
@@ -230,6 +264,7 @@ const SurveyFlow = () => {
   const currentQuestion = currentSurvey.questions?.[currentQuestionIndex];
   const isLastQuestion =
     currentQuestionIndex === currentSurvey.questions?.length - 1;
+
   return (
     <div>
       <style jsx global>{`
