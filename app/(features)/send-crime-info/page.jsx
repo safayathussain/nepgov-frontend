@@ -1,4 +1,5 @@
 "use client";
+
 import Button from "@/components/input/Button";
 import CrimeExtraInfo from "@/components/pages/crime/CrimeExtraInfo";
 import CrimeInfoNavigation from "@/components/pages/crime/CrimeInfoNavigation";
@@ -6,7 +7,7 @@ import CrimeOrIncident from "@/components/pages/crime/CrimeOrIncident";
 import CrimePersonInfo from "@/components/pages/crime/CrimePersonInfo";
 import CrimeType from "@/components/pages/crime/CrimeType";
 import { FetchApi } from "@/utils/FetchApi";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const CrimeReportForm = () => {
   const [step, setStep] = useState(1);
@@ -24,13 +25,29 @@ const CrimeReportForm = () => {
     hasWeapon: null,
     confirmNoPoliceAttention: false,
   });
+  const [crimeOptions, setCrimeOptions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const crimeOptions = [
-    { name: "Theft", value: "theft" },
-    { name: "Vandalism", value: "vandalism" },
-    { name: "Fraud", value: "fraud" },
-    // Add more options as needed
-  ];
+  useEffect(() => {
+    const fetchCrimeTypes = async () => {
+      setLoading(true);
+      try {
+        const response = await FetchApi({ url: "/crime/types" });
+        if (response?.data?.success) {
+          const options = response.data.data.map((item) => ({
+            name: item.type,
+            value: item._id,  
+          }));
+          setCrimeOptions(options);
+        }
+      } catch (err) {
+        console.error("Failed to fetch crime types:", err);
+      }
+      setLoading(false);
+    };
+
+    fetchCrimeTypes();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +56,7 @@ const CrimeReportForm = () => {
       [name]: value,
     }));
   };
+
   const handleDateChange = (name, value) => {
     setFormData((prev) => ({
       ...prev,
@@ -78,13 +96,13 @@ const CrimeReportForm = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto  ">
+    <div className="max-w-2xl mx-auto">
       <style>
         {`
-            .p-highlight > .p-checkbox-box {
+          .p-highlight > .p-checkbox-box {
             background-color: #EF4634 !important;
-            border-radius: 999px !important; 
-              }
+            border-radius: 999px !important;
+          }
         `}
       </style>
       {step !== 5 && step !== 1 && <CrimeInfoNavigation index={step} />}
@@ -96,6 +114,7 @@ const CrimeReportForm = () => {
             crimeOptions={crimeOptions}
             handleBack={handleBack}
             handleNext={handleNext}
+            loading={loading}
           />
         )}
 
@@ -129,8 +148,8 @@ const CrimeReportForm = () => {
         )}
 
         {step === 5 && (
-          <div className=" space-y-4 bg-white p-10">
-            <div className="w-12 h-12 bg-primary rounded-lg  ">
+          <div className="space-y-4 bg-white p-10">
+            <div className="w-12 h-12 bg-primary rounded-lg">
               <svg
                 className="w-12 h-12 text-white"
                 fill="none"
