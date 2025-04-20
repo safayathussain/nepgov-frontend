@@ -94,7 +94,7 @@ export default function Surveys({ surveys }) {
         {surveys?.map((item) => (
           <SwiperSlide key={item?._id}>
             <Link
-              href={`/report/survey/${item?._id}`}
+              href={`/surveys/${item?._id}`}
               className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full"
             >
               <div>

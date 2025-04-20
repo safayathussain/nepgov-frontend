@@ -93,8 +93,7 @@ const TrackerReportChart = ({
       onApplyFilters(resetFilters);
     }
   }, [onApplyFilters]);
-
-  // Load states when country changes - with proper error handling
+ 
   useEffect(() => {
     const loadStates = async () => {
       if (!localFilters.country) {
@@ -140,8 +139,7 @@ const TrackerReportChart = ({
 
     loadStates();
   }, [localFilters.country]);
-
-  // Load cities when state changes - with proper error handling
+ 
   useEffect(() => {
     const loadCities = async () => {
       if (!localFilters.country || !localFilters.state_province) {
@@ -189,15 +187,13 @@ const TrackerReportChart = ({
 
     loadCities();
   }, [localFilters.country, localFilters.state_province]);
-
-  // Parse age range from string
+ 
   const ageRange = useMemo(() => {
     return localFilters.age
       ? localFilters.age.split("-").map(Number)
       : [0, 100];
   }, [localFilters.age]);
-
-  // Memoize country options
+ 
   const countryOptions = useMemo(() => {
     return [
       { name: "All Countries", value: "" },
@@ -206,8 +202,7 @@ const TrackerReportChart = ({
   }, [countries]);
   const { downloadChartDataAsCSV, downloadChartDataAsPdf } =
     useChartDataDownload();
-  const chartRef = useRef();
-  console.log(chartData)
+  const chartRef = useRef(); 
   return (
     <div className="flex flex-col md:flex-row gap-5">
       <div className="w-full md:w-1/5 space-y-3">
@@ -305,7 +300,7 @@ const TrackerReportChart = ({
       </div>
       <div className="w-full md:w-4/5 bg-[#F9FAFB] rounded-xl p-2 md:px-5 md:py-7">
         <Chart chartData={chartData} isLoading={isLoading} ref={chartRef}/>
-        <div className="mt-5 md:px-5 flex justify-between flex-wrap">
+        <div className="mt-5 md:px-5 flex justify-between flex-wrap gap-3">
           <div className="flex gap-2 items-center">
             <p>Download as:</p>
             <button

@@ -39,7 +39,7 @@ const Page = () => {
       <p className="text-3xl font-medium">Trackers</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
         {trackers.map((item) => (
-          <Link key={item._id} href={`/report/tracker/${item._id}`}>
+          <Link key={item._id} href={`/trackers/${item._id}`}>
             <div className="p-5 border border-[#EBEBEB] flex flex-col justify-between h-full">
               <div>
                 <div className="flex justify-between py-3">

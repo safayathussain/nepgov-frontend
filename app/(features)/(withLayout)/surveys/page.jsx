@@ -52,7 +52,7 @@ const Page = () => {
         {surveys.map((item) => (
           <Link
             key={item?._id}
-            href={`/report/survey/${item?._id}`}
+            href={`/surveys/${item?._id}`}
             className="p-5 border border-[#EBEBEB] flex flex-col justify-between h-full"
           >
             <div>

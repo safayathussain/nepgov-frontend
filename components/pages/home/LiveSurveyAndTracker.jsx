@@ -39,8 +39,8 @@ const LiveSurveyAndTracker = ({ liveSurveyTracker }) => {
                   onClick={() =>
                     router.push(
                       item?.type === "Survey"
-                        ? `/vote/survey/${item?.data?._id}`
-                        : `/vote/tracker/${item?.data?._id}`
+                        ? `/surveys/${item?.data?._id}`
+                        : `/trackers/${item?.data?._id}`
                     )
                   }
                   variant="primary-outline"
