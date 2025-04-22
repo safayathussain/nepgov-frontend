@@ -70,7 +70,7 @@ const page = () => {
                 {moreArticles?.map((item) => (
                   <Link
                     key={item?._id}
-                    href={`/article/${item?._id}`}
+                    href={`/articles/${item?._id}`}
                     className="h-full"
                   >
                     <div className="p-5 border border-[#EBEBEB] shadow-medium h-full">

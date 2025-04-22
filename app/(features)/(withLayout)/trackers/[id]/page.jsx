@@ -11,8 +11,9 @@ import TrackerReportChart from "@/components/pages/report/TrackerReportChart";
 import ShareButtons from "@/components/common/ShareButtons";
 import { FetchApi } from "@/utils/FetchApi";
 import { isScheduled, useAuth } from "@/utils/functions";
+import { motion, AnimatePresence } from "framer-motion";
 
-const calculateResults = (options, selectedOptionId = null) => {
+const calculateResults = (options) => {
   const updatedOptions = options.map((item) => ({
     ...item,
     votedCount: item.votedCount || 0,
@@ -102,10 +103,14 @@ const TrackerPage = () => {
             )
           );
           setCurrentTracker(tracker);
-          setIsTrackerLive(
-            !isScheduled(tracker.liveStartedAt) &&
-              new Date(tracker.liveEndedAt) > new Date()
-          );
+          if (!tracker.liveEndedAt) {
+            setIsTrackerLive(true);
+          } else {
+            setIsTrackerLive(
+              !isScheduled(tracker.liveStartedAt) &&
+                new Date(tracker.liveEndedAt) > new Date()
+            );
+          }
 
           if (checkVoteResponse?.data?.data) {
             setIsAlreadyVoted(true);
@@ -137,7 +142,7 @@ const TrackerPage = () => {
 
   const handleOptionSelect = (optionId) => {
     setSelectedOption(optionId);
-    setResult(calculateResults(currentTracker.options, optionId));
+    setResult(calculateResults(currentTracker.options));
   };
 
   const handleSubmit = async () => {
@@ -160,7 +165,6 @@ const TrackerPage = () => {
       });
 
       setResult(calculateResults(data.data.options));
-      setIsAlreadyVoted(true);
       setShowSuccessScreen(true);
     } catch (error) {
       console.error("Error submitting vote:", error);
@@ -174,40 +178,7 @@ const TrackerPage = () => {
   }, []);
 
   const shouldShowVoteScreen =
-    !isAlreadyVoted && isTrackerLive && !showSuccessScreen;
-
-  if (showLoginScreen) {
-    return (
-      <div className="max-w-[835px] container">
-        <style jsx global>{`
-          .p-dropdown-item {
-            white-space: normal !important;
-            max-width: 690px;
-            font-size: 14px;
-          }
-          .p-highlight > .p-checkbox-box {
-            background-color: #3560ad !important;
-            border-radius: 999px !important;
-          }
-          @media (max-width: 768px) {
-            .p-dropdown-panel {
-              margin: 5px;
-            }
-          }
-        `}</style>
-        <div className="bg-white p-8 rounded-lg mt-5">
-          <p className="text-2xl font-semibold">
-            Please log in to submit your answers
-          </p>
-          <p>Your responses will be saved after logging in.</p>
-          <div className="flex items-center gap-2 mt-5">
-            <Button onClick={() => router.push("/login")}>Log in</Button>
-            <Button onClick={() => router.push("/signup")}>Signup</Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    (!isAlreadyVoted && isTrackerLive) || showSuccessScreen;
 
   return (
     <div className={""}>
@@ -238,7 +209,56 @@ const TrackerPage = () => {
           onChange={(e) => router.push("/trackers/" + e.target.value)}
         />
       </div>
-
+      {showLoginScreen && (
+        <motion.div
+          key={showLoginScreen}
+          initial={{ height: 0, opacity: 1 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="p-1 overflow-y-hidden"
+        >
+          <div className="max-w-[835px] container">
+            <div className="bg-white p-8 rounded-lg mt-5">
+              <div className="py-3 border-y">
+                <p className="font-medium text-xl">
+                  Are you already a member of NepGov?
+                </p>
+              </div>
+              <div className="lg:m-3 space-y-5 pt-5" role="radiogroup">
+                <div className="w-full space-y-1">
+                  <CheckInput
+                    boxClassName="!outline-primary"
+                    label="Yes"
+                    value={false}
+                    setValue={() => {
+                      sessionStorage.setItem(
+                        "voteRedirectUrl",
+                        `/trackers/${id}?option=${selectedOption}`
+                      );
+                      router.push("/login");
+                    }}
+                  />
+                </div>
+                <div className="w-full space-y-1">
+                  <CheckInput
+                    boxClassName="!outline-primary"
+                    label="No"
+                    value={false}
+                    setValue={() => {
+                      sessionStorage.setItem(
+                        "voteRedirectUrl",
+                        `/trackers/${id}?option=${selectedOption}`
+                      );
+                      router.push("/signup");
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
       {shouldShowVoteScreen ? (
         <div className="max-w-[835px] container">
           <div className="bg-white p-8 rounded-lg mt-5 ">
@@ -276,12 +296,24 @@ const TrackerPage = () => {
                     <p className="text-gray-600 mb-6">
                       Your response was stored successfully in NepGov.
                     </p>
-                    <Button
-                      variant="secondary"
-                      onClick={() => router.push("/")}
-                    >
-                      Back to Home
-                    </Button>
+                    <div className="flex items-center gap-4">
+                      <Button
+                        variant="secondary"
+                        onClick={() => router.push("/")}
+                      >
+                        Back to Home
+                      </Button>
+                      <Button
+                        variant="primary"
+                        onClick={() => {
+                          setShowSuccessScreen(false);
+                          setIsAlreadyVoted(true);
+                          fetchTrackerData();
+                        }}
+                      >
+                        View Result
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <>
@@ -302,7 +334,14 @@ const TrackerPage = () => {
                                 boxClassName="!outline-primary"
                                 label={item.content}
                                 value={selectedOption === item._id}
-                                setValue={() => handleOptionSelect(item._id)}
+                                setValue={() => {
+                                  console.log(auth);
+                                  handleOptionSelect(item._id);
+                                  if (!auth._id) {
+                                    console.log("HI");
+                                    setShowLoginScreen(true);
+                                  }
+                                }}
                               />
                               {resultItem && selectedOption && (
                                 <p>{resultItem.percentage}%</p>
@@ -315,7 +354,7 @@ const TrackerPage = () => {
                         );
                       })}
                     </div>
-                    {!isAlreadyVoted && (
+                    {!isAlreadyVoted && auth._id && (
                       <div className="flex justify-end mt-5">
                         <Button
                           onClick={handleSubmit}

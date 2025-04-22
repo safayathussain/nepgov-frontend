@@ -153,8 +153,7 @@ const SurveyReportChart = ({
   const timePeriods = generateChartDurationArray(liveStartedAt, liveEndedAt);
   const { downloadChartDataAsCSV, downloadChartDataAsPdf } =
     useChartDataDownload();
-  const chartRef = useRef(null);
-  console.log(chartData);
+  const chartRef = useRef(null); 
   return (
     <div className="flex flex-col md:flex-row gap-5">
       <div className="w-full md:w-1/5 space-y-3">

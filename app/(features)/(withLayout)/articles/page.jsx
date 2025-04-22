@@ -40,7 +40,7 @@ const Page = () => {
       <p className="text-3xl font-medium">Articles</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
         {articles.map((item) => (
-          <Link key={item._id} href={`/article/${item?._id}`} className="mb-2">
+          <Link key={item._id} href={`/articles/${item?._id}`} className="mb-2">
             <div className="p-5 border border-[#EBEBEB] shadow-medium h-full">
               <Image
                 src={ImgUrl + item?.thumbnail}

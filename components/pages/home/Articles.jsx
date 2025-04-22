@@ -92,7 +92,7 @@ export default function Articles({ articles }) {
       >
         {articles?.map((item) => (
           <SwiperSlide key={item?._id}>
-            <Link href={`/article/${item?._id}`} className="mb-2">
+            <Link href={`/articles/${item?._id}`} className="mb-2">
               <div className="p-5 border border-[#EBEBEB] shadow-medium h-full">
                 <Image
                   src={ImgUrl + item?.thumbnail}

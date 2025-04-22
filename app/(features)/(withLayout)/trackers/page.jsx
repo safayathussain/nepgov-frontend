@@ -1,5 +1,6 @@
 "use client";
 import TrackerChart from "@/components/chart/TrackerChart";
+import LiveStatus from "@/components/common/LiveStatus";
 import Loading from "@/components/common/Loading";
 import OptionsWithColor from "@/components/common/OptionsWithColor";
 import TrackerStatus from "@/components/common/TrackerStatus";
@@ -43,7 +44,12 @@ const Page = () => {
             <div className="p-5 border border-[#EBEBEB] flex flex-col justify-between h-full">
               <div>
                 <div className="flex justify-between py-3">
-                  <TrackerStatus />
+                  <div className="flex items-center gap-2">
+                    <TrackerStatus />
+                    {isLive(item?.liveStartedAt, item?.liveEndedAt) && (
+                      <LiveStatus />
+                    )}
+                  </div>
                   <p>{item?.categories?.[0]?.name}</p>
                 </div>
                 <p className="text-xl font-semibold leading-tight mb-3">

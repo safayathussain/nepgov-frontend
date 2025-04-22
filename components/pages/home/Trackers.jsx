@@ -9,13 +9,17 @@ import TrackerStatus from "@/components/common/TrackerStatus";
 import TrackerChart from "@/components/chart/TrackerChart";
 import { isLive, timeAgo, timeLeft } from "@/utils/functions";
 import OptionsWithColor from "@/components/common/OptionsWithColor";
+import LiveStatus from "@/components/common/LiveStatus";
 
 export default function Trackers({ trackers }) {
   function calculateVotedCount(options) {
-    const totalVotedCount = options.reduce((total, option) => total + option.votedCount, 0);
+    const totalVotedCount = options.reduce(
+      (total, option) => total + option.votedCount,
+      0
+    );
     return totalVotedCount;
   }
-  
+
   return (
     <div className="my-20">
       <div className="flex justify-between">
@@ -100,7 +104,12 @@ export default function Trackers({ trackers }) {
               <div className="p-5 border border-[#EBEBEB] shadow-medium flex flex-col justify-between h-full">
                 <div>
                   <div className="flex justify-between py-3">
-                    <TrackerStatus />
+                    <div className="flex items-center gap-2">
+                      <TrackerStatus />
+                      {isLive(item?.liveStartedAt, item?.liveEndedAt) && (
+                        <LiveStatus />
+                      )}
+                    </div>
                     <p> {item?.categories?.[0]?.name}</p>
                   </div>
                   <p className="text-xl font-semibold leading-tight mb-3">

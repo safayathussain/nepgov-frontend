@@ -1,5 +1,6 @@
 import TrackerChart from "@/components/chart/TrackerChart";
 import ArticleStatus from "@/components/common/ArticleStatus";
+import LiveStatus from "@/components/common/LiveStatus";
 import OptionsWithColor from "@/components/common/OptionsWithColor";
 import SurveyStatus from "@/components/common/SurveyStatus";
 import TrackerStatus from "@/components/common/TrackerStatus";
@@ -43,7 +44,7 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
         {featuredSurveyTracker?.articles?.map((article) => (
           <Link
             key={article._id}
-            href={`/article/${article?._id}`}
+            href={`/articles/${article?._id}`}
             className="p-5 shadow-light border border-[#EBEBEB] flex flex-col  gap-5 col-span-6 lg:col-span-4 row-span-2"
           >
             <img
@@ -81,7 +82,12 @@ const FeaturedSurveyAndTracker = ({ featuredSurveyTracker, allTrackers }) => {
           >
             <div>
               <div className="flex justify-between">
-                <TrackerStatus />
+                <div className="flex items-center gap-2">
+                  <TrackerStatus />
+                  {isLive(tracker?.liveStartedAt, tracker?.liveEndedAt) && (
+                    <LiveStatus />
+                  )}
+                </div>
                 <p className="text-lightGray">
                   {tracker.categories?.[0]?.name}
                 </p>

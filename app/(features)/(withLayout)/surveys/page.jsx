@@ -1,4 +1,5 @@
 "use client";
+import LiveStatus from "@/components/common/LiveStatus";
 import Loading from "@/components/common/Loading";
 import SurveyStatus from "@/components/common/SurveyStatus";
 import { ImgUrl } from "@/utils/constants";
@@ -30,7 +31,8 @@ const Page = () => {
     if (!questions || questions.length === 0) return 0;
     const totalVotedCount = questions.reduce(
       (total, question) =>
-        total + question.options.reduce((sum, option) => sum + option.votedCount, 0),
+        total +
+        question.options.reduce((sum, option) => sum + option.votedCount, 0),
       0
     );
     return Math.round(totalVotedCount / questions.length);
@@ -64,10 +66,17 @@ const Page = () => {
                 className="w-full coverImage"
               />
               <div className="flex justify-between py-3">
-                <SurveyStatus />
+                <div className="flex items-center gap-2">
+                  <SurveyStatus />
+                  {isLive(item?.liveStartedAt, item?.liveEndedAt) && (
+                    <LiveStatus />
+                  )}
+                </div>
                 <p>{item?.categories?.[0]?.name}</p>
               </div>
-              <p className="text-xl font-semibold leading-tight">{item?.topic}</p>
+              <p className="text-xl font-semibold leading-tight">
+                {item?.topic}
+              </p>
             </div>
             <div className="mt-auto">
               <p className="text-sm text-gray-400">

@@ -30,7 +30,9 @@ export const isLive = (start, end) => {
   const currentDate = new Date();
   const startDate = new Date(start);
   const endDate = new Date(end);
-
+  if (!end) {
+    return true;
+  }
   return currentDate >= startDate && currentDate <= endDate;
 };
 export const isScheduled = (start) => {
@@ -72,7 +74,7 @@ export function timeLeft(futureTime) {
   const now = new Date();
   const timestamp = new Date(futureTime);
   const diff = timestamp - now; // Difference in milliseconds
-
+  if (!futureTime) return "Unilimited";
   if (diff <= 0) return "Expired"; // If time has passed
 
   const seconds = Math.floor(diff / 1000);

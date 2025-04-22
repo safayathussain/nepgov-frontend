@@ -13,7 +13,7 @@ import { FetchApi } from "@/utils/FetchApi";
 import { isScheduled, useAuth } from "@/utils/functions";
 import { motion, AnimatePresence } from "framer-motion";
 
-const calculateResults = (options, selectedOptionId = null) => {
+const calculateResults = (options) => {
   const updatedOptions = options.map((item) => ({
     ...item,
     votedCount: item.votedCount || 0,
@@ -35,7 +35,7 @@ const SurveyPage = () => {
   const searchParams = useSearchParams();
   const { auth } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [chartLoading, setChartLoading] = useState(null); // Tracks loading questionId for charts
+  const [chartLoading, setChartLoading] = useState(null);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showLoginScreen, setShowLoginScreen] = useState(false);
@@ -46,7 +46,7 @@ const SurveyPage = () => {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [isAlreadyVoted, setIsAlreadyVoted] = useState(false);
-  const [isTrackerLive, setIsTrackerLive] = useState(false);
+  const [isSurveyLive, setIsSurveyLive] = useState(false);
   const [chartData, setChartData] = useState([]);
 
   const fetchSurveyData = useCallback(
@@ -100,10 +100,14 @@ const SurveyPage = () => {
             )
           );
           setCurrentSurvey(survey);
-          setIsTrackerLive(
-            !isScheduled(survey.liveStartedAt) &&
-              new Date(survey.liveEndedAt) > new Date()
-          );
+          if (!survey.liveEndedAt) {
+            setIsSurveyLive(true);
+          } else {
+            setIsSurveyLive(
+              !isScheduled(survey.liveStartedAt) &&
+                new Date(survey.liveEndedAt) > new Date()
+            );
+          }
 
           const options =
             Object.keys(checkVoteResponse?.data?.data || {}).length !== 0
@@ -141,7 +145,7 @@ const SurveyPage = () => {
             answeredQuestions.map((q) => ({
               ...q,
               selectedOption: initialOptions[q._id],
-              results: calculateResults(q.options, initialOptions[q._id]),
+              results: calculateResults(q.options),
             }))
           );
 
@@ -174,7 +178,6 @@ const SurveyPage = () => {
     },
     [id, auth?._id, searchParams]
   );
-
   useEffect(() => {
     if (id) {
       fetchSurveyData(true);
@@ -200,9 +203,10 @@ const SurveyPage = () => {
         return;
       }
 
-      const results = calculateResults(currentQuestion.options, optionId);
+      const results = calculateResults(currentQuestion.options);
 
       if (isPrevious) {
+        // Update the answered question with the new selection
         setAnsweredQuestions((prev) =>
           prev.map((q) =>
             q._id === questionId
@@ -223,15 +227,22 @@ const SurveyPage = () => {
                 : q
             )
           );
-        } else {
+        } else if (!isLastQuestion) {
           setAnsweredQuestions((prev) => [
             { ...currentQuestion, results, selectedOption: optionId },
             ...prev,
           ]);
-
-          if (currentQuestionIndex < currentSurvey.questions.length - 1) {
-            setCurrentQuestionIndex((prev) => prev + 1);
-          }
+          setCurrentQuestionIndex((prev) => prev + 1);
+        } else {
+          // setAnsweredQuestions((prev) => {
+          //   const updatedQuestions = prev.filter(
+          //     (q) => q._id !== currentQuestion._id
+          //   );
+          //   return [
+          //     { ...currentQuestion, results, selectedOption: optionId },
+          //     ...updatedQuestions,
+          //   ];
+          // });
         }
       }
       setError(null);
@@ -242,16 +253,6 @@ const SurveyPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!auth?._id) {
-      const optionsQuery = Object.entries(selectedOptions)
-        .map(([questionId, optionId]) => `options=${questionId}:${optionId}`)
-        .join("&");
-      const redirectUrl = `/surveys/${id}?${optionsQuery}`;
-      sessionStorage.setItem("voteRedirectUrl", redirectUrl);
-      setShowLoginScreen(true);
-      return;
-    }
-
     try {
       setSubmitLoading(true);
       setError(null);
@@ -286,44 +287,10 @@ const SurveyPage = () => {
   );
 
   const shouldShowVoteScreen =
-    !isAlreadyVoted && isTrackerLive && !showSuccessScreen;
+    (!isAlreadyVoted && isSurveyLive) || showSuccessScreen;
   const currentQuestion = currentSurvey.questions?.[currentQuestionIndex];
   const isLastQuestion =
     currentQuestionIndex === currentSurvey.questions?.length - 1;
-
-  if (showLoginScreen) {
-    return (
-      <div className="max-w-[835px] container">
-        <style jsx global>{`
-          .p-dropdown-item {
-            white-space: normal !important;
-            max-width: 690px;
-            font-size: 14px;
-          }
-          .p-highlight > .p-checkbox-box {
-            background-color: #3560ad !important;
-            border-radius: 999px !important;
-          }
-          @media (max-width: 768px) {
-            .p-dropdown-panel {
-              margin: 5px;
-            }
-          }
-        `}</style>
-        <div className="bg-white p-8 rounded-lg mt-5">
-          <p className="text-2xl font-semibold">
-            Please log in to submit your answers
-          </p>
-          <p>Your responses will be saved after logging in.</p>
-          <div className="flex items-center gap-2 mt-5">
-            <Button onClick={() => router.push("/login")}>Log in</Button>
-            <Button onClick={() => router.push("/signup")}>Signup</Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={""}>
       <style jsx global>{`
@@ -353,7 +320,64 @@ const SurveyPage = () => {
           onChange={(e) => router.push("/surveys/" + e.target.value)}
         />
       </div>
-
+      {showLoginScreen && (
+        <div className="max-w-[835px] container">
+          <motion.div
+            key={showLoginScreen}
+            initial={{ height: 0, opacity: 1 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="p-1 overflow-y-hidden"
+          >
+            <div className="bg-white p-8 rounded-lg mt-5">
+              <div className="py-3 border-y">
+                <p className="font-medium text-xl">
+                  Are you already a member of NepGov?
+                </p>
+              </div>
+              <div className="lg:m-3 space-y-5 pt-5" role="radiogroup">
+                <div className="w-full space-y-1">
+                  <CheckInput
+                    boxClassName="!outline-primary"
+                    label="Yes"
+                    value={false}
+                    setValue={() => {
+                      const optionsQuery = Object.entries(selectedOptions)
+                        .map(
+                          ([questionId, optionId]) =>
+                            `options=${questionId}:${optionId}`
+                        )
+                        .join("&");
+                      const redirectUrl = `/surveys/${id}?${optionsQuery}`;
+                      sessionStorage.setItem("voteRedirectUrl", redirectUrl);
+                      router.push("/login");
+                    }}
+                  />
+                </div>
+                <div className="w-full space-y-1">
+                  <CheckInput
+                    boxClassName="!outline-primary"
+                    label="No"
+                    value={false}
+                    setValue={() => {
+                      const optionsQuery = Object.entries(selectedOptions)
+                        .map(
+                          ([questionId, optionId]) =>
+                            `options=${questionId}:${optionId}`
+                        )
+                        .join("&");
+                      const redirectUrl = `/surveys/${id}?${optionsQuery}`;
+                      sessionStorage.setItem("voteRedirectUrl", redirectUrl);
+                      router.push("/signup");
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
       {loading ? (
         <div className="min-h-[80vh] flex h-full w-full items-center justify-center">
           <Loading />
@@ -388,9 +412,21 @@ const SurveyPage = () => {
               <p className="text-gray-600 mb-6 text-center">
                 Your response was stored successfully in NepGov.
               </p>
-              <Button variant="secondary" onClick={() => router.push("/")}>
-                Back to Home
-              </Button>
+              <div className="flex items-center gap-4">
+                <Button variant="secondary" onClick={() => router.push("/")}>
+                  Back to Home
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setShowSuccessScreen(false);
+                    setIsAlreadyVoted(true);
+                    fetchSurveyData();
+                  }}
+                >
+                  View Result
+                </Button>
+              </div>
             </div>
           ) : (
             <>
@@ -419,26 +455,46 @@ const SurveyPage = () => {
                         </p>
                         {error && <p className="text-red-500 mb-4">{error}</p>}
                         <div className="space-y-4">
-                          {currentQuestion?.options?.map((option) => (
-                            <CheckInput
-                              key={option._id}
-                              boxClassName="!outline-primary"
-                              label={option.content}
-                              value={
-                                selectedOptions[currentQuestion._id] ===
-                                option._id
-                              }
-                              setValue={() =>
-                                handleOptionSelect(
-                                  currentQuestion._id,
-                                  option._id
-                                )
-                              }
-                            />
-                          ))}
+                          {calculateResults(currentQuestion?.options)?.map(
+                            (option) => (
+                              <div key={option._id} className="w-full">
+                                <div className="flex justify-between items-center mb-2">
+                                  <span className="flex items-center w-full">
+                                    <CheckInput
+                                      boxClassName="!outline-primary"
+                                      label={option.content}
+                                      value={
+                                        selectedOptions[currentQuestion._id] ===
+                                        option._id
+                                      }
+                                      setValue={() => {
+                                        handleOptionSelect(
+                                          currentQuestion._id,
+                                          option._id
+                                        );
+                                        if (!auth._id && isLastQuestion) {
+                                          setShowLoginScreen(true);
+                                        }
+                                      }}
+                                    />
+                                  </span>
+                                  {selectedOptions[currentQuestion._id] && (
+                                    <span className="ml-4">
+                                      {option.percentage}%
+                                    </span>
+                                  )}
+                                </div>
+                                {selectedOptions[currentQuestion._id] && (
+                                  <ProgressBar progress={option.percentage} />
+                                )}
+                              </div>
+                            )
+                          )}
                         </div>
                         {isLastQuestion &&
-                          selectedOptions[currentQuestion._id] && (
+                          selectedOptions[currentQuestion._id] &&
+                          !showLoginScreen &&
+                          auth._id && (
                             <div className="flex justify-end mt-6">
                               <Button
                                 onClick={handleSubmit}
@@ -525,15 +581,15 @@ const SurveyPage = () => {
           )}
         </div>
       ) : (
-        <div className="container">
-          <p className="text-3xl  font-semibold text-center mt-10 text-white">
+        <div className="container" key={isAlreadyVoted}>
+          <p className="text-3xl font-semibold text-center mt-10 text-white">
             {chartData?.[0]?.topic}
           </p>
           {chartData?.map((item, index) => (
             <div
               id={item?._id}
               key={item._id}
-              className="container bg-white  rounded-xl py-10 my-10"
+              className="container bg-white rounded-xl py-10 my-10"
             >
               <p className="text-center bg-[#EF4634] text-white w-max px-2 mx-auto">
                 Question {index + 1}
@@ -545,7 +601,7 @@ const SurveyPage = () => {
                 {item?.options?.map((option) => (
                   <div
                     key={option._id}
-                    className="bg-[#F3F4F6] p-4 rounded-lg flex justify-between items-center flex-wrap flex-col gap-2 md:flex-row"
+                    className="bg-[#F3F4F6] p-4 rounded-lg flex justify-between items-center flex-wrap md:flex-nowrap flex-col gap-2 md:flex-row"
                   >
                     <div>
                       <CheckInput
