@@ -188,12 +188,17 @@ const Page = () => {
           email: formData.email,
           otp: formData.code,
         },
-        isToast: true,
-        callback: () => setSignUpStep(signUpStep + 1),
+        isToast: true, 
       });
       sessionStorage.setItem("accessToken", data?.data?.user?.accessToken);
       delete data?.data?.user?.accessToken;
       dispatch(setAuth(data?.data?.user));
+      if (sessionStorage.getItem("voteRedirectUrl")) {
+        router.push(sessionStorage.getItem("voteRedirectUrl"));
+        sessionStorage.removeItem("voteRedirectUrl");
+      } else {
+        setSignUpStep(signUpStep + 1)
+      }
     } catch (error) {
       console.error("OTP verification failed:", error);
     }
@@ -472,7 +477,8 @@ const Page = () => {
                   }}
                   disabled={isNextBtnDisabled}
                 >
-                  Next
+                {signUpStep === 8 ? "Verify" : "Next"}
+                  
                 </Button>
               </div>
             </>

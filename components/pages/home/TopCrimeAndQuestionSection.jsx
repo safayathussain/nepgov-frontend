@@ -25,7 +25,7 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
           <div className="">
             <button
               onClick={() => router.push("/send-crime-info")}
-              className="w-full bg-white text-secondary font-semibold rounded-full py-2"
+              className="w-full bg-white text-secondary font-semibold rounded-full py-2 hover:bg-gray-200 duration-300"
             >
               Give Information Here
             </button>
@@ -35,7 +35,10 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <p>Daily Question</p>
-              {isLive(hero?.dailyQuestion?.liveStartedAt, hero?.dailyQuestion?.liveEndedAt) && (
+              {isLive(
+                hero?.dailyQuestion?.liveStartedAt,
+                hero?.dailyQuestion?.liveEndedAt
+              ) && (
                 <p className="flex items-center gap-2 blink">
                   Live <GoDotFill />
                 </p>
@@ -45,7 +48,10 @@ const TopCrimeAndQuestionSection = ({ hero }) => {
               {hero?.dailyQuestion?.topic}
             </p>
           </div>
-          <button onClick={() => router.push(`/trackers/${hero?.dailyQuestion?._id}`)} className="w-full bg-white text-secondary font-semibold rounded-full py-2">
+          <button
+            onClick={() => router.push(`/trackers/${hero?.dailyQuestion?._id}`)}
+            className="w-full bg-white text-secondary font-semibold rounded-full py-2 hover:bg-gray-200 duration-300"
+          >
             Vote now
           </button>
         </div>

@@ -34,7 +34,7 @@ const page = () => {
         </p>
         <div className="flex justify-center ">
           <Button
-            className={" bg-white !text-primary hover:bg-white"}
+            className={" bg-white !text-primary hover:!bg-primary hover:!text-white !border-0"}
             variant="primary"
             onClick={() => router.push("/send-crime-info")}
           >
